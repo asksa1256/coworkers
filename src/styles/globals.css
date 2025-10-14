@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+@theme {
+  /* breakpoints */
+  --breakpoint-sm: 280px;
+  --breakpoint-md: 640px;
+  --breakpoint-lg: 1280px;
+
+  --font-family-sans: "Noto Sans KR", sans-serif;
+
+  /* colors */
+  --color-primary: #5189fa;
+  --color-primary-hover: #416ec8;
+  --color-primary-pressed: #3b63b5;
+
+  --color-secondary: #eef3ff;
+
+  --color-tertiary: #315296;
+
+  --color-border: #f8fafc;
+
+  --color-bg-primary: #fff;
+  --color-bg-secondary: #f1f5f9;
+  --color-bg-tertiary: #e2e8f0;
+  --color-bg-inverse: #fff;
+
+  --color-disabled: #94a3b8;
+
+  --color-danger: #fc4b4b;
+
+  --color-text-default: #64748b;
+  --color-text-primary: #1e293b;
+  --color-text-secondary: #334155;
+  --color-text-tertiary: #0f172a;
+  --color-text-inverse: #fff;
+
+  --color-purple: #a855f7;
+  --color-cyan: #06b6d4;
+  --color-pink: #ec4899;
+  --color-rose: #f43f5e;
+  --color-orange: #f97316;
+  --color-yellow: #eab308;
+
+  --color-icon-primary: #64748b;
+  --color-icon-inverse: #f8fafc;
+  --color-icon-brand: #74a1fb;
+
+  /* shadow */
+  --shadow-primary: 0 25px 50px 12px rgba(0, 0, 0, 0.25);
+
+  /* font system */
+  --text-4xl: 40px; /* font-size */
+  --leading-4xl: 48px; /* line-height */
+
+  --text-3xl: 32px;
+  --leading-3xl: 38px;
+
+  --text-2xl: 24px;
+  --leading-2xl: 28px;
+
+  --text-xl: 20px;
+  --leading-xl: 24px;
+
+  --text-2lg: 18px;
+  --leading-2lg: 21px;
+
+  --text-lg: 16px;
+  --leading-lg: 19px;
+
+  --text-md: 14px;
+  --leading-md: 17px;
+
+  --text-sm: 13px;
+  --leading-sm: 16px;
+
+  --text-xs: 12px;
+  --leading-xs: 14px;
+
+  --font-pretendard: "Pretendard", sans-serif;
+}
+
+/* fonts */
+@font-face {
+  font-family: "Pretendard";
+  src: url("./assets/fonts/Pretendard-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pretendard";
+  src: url("./assets/fonts/Pretendard-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pretendard";
+  src: url("./assets/fonts/Pretendard-SemiBold.woff") format("woff");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pretendard";
+  src: url("./assets/fonts/Pretendard-Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
