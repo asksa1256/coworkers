@@ -1,5 +1,5 @@
-import { Toaster } from "./components/ui/sonner";
-import LandingPage from "@/pages/LandingPage";
+import LandingPage from '@/pages/LandingPage';
+import { Toaster } from './components/ui/sonner';
 
 function App() {
   return (

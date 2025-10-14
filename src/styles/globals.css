@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -9,7 +9,7 @@
   --breakpoint-md: 640px;
   --breakpoint-lg: 1280px;
 
-  --font-family-sans: "Noto Sans KR", sans-serif;
+  --font-family-sans: 'Noto Sans KR', sans-serif;
 
   /* colors */
   --color-primary: #5189fa;
@@ -79,34 +79,34 @@
   --text-xs: 12px;
   --leading-xs: 14px;
 
-  --font-pretendard: "Pretendard", sans-serif;
+  --font-pretendard: 'Pretendard', sans-serif;
 }
 
 /* fonts */
 @font-face {
-  font-family: "Pretendard";
-  src: url("./assets/fonts/Pretendard-Regular.woff") format("woff");
+  font-family: 'Pretendard';
+  src: url('./assets/fonts/Pretendard-Regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Pretendard";
-  src: url("./assets/fonts/Pretendard-Medium.woff") format("woff");
+  font-family: 'Pretendard';
+  src: url('./assets/fonts/Pretendard-Medium.woff') format('woff');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Pretendard";
-  src: url("./assets/fonts/Pretendard-SemiBold.woff") format("woff");
+  font-family: 'Pretendard';
+  src: url('./assets/fonts/Pretendard-SemiBold.woff') format('woff');
   font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Pretendard";
-  src: url("./assets/fonts/Pretendard-Bold.woff") format("woff");
+  font-family: 'Pretendard';
+  src: url('./assets/fonts/Pretendard-Bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
