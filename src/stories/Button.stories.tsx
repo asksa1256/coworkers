@@ -1,8 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
-
-import { fn } from 'storybook/test';
-
 import { Button } from '@/components/ui/button';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Check } from 'lucide-react';
+import { fn } from 'storybook/test';
 
 const meta = {
   title: 'Example/Button',
@@ -81,5 +80,14 @@ export const Disabled: Story = {
     variant: 'default',
     disabled: true,
     children: '생성하기',
+  },
+};
+
+export const IconButton: Story = {
+  args: {
+    variant: 'default',
+    size: 'icon-lg',
+    round: 'full',
+    children: <Check />,
   },
 };
