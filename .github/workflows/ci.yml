@@ -36,9 +36,6 @@ jobs:
     needs: [lint-build]
     runs-on: ubuntu-latest
 
-    env:
-      CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
