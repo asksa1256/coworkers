@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Check } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { fn } from 'storybook/test';
 
 const meta = {
@@ -97,6 +97,7 @@ export const IconButton: Story = {
     variant: 'default',
     size: 'icon-lg',
     round: 'full',
-    children: <Check />,
+    'aria-label': '추가하기',
+    children: <Plus />,
   },
 };
