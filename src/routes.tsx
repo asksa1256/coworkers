@@ -8,7 +8,7 @@ const routes = [
     element: <Layout />,
     children: [
       { path: '/', element: <LandingPage /> },
-      { path: '/list/:gorupId', element: <ListPage /> },
+      { path: '/list/:groupId', element: <ListPage /> },
     ],
   },
 ];
