@@ -25,7 +25,16 @@ const meta = {
     },
     size: {
       control: 'select',
-      options: ['default', 'sm', 'lg', 'icon', 'icon-sm', 'icon-lg'],
+      options: [
+        'default',
+        'sm',
+        'lg',
+        'icon',
+        'icon-sm',
+        'icon-md',
+        'icon-lg',
+        'icon-xl',
+      ],
     },
     disabled: {
       control: 'boolean', // disabled를 체크박스로 표시
