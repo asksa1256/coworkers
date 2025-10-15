@@ -30,7 +30,7 @@ jobs:
       - name: Build React app
         run: pnpm run build
 
-  # chromatic job 추가
+  # chromatic job 추가 (storybook 배포)
   chromatic:
     # lint-build Job이 성공한 이후에만 이 job이 실행되도록 설정
     needs: [lint-build]
