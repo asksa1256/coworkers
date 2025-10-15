@@ -29,3 +29,38 @@ jobs:
 
       - name: Build React app
         run: pnpm run build
+
+  # chromatic job 추가
+  chromatic:
+    # lint-build Job이 성공한 이후에만 이 job이 실행되도록 설정
+    needs: [lint-build]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 독립된 환경에서 실행되는 job이므로, 별도 설치 필요
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.x
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Publish Storybook to Chromatic
+        uses: chromaui/action@v1
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          # storybook build 압축으로 CI 시간 단축
+          zip: true
+          # 시각적 변경이 있어도 에러 띄우지 않고 통과
+          exitZeroOnChanges: true
+          # 업로드 후 바로 종료하여 시간 단축
+          exitOnceUploaded: true
