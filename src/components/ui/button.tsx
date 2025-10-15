@@ -52,12 +52,15 @@ const buttonVariants = cva(
         'icon-lg': 'size-10',
       },
       round: {
+        sm: 'rounded-[8px]',
+        lg: 'rounded-[12px]',
         full: 'rounded-full',
       },
     },
     defaultVariants: {
       variant: 'default',
       size: 'default',
+      round: 'lg',
     },
   },
 );

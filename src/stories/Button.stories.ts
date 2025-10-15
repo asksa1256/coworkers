@@ -32,6 +32,12 @@ const meta = {
       control: 'boolean', // disabled를 체크박스로 표시
       description: '버튼 비활성화 여부',
     },
+    round: {
+      control: 'select',
+      options: ['sm', 'lg', 'full'],
+      description: 'border-radius 설정',
+      defaultValue: 'lg',
+    },
   },
 } satisfies Meta<typeof Button>;
 
@@ -57,7 +63,6 @@ export const Secondary: Story = {
 export const Outline: Story = {
   args: {
     variant: 'outline',
-    round: 'full',
     size: 'default',
     children: '생성하기',
   },
