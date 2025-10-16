@@ -28,7 +28,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    placeholder: '이름을 입력하세요',
+    placeholder: '내용을 입력하세요.',
     disabled: false,
     error: null,
   },
@@ -38,9 +38,8 @@ export const WithError: Story = {
   args: {
     disabled: false,
     error: {
-      message: '유효한 이메일이 아닙니다.',
+      message: '내용을 입력해주세요.',
     },
-    value: 'codeit@code.com',
   },
   name: '에러 메시지 표시',
 };
