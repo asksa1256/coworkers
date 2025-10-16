@@ -184,7 +184,7 @@
 
 @layer base {
   * {
-    @apply outline-none;
+    @apply text-text-primary outline-none;
   }
   body {
     @apply font-pretendard;
@@ -196,8 +196,6 @@
 
 @layer utilities {
   .card-common {
-    background-color: #fff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
+    @apply bg-bg-primary border-border-primary rounded-xl border;
   }
 }
