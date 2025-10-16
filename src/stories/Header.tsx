@@ -1,4 +1,4 @@
-import { Button } from './Button';
+import Button from '@/components/ui/Button';
 import './header.css';
 
 type User = {
@@ -50,17 +50,18 @@ export const Header = ({
             <span className="welcome">
               Welcome, <b>{user.name}</b>!
             </span>
-            <Button size="small" onClick={onLogout} label="Log out" />
+            <Button size="sm" onClick={onLogout}>
+              로그아웃
+            </Button>
           </>
         ) : (
           <>
-            <Button size="small" onClick={onLogin} label="Log in" />
-            <Button
-              primary
-              size="small"
-              onClick={onCreateAccount}
-              label="Sign up"
-            />
+            <Button size="sm" onClick={onLogin}>
+              로그인
+            </Button>
+            <Button variant="default" size="sm" onClick={onCreateAccount}>
+              회원가입
+            </Button>
           </>
         )}
       </div>
