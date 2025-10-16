@@ -4,7 +4,7 @@ import { type FieldError } from '@/types/types';
 import { useRef } from 'react';
 
 interface InputReplyProps extends React.ComponentProps<'textarea'> {
-  name: string; // 폼 제출용 필드
+  name?: string; // 폼 제출용 필드
   error?: FieldError | null;
   disabled: boolean;
   className?: string;
