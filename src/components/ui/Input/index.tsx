@@ -6,7 +6,12 @@ interface InputProps extends React.ComponentProps<'input'> {
   isError: boolean;
 }
 
-function Input({ className, type, isError = false, ...props }: InputProps) {
+export default function Input({
+  className,
+  type,
+  isError = false,
+  ...props
+}: InputProps) {
   return (
     <input
       type={type}
@@ -26,5 +31,3 @@ function Input({ className, type, isError = false, ...props }: InputProps) {
     />
   );
 }
-
-export default Input;
