@@ -1,9 +1,6 @@
 import { cn } from '@/lib/utils';
+import { type FieldError } from '@/types/types';
 import * as React from 'react';
-
-interface FieldError {
-  message: string;
-}
 
 interface InputProps extends React.ComponentProps<'input'> {
   error?: FieldError | null;
