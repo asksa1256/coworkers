@@ -1,15 +1,18 @@
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 
-import { cn } from '@/lib/utils';
+interface FieldError {
+  message: string;
+}
 
 interface InputProps extends React.ComponentProps<'input'> {
-  isError: boolean;
+  error?: FieldError | null;
 }
 
 export default function Input({
   className,
   type,
-  isError = false,
+  error = null,
   ...props
 }: InputProps) {
   return (
@@ -24,7 +27,7 @@ export default function Input({
         'aria-invalid:ring-destructive/20 aria-invalid:border-destructive',
         'dark:bg-input/30 dark:aria-invalid:ring-destructive/40',
         'file:text-foreground file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium',
-        { 'border-destructive': isError },
+        { 'border-destructive': error },
         className,
       )}
       {...props}

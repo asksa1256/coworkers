@@ -15,7 +15,7 @@ const meta = {
       control: 'boolean',
       description: '인풋 비활성화 여부',
     },
-    isError: {
+    error: {
       control: 'boolean',
       description: '유효성 검사 오류 여부',
     },
@@ -27,8 +27,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    isError: false,
+    error: null,
     placeholder: '이메일을 입력하세요.',
-    disabled: true,
+    disabled: false,
   },
 };
