@@ -1,13 +1,9 @@
-import LandingPage from '@/pages/LandingPage';
-import { Toaster } from './components/ui/sonner';
+import routes from '@/routes';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 function App() {
-  return (
-    <>
-      <LandingPage />
-      <Toaster />
-    </>
-  );
+  const router = createBrowserRouter(routes);
+  return <RouterProvider router={router} />;
 }
 
 export default App;
