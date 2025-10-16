@@ -1,6 +1,6 @@
 import Button from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
-import { type FieldError } from '@/types/types';
+import { type FieldError } from '@/types';
 import { useRef } from 'react';
 
 interface InputReplyProps extends React.ComponentProps<'textarea'> {

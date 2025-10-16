@@ -1,4 +1,4 @@
-import { type FieldError } from '@/types/types';
+import { type FieldError } from '@/types';
 import { useState } from 'react';
 import InputField from './InputField';
 

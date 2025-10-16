@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { type FieldError } from '@/types/types';
+import { type FieldError } from '@/types';
 import * as React from 'react';
 
 interface InputProps extends React.ComponentProps<'input'> {

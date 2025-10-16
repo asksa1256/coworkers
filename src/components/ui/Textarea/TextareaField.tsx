@@ -1,6 +1,6 @@
 import { ScrollArea } from '@/components/ui/ScrollArea';
 import { cn } from '@/lib/utils';
-import { type FieldError } from '@/types/types';
+import { type FieldError } from '@/types';
 import * as React from 'react';
 
 interface TextareaFieldProps extends React.ComponentProps<'textarea'> {
