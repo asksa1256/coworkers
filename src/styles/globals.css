@@ -187,7 +187,7 @@
     @apply text-text-primary outline-none;
   }
   body {
-    @apply font-pretendard;
+    @apply font-pretendard bg-bg-secondary has-[.view-white]:bg-bg-primary;
   }
   button {
     @apply cursor-pointer;
@@ -197,5 +197,10 @@
 @layer utilities {
   .card-common {
     @apply bg-bg-primary border-border-primary rounded-xl border;
+  }
+
+  .expand-bg-x {
+    /* 모바일 양쪽 여백 확장하여 bg 적용*/
+    @apply -mx-4 px-4 md:-mx-0 md:px-0;
   }
 }
