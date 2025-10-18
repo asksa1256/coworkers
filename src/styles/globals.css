@@ -184,10 +184,10 @@
 
 @layer base {
   * {
-    @apply text-text-primary outline-none;
+    @apply text-inherit outline-none;
   }
   body {
-    @apply font-pretendard bg-bg-secondary has-[.view-white]:bg-bg-primary;
+    @apply text-text-primary font-pretendard bg-bg-secondary has-[.view-white]:bg-bg-primary;
   }
   button {
     @apply cursor-pointer;
