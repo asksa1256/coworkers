@@ -5,5 +5,10 @@
   "printWidth": 80,
   "tabWidth": 2,
   "trailingComma": "all",
-  "plugins": ["prettier-plugin-organize-imports", "prettier-plugin-tailwindcss"]
+  "jsxSingleQuote": true,
+  "plugins": [
+    "prettier-plugin-organize-imports",
+    "prettier-plugin-tailwindcss"
+  ],
+  "endOfLine": "auto"
 }

@@ -75,14 +75,6 @@ export default [
         'warn',
         { allowConstantExport: true },
       ],
-
-      // Prettier 규칙 위반 시 경고
-      'prettier/prettier': [
-        'warn',
-        {
-          endOfLine: 'auto', // Prettier가 CRLF도 유효한 개행 방식으로 인식하도록 설정
-        },
-      ],
     },
   },
 ];
