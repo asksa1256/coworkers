@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
-import { type FieldError } from '@/types';
 import * as React from 'react';
+import { type FieldError } from 'react-hook-form';
 
 interface InputProps extends React.ComponentProps<'input'> {
   error?: FieldError | null;
