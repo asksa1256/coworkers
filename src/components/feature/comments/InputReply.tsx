@@ -1,3 +1,4 @@
+import ArrowUpIcon from '@/assets/icons/ArrowUpIcon.svg';
 import Button from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
 import { type FieldError } from '@/types';
@@ -26,21 +27,21 @@ export default function InputReply({
 
   return (
     <div className={cn('flex w-full flex-col gap-1', className)}>
-      <div className="border-border flex w-full gap-6 border-t border-b px-3 py-3">
+      <div className='border-border flex w-full gap-6 border-t border-b px-3 py-3'>
         <textarea
           ref={textareaRef}
           name={name}
-          placeholder="댓글을 달아주세요."
+          placeholder='댓글을 달아주세요.'
           onInput={handleInput}
-          className="md:text-md w-full resize-none pt-1 text-xs md:pt-0.5"
+          className='md:text-md w-full resize-none pt-1 text-xs md:pt-0.5'
           rows={1}
         ></textarea>
-        <Button size="icon-md" round="full" disabled={disabled}>
-          <img src="/icons/ArrowUpIcon.svg" alt="댓글 달기" />
+        <Button size='icon-md' round='full' disabled={disabled}>
+          <img src={ArrowUpIcon} alt='댓글 달기' />
         </Button>
       </div>
 
-      {error && <p className="text-destructive text-sm">{error.message}</p>}
+      {error && <p className='text-destructive text-sm'>{error.message}</p>}
     </div>
   );
 }

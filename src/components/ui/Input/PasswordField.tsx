@@ -1,3 +1,5 @@
+import VisibilityOffIcon from '@/assets/icons/VisibilityOffIcon.svg';
+import VisibilityOnIcon from '@/assets/icons/VisibilityOnIcon.svg';
 import { type FieldError } from '@/types';
 import { useState } from 'react';
 import InputField from './InputField';
@@ -21,15 +23,15 @@ export default function PasswordField({
 
   const toggleButton = (
     <button
-      type="button"
-      className="pr-2 focus:outline-none"
+      type='button'
+      className='pr-2 focus:outline-none'
       aria-label={showPassword ? '비밀번호 숨김' : '비밀번호 표시'}
       onClick={toggleVisibility}
     >
       {showPassword ? (
-        <img src="/icons/VisibilityOnIcon.svg" alt="" />
+        <img src={VisibilityOnIcon} alt='' />
       ) : (
-        <img src="/icons/VisibilityOffIcon.svg" alt="" />
+        <img src={VisibilityOffIcon} alt='' />
       )}
     </button>
   );
@@ -40,7 +42,7 @@ export default function PasswordField({
         type={inputType}
         suffix={toggleButton}
         error={error}
-        className="[&>input]:pr-12"
+        className='[&>input]:pr-12'
         {...props}
       />
     </div>
