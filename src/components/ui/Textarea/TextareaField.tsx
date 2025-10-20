@@ -1,4 +1,3 @@
-import { ScrollArea } from '@/components/ui/ScrollArea';
 import { cn } from '@/lib/utils';
 import { type FieldError } from '@/types';
 import * as React from 'react';
@@ -17,6 +16,8 @@ export default function TextareaField({
     'text-md w-full min-w-[343px] min-h-[75px] bg-transparent px-4 py-3 transition-colors outline-none md:text-base rounded-[12px] border border-[#e2e8f0] bg-transparent resize-none',
     'hover:border-primary focus-within:border-primary-pressed',
     'placeholder:text-text-default',
+    // 커스텀 스크롤바 스타일 추가
+    'scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent',
     'disabled:bg-bg-secondary disabled:text-disabled disabled:pointer-events-none disabled:cursor-not-allowed',
     { 'border-destructive': error },
   );
@@ -29,13 +30,11 @@ export default function TextareaField({
 
   return (
     <div className={wrapperClasses}>
-      <div data-slot="textarea" aria-invalid={error ? 'true' : undefined}>
-        <ScrollArea className="h-full w-full">
-          <textarea className={baseClasses} rows={rows} {...props} />
-        </ScrollArea>
+      <div data-slot='textarea' aria-invalid={error ? 'true' : undefined}>
+        <textarea className={baseClasses} rows={rows} {...props} />
       </div>
 
-      {error && <p className="text-destructive text-sm">{error.message}</p>}
+      {error && <p className='text-destructive text-sm'>{error.message}</p>}
     </div>
   );
 }
