@@ -7,19 +7,19 @@ import { cn } from '@/lib/utils';
 const buttonVariants = cva(
   `inline-flex items-center justify-center w-full gap-2 whitespace-nowrap text-sm font-medium transition-all outline-none 
 
-  disabled:pointer-events-none
+  disabled:pointer-events-none disabled:bg-primary-inactive
 
   [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0
 
   focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]
 
-  aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive`,
+  aria-invalid:ring-danger/20 dark:aria-invalid:ring-danger/40 aria-invalid:border-danger`,
   {
     variants: {
       variant: {
         default: `
-          bg-primary text-primary-foreground hover:bg-primary-hover focus:bg-primary-pressed
-          disabled:bg-disabled
+          bg-primary text-white hover:bg-primary-hover focus:bg-primary-pressed
+          disabled:bg-primary-inactive
         `,
         secondary: `
           bg-transparent border border-primary text-primary 
@@ -33,28 +33,27 @@ const buttonVariants = cva(
           focus:border-primary-pressed focus:text-primary-pressed
           disabled:border-disabled disabled:text-disabled
         `,
-        destructive: `
-          bg-destructive text-white 
-          hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60 
-          disabled:bg-disabled
+        danger: `
+          bg-danger text-white 
+          hover:bg-danger/90 
+          disabled:bg-primary-inactive
         `,
         ghost:
           'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50',
         link: 'text-primary underline-offset-4 hover:underline',
       },
       size: {
-        default:
-          'px-4 py-[12px] rounded-[12px] has-[>svg]:px-3 text-md font-semibold',
-        sm: 'rounded-[8px] gap-1 px-[12px] py-2 text-md',
-        lg: 'py-[14px] rounded-[12px] px-6 has-[>svg]:px-4 text-base',
+        default: 'px-4 py-3 rounded-xl has-[>svg]:px-3 text-md font-semibold',
+        sm: 'rounded-[8px] gap-1 px-[14px] py-2 text-md',
+        lg: 'py-[14px] rounded-xl px-6 has-[>svg]:px-4 text-base',
         'icon-sm': 'size-[18px] [&_svg]:!size-[10px]',
         'icon-md': 'size-6 [&_svg]:!size-4',
         'icon-lg': 'size-8 [&_svg]:!size-4',
         'icon-xl': 'size-14 [&_svg]:!size-6',
       },
       round: {
-        sm: 'rounded-[8px]',
-        lg: 'rounded-[12px]',
+        sm: 'rounded-lg',
+        lg: 'rounded-xl',
         full: 'rounded-full',
       },
     },

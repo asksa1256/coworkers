@@ -14,14 +14,7 @@ const meta = {
   argTypes: {
     variant: {
       control: 'select',
-      options: [
-        'default',
-        'secondary',
-        'outline',
-        'destructive',
-        'ghost',
-        'link',
-      ],
+      options: ['default', 'secondary', 'outline', 'danger', 'ghost', 'link'],
     },
     size: {
       control: 'select',
@@ -78,16 +71,8 @@ export const Outline: Story = {
 
 export const Danger: Story = {
   args: {
-    variant: 'destructive',
+    variant: 'danger',
     size: 'default',
-    children: '생성하기',
-  },
-};
-
-export const Disabled: Story = {
-  args: {
-    variant: 'default',
-    disabled: true,
     children: '생성하기',
   },
 };
