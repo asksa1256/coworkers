@@ -5,11 +5,22 @@ import PasswordField from '@/components/ui/Input/PasswordField';
 import { Label } from '@/components/ui/Label';
 import { type SignInFormData, signInSchema } from '@/types/SignInSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 
+interface ErrorResponse {
+  message: string;
+  errors?: {
+    field: string;
+    message: string;
+  }[];
+}
+
 export default function SignInForm() {
+  const [globalError, setGlobalError] = useState('');
+
   const {
     register,
     handleSubmit,
@@ -20,12 +31,41 @@ export default function SignInForm() {
   });
 
   const onSubmit = async (data: SignInFormData) => {
-    const res = await axios.post(
-      'https://fe-project-cowokers.vercel.app/16-16/auth/signin',
-      data,
-    );
-    console.log(res);
-    // 토큰 저장, 리다이렉트 등
+    try {
+      const res = await axios.post(
+        'https://fe-project-cowokers.vercel.app/16-16/auth/signin',
+        data,
+      );
+      // 토큰 저장, 리다이렉트 등
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+
+        if (axiosError.response) {
+          const { status, data } = axiosError.response;
+
+          switch (status) {
+            case 400:
+              setGlobalError(data.message || '입력하신 정보를 확인해주세요.');
+              break;
+            case 500:
+              setGlobalError('서버 오류가 발생했습니다.');
+              break;
+            default:
+              setGlobalError('로그인에 실패했습니다.');
+          }
+        } else if (axiosError.request) {
+          // 요청은 보냈지만 응답을 받지 못한 경우
+          setGlobalError('서버와 연결할 수 없습니다.');
+        } else {
+          // 요청 설정 중 오류 발생
+          setGlobalError('요청 처리 중 오류가 발생했습니다.');
+        }
+      } else {
+        console.error('예상치 못한 에러:', error);
+        setGlobalError('알 수 없는 오류가 발생했습니다.');
+      }
+    }
   };
 
   return (
@@ -72,9 +112,12 @@ export default function SignInForm() {
         </div>
       </div>
 
-      <Button type='submit' className='mb-6 text-base'>
-        {isSubmitting ? '로그인 중...' : '로그인'}
-      </Button>
+      <div className='flex flex-col gap-2'>
+        {globalError && <p className='text-danger text-md'>{globalError}</p>}
+        <Button type='submit' className='mb-6 text-base'>
+          {isSubmitting ? '로그인 중...' : '로그인'}
+        </Button>
+      </div>
 
       <div className='text-md mb-12 text-center md:mb-[60px] md:text-base'>
         <span className='text-text-primary mr-2'>아직 계정이 없으신가요?</span>
