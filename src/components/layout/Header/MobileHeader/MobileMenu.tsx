@@ -1,5 +1,5 @@
-import SheetCloseIcon from '@/assets/images/icons/SheetCloseIcon.svg?react';
-import SheetMenuIcon from '@/assets/images/icons/SheetMenuIcon.svg?react';
+import SheetCloseIcon from '@/assets/icons/SheetCloseIcon.svg?react';
+import SheetMenuIcon from '@/assets/icons/SheetMenuIcon.svg?react';
 import HeaderGnb from '@/components/layout/Header/HeaderGnb';
 import {
   Sheet,

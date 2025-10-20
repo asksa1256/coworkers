@@ -1,13 +1,23 @@
-export default function SidebarHeader() {
+import GnbFoldIcon from '@/assets/icons/GnbFoldIcon.svg?react';
+import HeaderLogo from '@/components/layout/Header/HeaderLogo';
+import { useState } from 'react';
+
+interface Props {
+  isLoggedIn: boolean;
+}
+
+export default function SidebarHeader({ isLoggedIn }: Props) {
+  const [isFold, setIsFold] = useState(false);
+
   return (
-    <header>
+    <header className='bg-bg-primary border-border-primary sticky top-0 h-screen w-[270px] border-r'>
       <div>
-        <img
-          src='/icons/ProfileIcon.svg'
-          className='w-6 md:w-[27px]'
-          alt='기본 프로필 아이콘'
-        />
+        <HeaderLogo />
+        <button>
+          <GnbFoldIcon />
+        </button>
       </div>
+      <div></div>
     </header>
   );
 }

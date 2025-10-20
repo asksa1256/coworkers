@@ -1,6 +1,6 @@
-import GnbBoardIcon from '@/assets/images/icons/GnbBoardIcon.svg?react';
-import GnbPlusIcon from '@/assets/images/icons/GnbPlusIcon.svg?react';
-import GnbTeamIcon from '@/assets/images/icons/GnbTeamIcon.svg?react';
+import GnbBoardIcon from '@/assets/icons/GnbBoardIcon.svg?react';
+import GnbPlusIcon from '@/assets/icons/GnbPlusIcon.svg?react';
+import GnbTeamIcon from '@/assets/icons/GnbTeamIcon.svg?react';
 import { cn } from '@/lib/utils';
 import { Link, useLocation } from 'react-router-dom';
 
