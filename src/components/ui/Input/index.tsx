@@ -15,9 +15,9 @@ export default function Input({
   return (
     <input
       type={type}
-      data-slot="input"
+      data-slot='input'
       className={cn(
-        'text-md text-text-primary w-full min-w-0 rounded-[12px] border border-[#e2e8f0] bg-transparent px-4 py-[12px] transition-colors outline-none md:px-4 md:py-[13px] md:text-base',
+        'text-md text-text-primary border-primary w-full min-w-0 rounded-[12px] border bg-transparent px-4 py-[12px] transition-colors outline-none md:px-4 md:py-[13px] md:text-base',
         'placeholder:text-text-default selection:text-text-primary',
         'hover:border-primary focus-visible:border-primary-pressed',
         'disabled:bg-bg-secondary disabled:text-disabled disabled:pointer-events-none disabled:cursor-not-allowed',
