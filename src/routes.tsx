@@ -2,6 +2,7 @@ import Layout from '@/components/layout/Layout';
 import ErrorPage from '@/pages/ErrorPage';
 import LandingPage from '@/pages/LandingPage';
 import ListPage from '@/pages/ListPage';
+import TeamPage from '@/pages/TeamPage';
 
 const routes = [
   {
@@ -11,6 +12,7 @@ const routes = [
     children: [
       { path: '/', element: <LandingPage /> },
       { path: '/list/:groupId', element: <ListPage /> },
+      { path: '/:teamId', element: <TeamPage /> },
     ],
   },
 ];

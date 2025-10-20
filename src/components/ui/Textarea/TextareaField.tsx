@@ -1,0 +1,40 @@
+import { cn } from '@/lib/utils';
+import { type FieldError } from '@/types';
+import * as React from 'react';
+
+interface TextareaFieldProps extends React.ComponentProps<'textarea'> {
+  error?: FieldError | null;
+}
+
+export default function TextareaField({
+  className,
+  error,
+  rows = 3,
+  ...props
+}: TextareaFieldProps) {
+  const baseClasses = cn(
+    'text-md w-full min-w-[343px] min-h-[75px] bg-transparent px-4 py-3 transition-colors outline-none md:text-base rounded-[12px] border border-border-primary bg-transparent resize-none',
+    'hover:border-primary focus-within:border-primary-pressed',
+    'placeholder:text-text-default',
+    // 커스텀 스크롤바 스타일 추가
+    'scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent',
+    'disabled:bg-bg-secondary disabled:text-disabled disabled:pointer-events-none disabled:cursor-not-allowed',
+    { 'border-danger': error },
+  );
+
+  const wrapperClasses = cn(
+    'flex flex-col w-full',
+    'aria-invalid:ring-danger/20 dark:aria-invalid:ring-danger/40 aria-invalid:border-danger dark:bg-input/30',
+    className,
+  );
+
+  return (
+    <div className={wrapperClasses}>
+      <div data-slot='textarea' aria-invalid={error ? 'true' : undefined}>
+        <textarea className={baseClasses} rows={rows} {...props} />
+      </div>
+
+      {error && <p className='text-danger text-sm'>{error.message}</p>}
+    </div>
+  );
+}
