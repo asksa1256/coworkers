@@ -20,15 +20,13 @@ export default function InputField({
         <Input type={type} error={error} {...props} />
 
         {suffix && (
-          <div className="absolute inset-y-0 right-2 z-[1] flex items-center">
+          <div className='absolute inset-y-0 right-2 z-[1] flex items-center'>
             {suffix}
           </div>
         )}
       </div>
 
-      {error && (
-        <p className="text-md text-destructive mt-2">{error.message}</p>
-      )}
+      {error && <p className='text-md text-danger mt-2'>{error.message}</p>}
     </>
   );
 }

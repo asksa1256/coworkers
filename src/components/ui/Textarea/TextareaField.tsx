@@ -13,18 +13,18 @@ export default function TextareaField({
   ...props
 }: TextareaFieldProps) {
   const baseClasses = cn(
-    'text-md w-full min-w-[343px] min-h-[75px] bg-transparent px-4 py-3 transition-colors outline-none md:text-base rounded-[12px] border border-[#e2e8f0] bg-transparent resize-none',
+    'text-md w-full min-w-[343px] min-h-[75px] bg-transparent px-4 py-3 transition-colors outline-none md:text-base rounded-[12px] border border-border-primary bg-transparent resize-none',
     'hover:border-primary focus-within:border-primary-pressed',
     'placeholder:text-text-default',
     // 커스텀 스크롤바 스타일 추가
     'scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent',
     'disabled:bg-bg-secondary disabled:text-disabled disabled:pointer-events-none disabled:cursor-not-allowed',
-    { 'border-destructive': error },
+    { 'border-danger': error },
   );
 
   const wrapperClasses = cn(
     'flex flex-col w-full',
-    'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30',
+    'aria-invalid:ring-danger/20 dark:aria-invalid:ring-danger/40 aria-invalid:border-danger dark:bg-input/30',
     className,
   );
 
@@ -34,7 +34,7 @@ export default function TextareaField({
         <textarea className={baseClasses} rows={rows} {...props} />
       </div>
 
-      {error && <p className='text-destructive text-sm'>{error.message}</p>}
+      {error && <p className='text-danger text-sm'>{error.message}</p>}
     </div>
   );
 }
