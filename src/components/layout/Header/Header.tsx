@@ -12,7 +12,7 @@ export default function Header() {
       {currentView === 'MOBILE' ? (
         <MobileHeader isLoggedIn={isLoggedIn} />
       ) : (
-        <SidebarHeader />
+        <SidebarHeader isLoggedIn={isLoggedIn} />
       )}
     </>
   );

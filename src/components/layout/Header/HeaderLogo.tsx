@@ -9,11 +9,9 @@ interface Props {
 
 export default function HeaderLogo({ iconOnly }: Props) {
   return (
-    <Link to='/' className='text-primary flex h-full gap-0.5 md:h-[96px]'>
+    <Link to='/' className='text-primary flex h-full gap-0.5'>
       <LogoIcon className={cn(`w-4 md:w-6`, iconOnly && 'w-6')} />
-      {!iconOnly && (
-        <LogoText className='w-[84px] md:hidden md:w-[132px] md:group-[.is-open]:block' />
-      )}
+      {!iconOnly && <LogoText className='w-[84px] md:w-[132px]' />}
     </Link>
   );
 }

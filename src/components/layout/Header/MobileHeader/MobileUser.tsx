@@ -1,4 +1,4 @@
-import DefaultProfileIcon from '@/assets/images/icons/DefaultProfileIcon.svg?react';
+import DefaultProfileIcon from '@/assets/icons/DefaultProfileIcon.svg?react';
 
 export default function MobileUser() {
   return (
