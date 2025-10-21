@@ -1,7 +1,13 @@
 import Button from '@/components/ui/Button';
+import useSignOut from '@/hooks/useSignOut';
+import { userAtom } from '@/store/authAtom';
+import { useAtomValue } from 'jotai';
 import { toast } from 'sonner';
 
 export default function LandingPage() {
+  const user = useAtomValue(userAtom);
+  const signOut = useSignOut();
+
   return (
     <main>
       <h2 className='text-4xl font-bold'>Coworkers</h2>
@@ -28,6 +34,18 @@ export default function LandingPage() {
 
       {/* tailwind prettier order test */}
       <div className='flex rounded-lg bg-blue-500 p-4 text-xl font-bold shadow-lg'></div>
+
+      {/* 로그인 후 user 전역 상태 테스트 */}
+      {user ? (
+        <>
+          <span>환영합니다, {user.nickname}님</span>
+          <Button className='w-auto' onClick={signOut}>
+            로그아웃
+          </Button>
+        </>
+      ) : (
+        <span>로그인 전</span>
+      )}
     </main>
   );
 }
