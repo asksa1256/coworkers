@@ -8,9 +8,20 @@ import {
   SheetHeader,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import type { MembershipsType, UserType } from '@/types/userType';
 import { DialogTitle } from '@radix-ui/react-dialog';
 
-export default function MobileMenu() {
+interface Props {
+  user: UserType;
+  currentGroup: MembershipsType | null;
+  onUpdateCurrentGroup: (group: MembershipsType) => void;
+}
+
+export default function MobileMenu({
+  user,
+  currentGroup,
+  onUpdateCurrentGroup,
+}: Props) {
   return (
     <Sheet>
       <SheetTrigger>
@@ -28,7 +39,11 @@ export default function MobileMenu() {
           </SheetClose>
         </SheetHeader>
         <div className='grow-1 overflow-auto px-4'>
-          <HeaderGnb />
+          <HeaderGnb
+            user={user}
+            currentGroup={currentGroup}
+            onUpdateCurrentGroup={onUpdateCurrentGroup}
+          />
         </div>
       </SheetContent>
     </Sheet>
