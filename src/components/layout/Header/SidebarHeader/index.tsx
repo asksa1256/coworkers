@@ -26,20 +26,23 @@ export default function SidebarHeader({
   return (
     <header
       className={cn(
-        'bg-bg-primary border-border-primary group sticky top-0 flex h-screen w-[270px] flex-col border-r transition-all',
-        isFold && 'is-fold w-[72px]',
+        'bg-bg-primary border-border-primary group sticky top-0 flex h-screen w-[210px] flex-col border-r transition-all lg:w-[270px]',
+        isFold && 'is-fold w-[72px] lg:w-[72px]',
       )}
     >
       {/* 상단 영역 */}
       <div
         className={cn(
-          'relative flex shrink-0 items-center justify-between px-[26px] py-8',
+          'relative flex shrink-0 items-center justify-between px-4 py-8 lg:px-[26px]',
           'group-[.is-fold]:px-6',
         )}
       >
         <HeaderLogo iconOnly={isFold} />
         <button
-          className='group-[.is-fold]:bg-bg-primary group-[.is-fold]:border-border-primary group-[.is-fold]:absolute group-[.is-fold]:top-1/2 group-[.is-fold]:right-0 group-[.is-fold]:h-8 group-[.is-fold]:w-8 group-[.is-fold]:translate-x-[18px] group-[.is-fold]:-translate-y-1/2 group-[.is-fold]:rounded-full group-[.is-fold]:border'
+          className={cn(
+            'border-border-primary bg-bg-primary translate-x-2 rounded-full border p-0.5 lg:translate-x-0 lg:rounded-none lg:border-0 lg:p-0',
+            'group-[.is-fold]:bg-bg-primary group-[.is-fold]:border-border-primary group-[.is-fold]:absolute group-[.is-fold]:top-1/2 group-[.is-fold]:right-0 group-[.is-fold]:h-8 group-[.is-fold]:w-8 group-[.is-fold]:translate-x-[18px] group-[.is-fold]:-translate-y-1/2 group-[.is-fold]:rounded-full group-[.is-fold]:border',
+          )}
           onClick={() => {
             setIsFold(prev => !prev);
           }}

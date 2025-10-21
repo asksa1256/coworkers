@@ -26,7 +26,7 @@ function GnbItem({ type, href, title, current }: GnbItemProps) {
       <Link
         to={href}
         className={cn(
-          'text-md flex h-11 items-center gap-2 whitespace-normal md:h-auto md:min-h-[52px] md:rounded-xl md:px-4 md:py-[10px] md:text-base md:hover:bg-slate-50',
+          'text-md flex h-11 items-center gap-2 whitespace-normal md:h-auto md:min-h-[52px] md:rounded-xl md:px-4 md:py-[10px] md:hover:bg-slate-50 lg:text-base',
           current && 'text-primary font-semibold md:bg-blue-50',
           'transition-all group-[.is-fold]:md:h-[52px] group-[.is-fold]:md:w-[52px] group-[.is-fold]:md:gap-0 group-[.is-fold]:md:px-0',
         )}
@@ -79,7 +79,7 @@ export default function HeaderGnb({
   }, [params.teamId]);
 
   return (
-    <nav className='md:-mx-4 md:flex md:w-[270px] md:grow-1 md:flex-col md:overflow-hidden md:px-4'>
+    <nav className='md:-mx-4 md:flex md:w-[210px] md:grow-1 md:flex-col md:overflow-hidden md:px-4 lg:w-[270px]'>
       <div
         className={cn(
           'md:flex md:flex-col md:overflow-hidden md:opacity-100 md:transition-all md:delay-200 md:duration-75',
@@ -96,7 +96,7 @@ export default function HeaderGnb({
             <>
               <button
                 className={cn(
-                  'mb-2 hidden h-9 w-full items-center gap-3 px-4 text-left md:flex md:shrink-0',
+                  'md:text-md mb-2 hidden h-9 w-full items-center gap-3 overflow-hidden px-4 text-left md:flex md:shrink-0 lg:text-base',
                 )}
                 onClick={() => {
                   setIsGroupOpen(prev => !prev);
@@ -112,7 +112,7 @@ export default function HeaderGnb({
                 </span>
                 <span
                   className={cn(
-                    'grow-1 font-semibold text-slate-400',
+                    'block grow-1 overflow-hidden font-semibold text-ellipsis whitespace-nowrap text-slate-400',
                     currentGroup && 'text-primary',
                   )}
                 >
