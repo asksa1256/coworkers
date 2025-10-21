@@ -68,10 +68,18 @@ export default function SidebarHeader({
           <SidebarUser user={user} currentGroup={currentGroup} />
         ) : (
           <Link
-            className='border-border-primary mx-4 flex items-center gap-3 border-t pt-5 pb-6 leading-10 font-medium'
+            className={cn(
+              'border-border-primary mx-4 flex items-center gap-3 border-t pt-5 pb-6 text-center leading-10 font-medium whitespace-nowrap',
+              'group-[.is-fold]:text-text-default',
+            )}
             to='/login'
           >
-            <span className='flex h-10 w-10 items-center justify-center rounded-xl bg-slate-200'>
+            <span
+              className={cn(
+                'flex h-10 w-10 items-center justify-center rounded-xl bg-slate-200',
+                'group-[.is-fold]:hidden',
+              )}
+            >
               <DefaultProfileIcon />
             </span>
             로그인

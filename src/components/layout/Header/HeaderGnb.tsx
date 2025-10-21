@@ -26,7 +26,7 @@ function GnbItem({ type, href, title, current }: GnbItemProps) {
       <Link
         to={href}
         className={cn(
-          'text-md flex h-11 items-center gap-2 whitespace-normal md:h-auto md:min-h-[52px] md:rounded-xl md:px-4 md:py-[10px] md:hover:bg-slate-50',
+          'text-md flex h-11 items-center gap-2 whitespace-normal md:h-auto md:min-h-[52px] md:rounded-xl md:px-4 md:py-[10px] md:text-base md:hover:bg-slate-50',
           current && 'text-primary font-semibold md:bg-blue-50',
           'transition-all group-[.is-fold]:md:h-[52px] group-[.is-fold]:md:w-[52px] group-[.is-fold]:md:gap-0 group-[.is-fold]:md:px-0',
         )}
