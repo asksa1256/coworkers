@@ -3,6 +3,7 @@ import Button from '@/components/ui/Button';
 import InputField from '@/components/ui/Input/InputField';
 import PasswordField from '@/components/ui/Input/PasswordField';
 import { Label } from '@/components/ui/Label';
+import axiosInstance from '@/lib/axios';
 import { type SignInFormData, signInSchema } from '@/types/SignInSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios, { AxiosError } from 'axios';
@@ -33,10 +34,7 @@ export default function SignInForm() {
 
   const onSubmit = async (data: SignInFormData) => {
     try {
-      const res = await axios.post(
-        'https://fe-project-cowokers.vercel.app/16-16/auth/signin',
-        data,
-      );
+      const res = await axiosInstance.post('/auth/signin', data);
       console.log(res);
       // 토큰 저장... (브랜치 분리 후 작업 예정)
 
