@@ -1,14 +1,17 @@
+import GnbArrowIcon from '@/assets/icons/GnbArrowIcon.svg?react';
 import GnbBoardIcon from '@/assets/icons/GnbBoardIcon.svg?react';
 import GnbPlusIcon from '@/assets/icons/GnbPlusIcon.svg?react';
 import GnbTeamIcon from '@/assets/icons/GnbTeamIcon.svg?react';
 import { cn } from '@/lib/utils';
-import { Link, useLocation } from 'react-router-dom';
+import type { MembershipsType, UserType } from '@/types/userType';
+import { useEffect, useState } from 'react';
+import { Link, useLocation, useParams } from 'react-router-dom';
 
 interface GnbItemProps {
   type: 'team' | 'board';
   href: string;
   title: string;
-  active: boolean;
+  current: boolean;
 }
 
 const gnbIconType = {
@@ -16,64 +19,144 @@ const gnbIconType = {
   board: GnbBoardIcon,
 };
 
-function GnbItem({ type, href, title, active }: GnbItemProps) {
-  console.log(active);
+function GnbItem({ type, href, title, current }: GnbItemProps) {
   const Icon = gnbIconType[type];
   return (
-    <li>
+    <li className='md:mb-2'>
       <Link
         to={href}
         className={cn(
-          'text-md flex h-11 items-center gap-2',
-          active && 'text-primary font-semibold',
+          'text-md flex h-11 items-center gap-2 md:h-[52px] md:rounded-xl md:px-4 md:hover:bg-slate-50',
+          current && 'text-primary font-semibold md:bg-blue-50',
+          'transition-all group-[.is-fold]:md:h-[52px] group-[.is-fold]:md:w-[52px] group-[.is-fold]:md:gap-0 group-[.is-fold]:md:px-0',
         )}
       >
-        <span className={cn('w-5 text-slate-300', active && 'text-primary')}>
+        <span
+          className={cn(
+            'w-5 text-slate-300',
+            current && 'text-primary',
+            'transition-all group-[.is-fold]:md:mx-auto group-[.is-fold]:md:w-6',
+          )}
+        >
           {<Icon />}
         </span>
-        {title}
+        <span className='transition-all group-[.is-fold]:md:hidden'>
+          {title}
+        </span>
       </Link>
     </li>
   );
 }
 
-const mockTeam = [
-  { title: '경영관리팀', href: '/list/123' },
-  { title: '프로덕트팀', href: '/222' },
-  { title: '마케팅팀', href: '/333' },
-  { title: '콘텐츠팀', href: '/444' },
-];
+interface HeaderGnbProps {
+  user: UserType;
+  currentGroup: MembershipsType | null;
+  onUpdateCurrentGroup: (group: MembershipsType) => void;
+}
 
-export default function HeaderGnb() {
-  const { pathname } = useLocation();
+export default function HeaderGnb({
+  user,
+  currentGroup,
+  onUpdateCurrentGroup,
+}: HeaderGnbProps) {
+  const location = useLocation();
+  const params = useParams();
+  const [isGroupOpen, setIsGroupOpen] = useState(true);
+
+  const { memberships } = user;
+
+  useEffect(() => {
+    if (!params.teamId) return;
+    const findGroup = memberships.find(
+      item => String(item.group.id) === params.teamId,
+    );
+    if (findGroup) onUpdateCurrentGroup(findGroup);
+  }, [params.teamId]);
 
   return (
-    <nav>
-      <ul>
-        {mockTeam.map(team => (
+    <nav className='md:flex md:grow-1 md:flex-col md:overflow-hidden'>
+      <div
+        className={cn(
+          'border-border-primary mb-3 border-b pb-6 md:flex md:flex-col md:overflow-hidden md:transition md:delay-[3000ms]',
+          'group-[.is-fold]:md:hidden group-[.is-fold]:md:opacity-0',
+        )}
+      >
+        {!!memberships.length && (
+          <>
+            <button
+              className={cn(
+                'mb-2 hidden h-9 w-full items-center gap-3 px-4 text-left md:flex md:shrink-0',
+              )}
+              onClick={() => {
+                setIsGroupOpen(prev => !prev);
+              }}
+            >
+              <span
+                className={cn(
+                  'block w-5 shrink-0 text-slate-300',
+                  currentGroup && 'text-primary',
+                )}
+              >
+                <GnbTeamIcon />
+              </span>
+              <span
+                className={cn(
+                  'grow-1 font-semibold text-slate-400',
+                  currentGroup && 'text-primary',
+                )}
+              >
+                {currentGroup === null ? '팀 선택' : currentGroup.group.name}
+              </span>
+              <span className='shrink-0'>
+                <GnbArrowIcon
+                  className={cn(!isGroupOpen && 'rotate-180 transition-all')}
+                />
+              </span>
+            </button>
+            <div
+              className={cn(
+                'md:grow-1 md:overflow-auto',
+                isGroupOpen ? 'md:block' : 'md:hidden',
+              )}
+            >
+              <ul>
+                {memberships.map(team => (
+                  <GnbItem
+                    type='team'
+                    title={team.group.name}
+                    href={`/${team.group.id}`}
+                    key={team.group.id}
+                    current={currentGroup?.group?.id === team.group.id}
+                  />
+                ))}
+              </ul>
+            </div>
+          </>
+        )}
+        <Link
+          to=''
+          className='border-primary text-md text-primary mt-2 flex h-[33px] shrink-0 items-center justify-center gap-1 rounded-lg border font-semibold'
+        >
+          <GnbPlusIcon />팀 추가하기
+        </Link>
+      </div>
+
+      {currentGroup && (
+        <ul className='hidden group-[.is-fold]:md:block'>
           <GnbItem
             type='team'
-            title={team.title}
-            href={team.href}
-            key={team.href}
-            active={pathname === team.href}
+            title={currentGroup?.group.name}
+            href={`/${currentGroup.group.id}`}
+            current={true}
           />
-        ))}
-        <li className='mt-2'>
-          <Link
-            to=''
-            className='border-primary text-md text-primary flex h-[33px] items-center justify-center gap-1 rounded-lg border font-semibold'
-          >
-            <GnbPlusIcon />팀 추가하기
-          </Link>
-        </li>
-      </ul>
-      <ul className='border-border-primary mt-6 border-t pt-3'>
+        </ul>
+      )}
+      <ul className='shrink-0'>
         <GnbItem
           type='board'
           title='자유게시판'
-          href='/'
-          active={pathname === 'board'}
+          href='/board'
+          current={location.pathname === '/board'}
         />
       </ul>
     </nav>
