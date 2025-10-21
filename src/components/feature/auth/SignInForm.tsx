@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import axios, { AxiosError } from 'axios';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface ErrorResponse {
   message: string;
@@ -20,6 +20,7 @@ interface ErrorResponse {
 
 export default function SignInForm() {
   const [globalError, setGlobalError] = useState('');
+  const navigate = useNavigate();
 
   const {
     register,
@@ -36,7 +37,11 @@ export default function SignInForm() {
         'https://fe-project-cowokers.vercel.app/16-16/auth/signin',
         data,
       );
-      // 토큰 저장, 리다이렉트 등
+      console.log(res);
+      // 토큰 저장... (브랜치 분리 후 작업 예정)
+
+      // 리디렉션
+      navigate('/');
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
