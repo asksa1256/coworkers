@@ -18,7 +18,7 @@ export default function Input({
       data-slot='input'
       className={cn(
         'text-md text-text-primary border-border-primary w-full min-w-0 rounded-[12px] border bg-transparent px-4 py-[12px] transition-colors outline-none md:px-4 md:py-[13px] md:text-base',
-        'placeholder:text-text-default selection:text-text-primary',
+        'placeholder:text-text-default selection:bg-primary selection:text-white',
         'hover:border-primary focus-visible:border-primary-pressed',
         'disabled:bg-bg-secondary disabled:text-disabled disabled:pointer-events-none disabled:cursor-not-allowed',
         'aria-invalid:ring-danger/20 aria-invalid:border-danger',

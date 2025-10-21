@@ -216,6 +216,12 @@
     /* 스크롤바 상하 버튼 */
     display: none;
   }
+
+  /* 텍스트 드래그 색상 */
+  ::selection {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+  }
 }
 
 @layer utilities {
