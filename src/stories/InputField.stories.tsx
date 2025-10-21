@@ -41,6 +41,7 @@ export const Default: Story = {
 export const WithError: Story = {
   args: {
     error: {
+      type: 'validate',
       message: '유효한 이메일이 아닙니다.',
     },
     value: 'codeit@code.com',
