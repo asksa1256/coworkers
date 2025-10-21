@@ -51,7 +51,9 @@ export default function SignInForm() {
 
           switch (status) {
             case 400:
-              setGlobalError(data.message || '입력하신 정보를 확인해주세요.');
+              setGlobalError(
+                data.message || '이메일 혹은 비밀번호를 확인해주세요.',
+              );
               break;
             case 500:
               setGlobalError('서버 오류가 발생했습니다.');
