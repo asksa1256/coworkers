@@ -20,12 +20,12 @@ export default function SidebarUser({ user, currentGroup }: Props) {
             <DefaultProfileIcon />
           )}
         </span>
-        <div className='grow-1 overflow-hidden'>
+        <div className='grow-1 overflow-hidden group-[.is-fold]:hidden'>
           <strong className='block overflow-hidden leading-[1.35] font-medium text-ellipsis whitespace-nowrap'>
             {nickname}
           </strong>
           {currentGroup && (
-            <span className='text-md mt-0.5 block leading-[1.1] text-slate-400'>
+            <span className='text-md mt-0.5 block overflow-hidden leading-[1.1] text-ellipsis whitespace-nowrap text-slate-400'>
               {currentGroup.group.name}
             </span>
           )}

@@ -26,21 +26,26 @@ function GnbItem({ type, href, title, current }: GnbItemProps) {
       <Link
         to={href}
         className={cn(
-          'text-md flex h-11 items-center gap-2 md:h-[52px] md:rounded-xl md:px-4 md:hover:bg-slate-50',
+          'text-md flex h-11 items-center gap-2 whitespace-normal md:h-auto md:min-h-[52px] md:rounded-xl md:px-4 md:py-[10px] md:hover:bg-slate-50',
           current && 'text-primary font-semibold md:bg-blue-50',
           'transition-all group-[.is-fold]:md:h-[52px] group-[.is-fold]:md:w-[52px] group-[.is-fold]:md:gap-0 group-[.is-fold]:md:px-0',
         )}
       >
         <span
           className={cn(
-            'w-5 text-slate-300',
+            'w-5 shrink-0 text-slate-300',
             current && 'text-primary',
             'transition-all group-[.is-fold]:md:mx-auto group-[.is-fold]:md:w-6',
           )}
         >
           {<Icon />}
         </span>
-        <span className='transition-all group-[.is-fold]:md:hidden'>
+        <span
+          className={cn(
+            'md:opacity-100 md:transition-opacity md:delay-200 md:duration-75',
+            'group-[.is-fold]:md:hidden group-[.is-fold]:md:opacity-0 group-[.is-fold]:md:delay-0',
+          )}
+        >
           {title}
         </span>
       </Link>
@@ -74,75 +79,82 @@ export default function HeaderGnb({
   }, [params.teamId]);
 
   return (
-    <nav className='md:flex md:grow-1 md:flex-col md:overflow-hidden'>
+    <nav className='md:-mx-4 md:flex md:w-[270px] md:grow-1 md:flex-col md:overflow-hidden md:px-4'>
       <div
         className={cn(
-          'border-border-primary mb-3 border-b pb-6 md:flex md:flex-col md:overflow-hidden md:transition md:delay-[3000ms]',
-          'group-[.is-fold]:md:hidden group-[.is-fold]:md:opacity-0',
+          'md:flex md:flex-col md:overflow-hidden md:opacity-100 md:transition-all md:delay-200 md:duration-75',
+          'group-[.is-fold]:md:opacity-0',
         )}
       >
-        {!!memberships.length && (
-          <>
-            <button
-              className={cn(
-                'mb-2 hidden h-9 w-full items-center gap-3 px-4 text-left md:flex md:shrink-0',
-              )}
-              onClick={() => {
-                setIsGroupOpen(prev => !prev);
-              }}
-            >
-              <span
-                className={cn(
-                  'block w-5 shrink-0 text-slate-300',
-                  currentGroup && 'text-primary',
-                )}
-              >
-                <GnbTeamIcon />
-              </span>
-              <span
-                className={cn(
-                  'grow-1 font-semibold text-slate-400',
-                  currentGroup && 'text-primary',
-                )}
-              >
-                {currentGroup === null ? '팀 선택' : currentGroup.group.name}
-              </span>
-              <span className='shrink-0'>
-                <GnbArrowIcon
-                  className={cn(!isGroupOpen && 'rotate-180 transition-all')}
-                />
-              </span>
-            </button>
-            <div
-              className={cn(
-                'md:grow-1 md:overflow-auto',
-                isGroupOpen ? 'md:block' : 'md:hidden',
-              )}
-            >
-              <ul>
-                {memberships.map(team => (
-                  <GnbItem
-                    type='team'
-                    title={team.group.name}
-                    href={`/${team.group.id}`}
-                    key={team.group.id}
-                    current={currentGroup?.group?.id === team.group.id}
-                  />
-                ))}
-              </ul>
-            </div>
-          </>
-        )}
-        <Link
-          to=''
-          className='border-primary text-md text-primary mt-2 flex h-[33px] shrink-0 items-center justify-center gap-1 rounded-lg border font-semibold'
+        <div
+          className={cn(
+            'border-border-primary mb-3 border-b pb-6 md:flex md:flex-col md:overflow-hidden',
+            'group-[.is-fold]:md:hidden',
+          )}
         >
-          <GnbPlusIcon />팀 추가하기
-        </Link>
+          {!!memberships.length && (
+            <>
+              <button
+                className={cn(
+                  'mb-2 hidden h-9 w-full items-center gap-3 px-4 text-left md:flex md:shrink-0',
+                )}
+                onClick={() => {
+                  setIsGroupOpen(prev => !prev);
+                }}
+              >
+                <span
+                  className={cn(
+                    'block w-5 shrink-0 text-slate-300',
+                    currentGroup && 'text-primary',
+                  )}
+                >
+                  <GnbTeamIcon />
+                </span>
+                <span
+                  className={cn(
+                    'grow-1 font-semibold text-slate-400',
+                    currentGroup && 'text-primary',
+                  )}
+                >
+                  {currentGroup === null ? '팀 선택' : currentGroup.group.name}
+                </span>
+                <span className='shrink-0'>
+                  <GnbArrowIcon
+                    className={cn(!isGroupOpen && 'rotate-180 transition-all')}
+                  />
+                </span>
+              </button>
+              <div
+                className={cn(
+                  'md:grow-1 md:overflow-auto',
+                  isGroupOpen ? 'md:block' : 'md:hidden',
+                )}
+              >
+                <ul>
+                  {memberships.map(team => (
+                    <GnbItem
+                      type='team'
+                      title={team.group.name}
+                      href={`/${team.group.id}`}
+                      key={team.group.id}
+                      current={currentGroup?.group?.id === team.group.id}
+                    />
+                  ))}
+                </ul>
+              </div>
+            </>
+          )}
+          <Link
+            to=''
+            className='border-primary text-md text-primary mt-2 flex h-[33px] shrink-0 items-center justify-center gap-1 rounded-lg border font-semibold'
+          >
+            <GnbPlusIcon />팀 추가하기
+          </Link>
+        </div>
       </div>
 
       {currentGroup && (
-        <ul className='hidden group-[.is-fold]:md:block'>
+        <ul className='mb-2 hidden group-[.is-fold]:md:block'>
           <GnbItem
             type='team'
             title={currentGroup?.group.name}
@@ -151,6 +163,7 @@ export default function HeaderGnb({
           />
         </ul>
       )}
+
       <ul className='shrink-0'>
         <GnbItem
           type='board'
