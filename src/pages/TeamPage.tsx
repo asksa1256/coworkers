@@ -1,5 +1,5 @@
 import ConfigIcon from '@/assets/icons/ConfigIcon.svg?react';
-import MemberCard from '@/components/feature/teamPage/MemberCard';
+import MemberCard from '@/components/feature/teamPage/MemberListCard';
 import ReportCard from '@/components/feature/teamPage/ReportCard';
 import TaskKanbanBoard from '@/components/feature/teamPage/TaskKanbanBoard';
 import GroupTitleBar from '@/components/ui/GroupTitleBar';
@@ -17,17 +17,17 @@ const MOCK_DATA = {
     members: [
       {
         role: 'ADMIN',
-        userImage: '강영훈',
+        userImage: '이미지',
         userEmail: 'codeitCEO@email.com',
-        userName: '영후니',
+        userName: '강영훈',
         groupId: 123,
         userId: 1,
       },
       {
         role: 'MEMBER',
-        userImage: '이용섭',
+        userImage: '이미지',
         userEmail: 'ysub@email.com',
-        userName: '용서비',
+        userName: '이용섭',
         groupId: 123,
         userId: 2,
       },
@@ -49,7 +49,16 @@ const MOCK_DATA = {
         createdAt: '2025-10-21T12:37:13.606Z',
         name: '팀장 회의',
         id: 2,
-        tasks: ['커피 타기', '회의실 예약하기'],
+        tasks: ['커피 타기', '회의실 예약하기', '공지 올리기'],
+      },
+      {
+        displayIndex: 1,
+        groupId: 124,
+        updatedAt: '2025-10-22T12:37:13.606Z',
+        createdAt: '2025-10-22T12:37:13.606Z',
+        name: '업무 보고',
+        id: 3,
+        tasks: ['보고서 작성', '자료 전달'],
       },
     ],
   },
@@ -71,13 +80,23 @@ export default function TeamPage() {
         </GroupTitleBar>
 
         {/* Todo - count 연결 */}
-        {isAdmin && <ReportCard todosCount={3} doneCount={2} />}
+        {isAdmin && <ReportCard todosCount={6} doneCount={3} />}
       </div>
 
-      <h2 className='mt-8 mb-4 font-medium md:mt-10 lg:mt-16 lg:mb-[30px]'>
+      {isAdmin && (
+        <div className='border-border-primary mt-9 hidden w-full max-w-280 border-t lg:block' />
+      )}
+
+      <h2
+        className={clsx(
+          'mt-8 mb-4 font-medium md:mt-10 lg:mt-11 lg:mb-[30px]',
+          { 'lg:mt-7': isAdmin },
+        )}
+      >
         할 일 목록
-        <span className='font-base text-text-default'>{` (${MOCK_DATA.TEAM.taskLists.length})개`}</span>
+        <span className='text-text-default font-normal'>{` (${MOCK_DATA.TEAM.taskLists.length}개)`}</span>
       </h2>
+
       <div className='flex lg:gap-7'>
         <TaskKanbanBoard tasklist={MOCK_DATA.TEAM.taskLists} />
         <MemberCard members={MOCK_DATA.TEAM.members} />

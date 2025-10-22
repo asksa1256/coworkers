@@ -20,8 +20,13 @@ export default function KanbanCard({ tasks, taskListName }: Props) {
         </div>
       </div>
       <div className='flex flex-col gap-2'>
+        {/* Todo - 데이터 연결 */}
         {tasks.map((task, i) => (
-          <TaskCheckbox key={task} isDone={i % 2 === 0 ? true : false}>
+          <TaskCheckbox
+            key={task}
+            taskId={i}
+            isDone={i % 2 === 0 ? true : false}
+          >
             {task}
           </TaskCheckbox>
         ))}
