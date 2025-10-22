@@ -10,7 +10,7 @@ interface Props {
 
 export default function ReportCard({ todosCount, doneCount }: Props) {
   return (
-    <section className='card-common flex w-full items-center justify-between gap-5 py-6 pr-6'>
+    <section className='card-common flex w-full items-center justify-between gap-4 py-6 pr-6'>
       <CircularProgressbar
         size='L'
         todosCount={todosCount}
