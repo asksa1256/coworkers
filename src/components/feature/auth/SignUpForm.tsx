@@ -13,6 +13,7 @@ import { useSetAtom } from 'jotai';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 interface ErrorResponse {
   message: string;
@@ -45,6 +46,8 @@ export default function SignInForm() {
       // 토큰 저장
       setTokens(accessToken, refreshToken); // 로컬 스토리지
       setUser(user); // 전역 상태
+
+      toast.success(`환영합니다, ${user.nickname}님!`);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
