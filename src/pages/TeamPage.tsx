@@ -1,5 +1,7 @@
 import ConfigIcon from '@/assets/icons/ConfigIcon.svg?react';
-import ReportCard from '@/components/feature/teamPageCards/ReportCard';
+import MemberCard from '@/components/feature/teamPage/MemberCard';
+import ReportCard from '@/components/feature/teamPage/ReportCard';
+import TaskKanbanBoard from '@/components/feature/teamPage/TaskKanbanBoard';
 import GroupTitleBar from '@/components/ui/GroupTitleBar';
 import clsx from 'clsx';
 
@@ -20,6 +22,14 @@ const MOCK_DATA = {
         userName: '영후니',
         groupId: 123,
         userId: 1,
+      },
+      {
+        role: 'MEMBER',
+        userImage: '이용섭',
+        userEmail: 'ysub@email.com',
+        userName: '용서비',
+        groupId: 123,
+        userId: 2,
       },
     ],
     taskLists: [
@@ -61,13 +71,17 @@ export default function TeamPage() {
         </GroupTitleBar>
 
         {/* Todo - count 연결 */}
-        {isAdmin && <ReportCard todosCount={3} doneCount={1} />}
+        {isAdmin && <ReportCard todosCount={3} doneCount={2} />}
       </div>
 
-      <h2 className='mt-8 font-medium md:mt-10 lg:mt-16'>
+      <h2 className='mt-8 mb-4 font-medium md:mt-10 lg:mt-16 lg:mb-[30px]'>
         할 일 목록
         <span className='font-base text-text-default'>{` (${MOCK_DATA.TEAM.taskLists.length})개`}</span>
       </h2>
+      <div className='flex lg:gap-7'>
+        <TaskKanbanBoard tasklist={MOCK_DATA.TEAM.taskLists} />
+        <MemberCard members={MOCK_DATA.TEAM.members} />
+      </div>
     </div>
   );
 }

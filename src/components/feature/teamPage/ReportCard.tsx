@@ -1,6 +1,6 @@
 import DoneIcon from '@/assets/icons/DoneIcon.svg?react';
 import TodoIcon from '@/assets/icons/TodoIcon.svg?react';
-import CircularProgressbar from '../progressbar/CircularProgressbar';
+import CircularProgressbar from '../../ui/CircularProgressbar';
 import ReportCountCard from './ReportCountCard';
 
 interface Props {
