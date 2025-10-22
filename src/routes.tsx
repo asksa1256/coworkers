@@ -7,7 +7,16 @@ import ListPage from '@/pages/ListPage';
 import TeamPage from '@/pages/TeamPage';
 import SignInPage from '@/pages/auth/SignInPage';
 import BoardPage from '@/pages/board/BoardPage';
+import type { ReactNode } from 'react';
 import PostDetailPage from './pages/board/PostDetailPage';
+
+const withPrivate = (element: ReactNode) => {
+  return <PrivateRoute>{element}</PrivateRoute>;
+};
+
+const withAuth = (element: ReactNode) => {
+  return <AuthRoute>{element}</AuthRoute>;
+};
 
 const routes = [
   {
@@ -18,22 +27,16 @@ const routes = [
       { path: '/', element: <LandingPage /> },
       {
         path: '/list/:groupId',
-        element: (
-          <PrivateRoute>
-            <ListPage />
-          </PrivateRoute>
-        ),
+        element: withPrivate(<ListPage />),
       },
       {
         path: '/:teamId',
-        element: (
-          <PrivateRoute>
-            <TeamPage />
-          </PrivateRoute>
-        ),
+        element: withPrivate(<TeamPage />),
       },
     ],
   },
+
+  // auth pages
   {
     path: '/auth',
     element: <Layout />,
@@ -41,14 +44,12 @@ const routes = [
     children: [
       {
         path: 'signin',
-        element: (
-          <AuthRoute>
-            <SignInPage />
-          </AuthRoute>
-        ),
+        element: withAuth(<SignInPage />),
       },
     ],
   },
+
+  // board pages
   {
     path: '/board',
     element: <Layout />,
@@ -60,11 +61,7 @@ const routes = [
       },
       {
         path: ':postId',
-        element: (
-          <PrivateRoute>
-            <PostDetailPage />
-          </PrivateRoute>
-        ),
+        element: withPrivate(<PostDetailPage />),
       },
     ],
   },
