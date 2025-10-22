@@ -187,10 +187,10 @@
 
 @layer base {
   * {
-    @apply text-text-primary outline-none;
+    @apply text-inherit outline-none;
   }
   body {
-    @apply font-pretendard bg-bg-secondary has-[.view-white]:bg-bg-primary;
+    @apply text-text-primary font-pretendard bg-bg-secondary has-[.view-white]:bg-bg-primary;
   }
   button {
     @apply cursor-pointer;
@@ -215,6 +215,12 @@
   ::-webkit-scrollbar-button {
     /* 스크롤바 상하 버튼 */
     display: none;
+  }
+
+  /* 텍스트 드래그 색상 */
+  ::selection {
+    background-color: var(--color-primary);
+    color: var(--color-white);
   }
 }
 

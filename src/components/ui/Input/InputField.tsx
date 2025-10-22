@@ -1,5 +1,4 @@
-import { cn } from '@/lib/utils';
-import { type FieldError } from '@/types';
+import { type FieldError } from 'react-hook-form';
 import Input from '.';
 
 interface InputFieldProps extends React.ComponentProps<'input'> {
@@ -15,8 +14,8 @@ export default function InputField({
   ...props
 }: InputFieldProps) {
   return (
-    <>
-      <div className={cn('relative', className)}>
+    <div className={className}>
+      <div className='relative'>
         <Input type={type} error={error} {...props} />
 
         {suffix && (
@@ -27,6 +26,6 @@ export default function InputField({
       </div>
 
       {error && <p className='text-md text-danger mt-2'>{error.message}</p>}
-    </>
+    </div>
   );
 }

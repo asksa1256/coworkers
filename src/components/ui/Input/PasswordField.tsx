@@ -1,7 +1,7 @@
 import VisibilityOffIcon from '@/assets/icons/VisibilityOffIcon.svg';
 import VisibilityOnIcon from '@/assets/icons/VisibilityOnIcon.svg';
-import { type FieldError } from '@/types';
 import { useState } from 'react';
+import { type FieldError } from 'react-hook-form';
 import InputField from './InputField';
 
 interface PasswordFieldProps extends React.ComponentProps<'input'> {
