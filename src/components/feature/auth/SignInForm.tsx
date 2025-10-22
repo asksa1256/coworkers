@@ -121,7 +121,11 @@ export default function SignInForm() {
 
       <div className='flex flex-col gap-2'>
         {globalError && <p className='text-danger text-md'>{globalError}</p>}
-        <Button type='submit' className='mb-6 text-base'>
+        <Button
+          type='submit'
+          className='mb-6 text-base'
+          disabled={isSubmitting}
+        >
           {isSubmitting ? '로그인 중...' : '로그인'}
         </Button>
       </div>
