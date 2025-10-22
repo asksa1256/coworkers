@@ -45,9 +45,6 @@ export default function SignInForm() {
       // 토큰 저장
       setTokens(accessToken, refreshToken); // 로컬 스토리지
       setUser(user); // 전역 상태
-
-      // 리디렉션
-      navigate('/');
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
