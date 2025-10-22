@@ -36,6 +36,7 @@ export const Default: Story = {
 export const WithError: Story = {
   args: {
     error: {
+      type: 'required',
       message: '비밀번호를 입력해주세요.',
     },
     placeholder: '비밀번호를 입력해주세요.',
