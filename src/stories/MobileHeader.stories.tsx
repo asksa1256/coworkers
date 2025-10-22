@@ -74,11 +74,8 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
-  },
-  globals: {
     viewport: {
-      value: 'iphone5',
-      isRotated: true,
+      defaultViewport: 'iphone5',
     },
   },
   decorators: [
