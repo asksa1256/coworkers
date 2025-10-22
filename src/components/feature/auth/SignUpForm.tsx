@@ -45,9 +45,6 @@ export default function SignInForm() {
       // 토큰 저장
       setTokens(accessToken, refreshToken); // 로컬 스토리지
       setUser(user); // 전역 상태
-
-      // 리디렉션
-      navigate('/');
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
@@ -65,7 +62,7 @@ export default function SignInForm() {
               setGlobalError('서버 오류가 발생했습니다.');
               break;
             default:
-              setGlobalError('로그인에 실패했습니다.');
+              setGlobalError('회원가입에 실패했습니다.');
           }
         } else if (axiosError.request) {
           // 요청은 보냈지만 응답을 받지 못한 경우
