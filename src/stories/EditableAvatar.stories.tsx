@@ -1,4 +1,3 @@
-import DefaultProfileIcon from '@/assets/icons/DefaultProfileIcon.svg';
 import EditableAvatar from '@/components/feature/profile/EditableAvatar';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
@@ -16,7 +15,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    imgSrc: DefaultProfileIcon,
+    imgSrc: null,
   },
 };
 
