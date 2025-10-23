@@ -10,7 +10,7 @@ import { setTokens } from '@/utils/tokenStorage';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios, { AxiosError } from 'axios';
 import { useSetAtom } from 'jotai';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
@@ -29,11 +29,22 @@ export default function SignInForm() {
   const {
     register,
     handleSubmit,
+    watch,
+    trigger,
     formState: { errors, isSubmitting },
   } = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
     mode: 'onBlur',
   });
+
+  const password = watch('password');
+  const passwordConfirmation = watch('passwordConfirmation');
+
+  useEffect(() => {
+    if (passwordConfirmation) {
+      trigger('passwordConfirmation');
+    }
+  }, [password, passwordConfirmation, trigger]);
 
   const onSubmit = async (data: SignUpFormData) => {
     try {
