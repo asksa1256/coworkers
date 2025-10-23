@@ -15,8 +15,12 @@ export default function KanbanCard({ tasks, taskListName }: Props) {
         <h4 className='text-md font-semibold'>{taskListName}</h4>
         <div className='flex items-center'>
           {/* Todo - 할 일, 완료한 일 갯 수 계산 로직 추가 */}
-          <CircularProgressbar todosCount={tasks.length} doneCount={1} />
-          <KebabIcon className='h-6 w-6' />
+          <CircularProgressbar
+            className='px-2'
+            todosCount={tasks.length}
+            doneCount={1}
+          />
+          <KebabIcon className='hover:text-icon-primary text-icon-secondary h-6 w-6' />
         </div>
       </div>
       <div className='flex flex-col gap-2'>

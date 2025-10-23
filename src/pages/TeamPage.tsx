@@ -69,7 +69,7 @@ export default function TeamPage() {
   const isAdmin = true;
 
   return (
-    <div className='w-full max-w-280 py-6 md:pt-18 lg:mx-auto lg:pt-30'>
+    <div className='w-full max-w-280 py-6 md:py-18 lg:mx-auto lg:py-30'>
       <div className='flex flex-col gap-3 md:gap-5'>
         <GroupTitleBar className='flex justify-between'>
           <div className='flex gap-2'>

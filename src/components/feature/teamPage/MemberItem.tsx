@@ -23,7 +23,7 @@ export default function MemberItem({ member }: Props) {
           <div className='text-sm font-semibold'>{member.userName}</div>
           <div className='text-text-secondary text-xs'>{member.userEmail}</div>
         </div>
-        <KebabIcon />
+        <KebabIcon className='text-icon-secondary hover:text-icon-primary h-4 w-4' />
       </div>
     </div>
   );
