@@ -79,24 +79,24 @@ export default function HeaderGnb({
   }, [params.teamId]);
 
   return (
-    <nav className='md:-mx-4 md:flex md:w-[210px] md:grow-1 md:flex-col md:overflow-hidden md:px-4 lg:w-[270px]'>
+    <nav className='lg:-mx-4 lg:flex lg:w-[270px] lg:grow-1 lg:flex-col lg:overflow-hidden lg:px-4'>
       <div
         className={cn(
-          'md:flex md:flex-col md:overflow-hidden md:opacity-100 md:transition-all md:delay-200 md:duration-75',
-          'group-[.is-fold]:md:opacity-0',
+          'lg:flex lg:flex-col lg:overflow-hidden lg:opacity-100 lg:transition-all lg:delay-200 lg:duration-75',
+          'group-[.is-fold]:lg:opacity-0',
         )}
       >
         <div
           className={cn(
-            'border-border-primary mb-3 border-b pb-6 md:flex md:flex-col md:overflow-hidden',
-            'group-[.is-fold]:md:hidden',
+            'border-border-primary mb-3 border-b pb-6 lg:flex lg:flex-col lg:overflow-hidden',
+            'group-[.is-fold]:lg:hidden',
           )}
         >
           {!!memberships.length && (
             <>
               <button
                 className={cn(
-                  'md:text-md mb-2 hidden h-9 w-full items-center gap-3 overflow-hidden px-4 text-left md:flex md:shrink-0 lg:text-base',
+                  'lg:text-md mb-2 hidden h-9 w-full items-center gap-3 overflow-hidden px-4 text-left lg:flex lg:shrink-0 lg:text-base',
                 )}
                 onClick={() => {
                   setIsGroupOpen(prev => !prev);
@@ -126,8 +126,8 @@ export default function HeaderGnb({
               </button>
               <div
                 className={cn(
-                  'md:grow-1 md:overflow-auto',
-                  isGroupOpen ? 'md:block' : 'md:hidden',
+                  'lg:grow-1 lg:overflow-auto',
+                  isGroupOpen ? 'lg:block' : 'lg:hidden',
                 )}
               >
                 <ul>
@@ -154,7 +154,7 @@ export default function HeaderGnb({
       </div>
 
       {currentGroup && (
-        <ul className='mb-2 hidden group-[.is-fold]:md:block'>
+        <ul className='mb-2 hidden group-[.is-fold]:lg:block'>
           <GnbItem
             type='team'
             title={currentGroup?.group.name}
