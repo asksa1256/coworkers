@@ -54,7 +54,13 @@ export default function Modal() {
   const { isOpen, options } = modal;
 
   if (options === null) return;
-  const { children, closeIconButton, className, mode, round } = options;
+  const {
+    children,
+    closeIconButton,
+    className,
+    mode = 'bottomSheet',
+    round,
+  } = options;
 
   return (
     <Dialog open={isOpen} onOpenChange={closeModal}>
