@@ -12,7 +12,6 @@ import axios, { AxiosError } from 'axios';
 import { useSetAtom } from 'jotai';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 interface ErrorResponse {
@@ -25,7 +24,6 @@ interface ErrorResponse {
 
 export default function SignInForm() {
   const [globalError, setGlobalError] = useState('');
-  const navigate = useNavigate();
   const setUser = useSetAtom(userAtom);
 
   const {
