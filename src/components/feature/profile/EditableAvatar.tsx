@@ -5,13 +5,20 @@ import { cn } from '@/lib/utils';
 interface EditableAvatarProps {
   imgSrc: string | null;
   className?: string;
+  onImageChange: (file: File) => void;
 }
 
 export default function EditableAvatar({
   imgSrc,
   className,
+  onImageChange,
 }: EditableAvatarProps) {
-  const handleFileChange = () => {};
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      onImageChange(file);
+    }
+  };
 
   return (
     <label

@@ -1,5 +1,6 @@
 import EditableAvatar from '@/components/feature/profile/EditableAvatar';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { fn } from 'storybook/internal/test';
 
 const meta = {
   title: 'Example/Avatar/EditableAvatar',
@@ -8,6 +9,9 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
+  args: {
+    onImageChange: fn(),
+  },
 } satisfies Meta<typeof EditableAvatar>;
 
 export default meta;
