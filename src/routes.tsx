@@ -8,6 +8,7 @@ import TeamPage from '@/pages/TeamPage';
 import SignInPage from '@/pages/auth/SignInPage';
 import BoardPage from '@/pages/board/BoardPage';
 import type { ReactNode } from 'react';
+import SignUpPage from './pages/auth/SignUpPage';
 import PostDetailPage from './pages/board/PostDetailPage';
 
 const withPrivate = (element: ReactNode) => {
@@ -45,6 +46,10 @@ const routes = [
       {
         path: 'signin',
         element: withAuth(<SignInPage />),
+      },
+      {
+        path: 'signup',
+        element: withAuth(<SignUpPage />),
       },
     ],
   },
