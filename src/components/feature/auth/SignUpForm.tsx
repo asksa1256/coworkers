@@ -5,14 +5,14 @@ import PasswordField from '@/components/ui/Input/PasswordField';
 import { Label } from '@/components/ui/Label';
 import axiosInstance from '@/lib/axios';
 import { userAtom } from '@/store/authAtom';
-import { type SignInFormData, signInSchema } from '@/types/SignInSchema';
+import { type SignUpFormData, signUpSchema } from '@/types/SignUpSchema';
 import { setTokens } from '@/utils/tokenStorage';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios, { AxiosError } from 'axios';
 import { useSetAtom } from 'jotai';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 interface ErrorResponse {
@@ -32,14 +32,14 @@ export default function SignInForm() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<SignInFormData>({
-    resolver: zodResolver(signInSchema),
+  } = useForm<SignUpFormData>({
+    resolver: zodResolver(signUpSchema),
     mode: 'onBlur',
   });
 
-  const onSubmit = async (data: SignInFormData) => {
+  const onSubmit = async (data: SignUpFormData) => {
     try {
-      const res = await axiosInstance.post('/auth/signin', data);
+      const res = await axiosInstance.post('/auth/signup', data);
 
       const { user, accessToken, refreshToken } = res.data;
 
@@ -65,7 +65,7 @@ export default function SignInForm() {
               setGlobalError('서버 오류가 발생했습니다.');
               break;
             default:
-              setGlobalError('로그인에 실패했습니다.');
+              setGlobalError('회원가입에 실패했습니다.');
           }
         } else if (axiosError.request) {
           // 요청은 보냈지만 응답을 받지 못한 경우
@@ -87,10 +87,22 @@ export default function SignInForm() {
       className='w-full max-w-[550px] rounded-[20px] bg-white px-[22px] py-[56px] shadow md:px-[44px] md:py-[70px]'
     >
       <h3 className='mb-8 text-center text-xl font-bold md:mb-16 md:text-2xl'>
-        로그인
+        회원가입
       </h3>
 
       <div className='mb-10 space-y-6'>
+        {/* 이름 */}
+        <div className='flex flex-col gap-3'>
+          <Label htmlFor='nickname'>이름</Label>
+          <InputField
+            id='nickname'
+            type='text'
+            placeholder='이름을 입력해주세요.'
+            {...register('nickname')}
+            error={errors.nickname}
+          />
+        </div>
+
         {/* 이메일 */}
         <div className='flex flex-col gap-3'>
           <Label htmlFor='email'>이메일</Label>
@@ -113,15 +125,18 @@ export default function SignInForm() {
             {...register('password')}
             error={errors.password}
           />
-          <div className='text-right'>
-            <Button
-              type='button'
-              variant='link'
-              className='text-md w-auto p-0 font-normal underline underline-offset-4 hover:font-medium md:text-base'
-            >
-              비밀번호를 잊으셨나요?
-            </Button>
-          </div>
+        </div>
+
+        {/* 비밀번호 확인 */}
+        <div className='flex flex-col gap-3'>
+          <Label htmlFor='pwConfirm'>비밀번호 확인</Label>
+          <PasswordField
+            id='pwConfirm'
+            placeholder='비밀번호를 다시 한 번 입력해주세요.'
+            autoComplete='new-password'
+            {...register('passwordConfirmation')}
+            error={errors.passwordConfirmation}
+          />
         </div>
       </div>
 
@@ -132,18 +147,8 @@ export default function SignInForm() {
           className='mb-6 text-base'
           disabled={isSubmitting}
         >
-          {isSubmitting ? '로그인 중...' : '로그인'}
+          {isSubmitting ? '회원가입 중...' : '회원가입'}
         </Button>
-      </div>
-
-      <div className='text-md mb-12 text-center md:mb-[60px] md:text-base'>
-        <span className='text-text-primary mr-2'>아직 계정이 없으신가요?</span>
-        <Link
-          to='/auth/signup'
-          className='text-primary underline underline-offset-4 hover:font-medium'
-        >
-          가입하기
-        </Link>
       </div>
 
       <div className='mb-4 flex items-center justify-between gap-6'>
@@ -154,7 +159,7 @@ export default function SignInForm() {
 
       <div className='flex items-center justify-between'>
         <span className='text-md text-text-default md:text-base'>
-          간편 로그인하기
+          간편 회원가입하기
         </span>
         <Button
           type='button'
