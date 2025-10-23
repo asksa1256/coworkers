@@ -26,9 +26,9 @@ export default function EditableAvatar({
       />
 
       <Button
-        size='icon-lg'
+        size='icon-sm'
         round='full'
-        className='bg-bg-tertiary group-hover:bg-primary hover:bg-primary absolute -right-1 bottom-0'
+        className='bg-bg-tertiary group-hover:bg-primary hover:bg-primary absolute -right-1 bottom-0 size-[20px] md:size-8 md:[&_svg]:!size-4'
       >
         <PencilIcon className='text-icon-primary group-hover:text-white group-focus:text-white' />
       </Button>
