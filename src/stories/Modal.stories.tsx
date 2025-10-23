@@ -14,7 +14,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj<typeof Modal>;
 
-const SampleModal = () => {
+const ModalTriggerButtons = () => {
   const { openModal, closeModal } = useModal();
 
   const modalContent = (
@@ -59,7 +59,7 @@ export const DefaultModal: Story = {
   render: () => {
     return (
       <>
-        <SampleModal />
+        <ModalTriggerButtons />
         <Modal />
       </>
     );
