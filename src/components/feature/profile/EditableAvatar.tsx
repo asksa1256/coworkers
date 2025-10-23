@@ -1,6 +1,5 @@
 import PencilIcon from '@/assets/icons/PencilIcon.svg?react';
 import Avatar from '@/components/ui/Avatar';
-import Button from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
 
 interface EditableAvatarProps {
@@ -12,12 +11,28 @@ export default function EditableAvatar({
   imgSrc,
   className,
 }: EditableAvatarProps) {
+  const handleFileChange = () => {};
+
   return (
-    <div className={cn('group relative transition-colors', className)}>
+    <label
+      className={cn(
+        'group relative block h-16 w-16 transition-colors md:h-[100px] md:w-[100px]',
+        className,
+      )}
+      htmlFor='profile-image-upload'
+    >
+      <input
+        type='file'
+        id='profile-image-upload'
+        className='sr-only'
+        accept='image/*'
+        onChange={handleFileChange}
+      />
+
       <Avatar
         imgSrc={imgSrc}
         className={cn(
-          'border-border-primary bg-bg-tertiary/50 relative h-16 w-16 cursor-pointer rounded-[20px] border-2 transition-colors md:h-[100px] md:w-[100px] md:rounded-4xl',
+          'border-border-primary bg-bg-tertiary/50 relative h-full w-full cursor-pointer rounded-[20px] border-2 transition-colors md:rounded-4xl',
           'group-hover:bg-bg-tertiary',
           !imgSrc && '[&_img]:size-12 md:[&_img]:size-20',
           imgSrc &&
@@ -25,13 +40,9 @@ export default function EditableAvatar({
         )}
       />
 
-      <Button
-        size='icon-sm'
-        round='full'
-        className='bg-bg-tertiary group-hover:bg-primary hover:bg-primary absolute -right-1 bottom-0 size-[20px] md:size-8 md:[&_svg]:!size-4'
-      >
-        <PencilIcon className='text-icon-primary group-hover:text-white group-focus:text-white' />
-      </Button>
-    </div>
+      <span className='bg-bg-tertiary group-hover:bg-primary hover:bg-primary absolute -right-1 bottom-0 flex size-[20px] items-center justify-center rounded-full transition-colors md:size-8'>
+        <PencilIcon className='text-icon-primary size-[10px] group-hover:text-white group-focus:text-white md:size-4' />
+      </span>
+    </label>
   );
 }
