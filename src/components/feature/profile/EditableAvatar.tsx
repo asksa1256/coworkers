@@ -67,7 +67,7 @@ export default function EditableAvatar({
         )}
       />
 
-      <span className='bg-bg-tertiary group-hover:bg-primary hover:bg-primary absolute -right-1 bottom-0 flex size-[20px] items-center justify-center rounded-full transition-colors md:size-8'>
+      <span className='bg-bg-tertiary group-hover:bg-primary hover:bg-primary absolute -right-1 -bottom-[5px] flex size-[20px] items-center justify-center rounded-full transition-colors md:bottom-0 md:size-8'>
         <PencilIcon className='text-icon-primary size-[10px] group-hover:text-white group-focus:text-white md:size-4' />
       </span>
     </label>
