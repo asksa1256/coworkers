@@ -65,15 +65,15 @@ export default function Header() {
 
   return (
     <>
-      {currentView === 'MOBILE' ? (
-        <MobileHeader
+      {currentView === 'WEB' ? (
+        <SidebarHeader
           isLoggedIn={isLoggedIn}
           user={TEST_USER}
           currentGroup={currentGroup}
           onUpdateCurrentGroup={handleUpdateCurrentGroup}
         />
       ) : (
-        <SidebarHeader
+        <MobileHeader
           isLoggedIn={isLoggedIn}
           user={TEST_USER}
           currentGroup={currentGroup}
