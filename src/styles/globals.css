@@ -65,6 +65,7 @@
   --danger: #fc4b4b;
 
   --icon-primary: #64748b;
+  --icon-secondary: #d1d5dc;
   --icon-inverse: #f8fafc;
   --icon-brand: #74a1fb;
 }
@@ -103,6 +104,7 @@
   --danger: #fc4b4b;
 
   --icon-primary: #64748b;
+  --icon-secondary: #d1d5dc;
   --icon-inverse: #f8fafc;
   --icon-brand: #74a1fb;
 }
@@ -178,6 +180,7 @@
   --color-danger: var(--danger);
 
   --color-icon-primary: var(--icon-primary);
+  --color-icon-secondary: var(--icon-secondary);
   --color-icon-inverse: var(--icon-inverse);
   --color-icon-brand: var(--icon-brand);
 

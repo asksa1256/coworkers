@@ -30,7 +30,7 @@ export default function CircularProgressbar({
    * offset - 전체 둘레중 빈 영역
    */
   const variant = {
-    L: 'h-30 w-30 md:h-40 md:w-40',
+    L: 'h-40 w-40 md:h-45 md:w-45',
     S: 'h-4 w-4',
   };
   const progress = Math.max(
@@ -45,7 +45,13 @@ export default function CircularProgressbar({
   const circumference = 2 * Math.PI * radius;
   const offset = circumference * (1 - progress / 100);
   return (
-    <div className={cn('inline-flex items-center gap-1', className)}>
+    <div
+      className={cn(
+        'relative inline-flex items-center gap-1',
+        { 'md:gap-3 lg:gap-8': size === 'L' },
+        className,
+      )}
+    >
       <svg
         className={cn('scale-y-[-1] rotate-90', variant[size], {
           hidden: progress === 100 && size === 'S',
@@ -78,8 +84,18 @@ export default function CircularProgressbar({
       ) : undefined}
 
       {size === 'S' ? (
-        <span className='text-md leading-md text-primary'>{`${doneCount}/${todosCount}`}</span>
-      ) : undefined}
+        <span className='text-md text-primary'>{`${doneCount}/${todosCount}`}</span>
+      ) : (
+        <div className='absolute top-[50%] left-[50%] flex translate-[-50%] flex-col items-center md:static md:translate-none md:items-start md:gap-1'>
+          <div className='leading-xs md:text-md md:leading-md text-xs font-medium'>
+            오늘
+            <span className='hidden whitespace-pre-line md:inline'>{`의\n진행상황`}</span>
+          </div>
+          <div className='text-primary text-xl font-bold md:text-4xl'>
+            {calcPercentage(doneCount, todosCount) + '%'}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
