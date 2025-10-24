@@ -59,7 +59,7 @@ export default function EditableAvatar({
       <Avatar
         imgSrc={imgSrc}
         className={cn(
-          'border-border-primary bg-bg-tertiary/50 relative h-full w-full cursor-pointer rounded-[20px] border-2 transition-colors md:rounded-4xl',
+          'border-border-primary bg-bg-tertiary/50 relative !h-full !w-full cursor-pointer rounded-[20px] border-2 transition-colors md:rounded-4xl',
           'group-hover:bg-bg-tertiary',
           !imgSrc && '[&_img]:size-12 md:[&_img]:size-20',
           imgSrc &&
