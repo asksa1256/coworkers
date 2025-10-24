@@ -1,4 +1,4 @@
-import CircularProgressbar from '@/components/feature/progressbar/CircularProgressbar';
+import CircularProgressbar from '@/components/ui/CircularProgressbar';
 import type { Meta } from '@storybook/react-vite';
 
 const meta: Meta<typeof CircularProgressbar> = {
