@@ -15,10 +15,11 @@ export default function Avatar({
   return (
     <div
       className={cn(
-        'bg-bg-tertiary inline-flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg',
+        'bg-bg-tertiary inline-flex h-6 w-6 items-center justify-center overflow-hidden rounded-md md:h-8 md:w-8 md:rounded-lg',
         {
           'h-6 w-6 rounded-md': size === 'sm',
-          'h-10 w-10 rounded-xl': size === 'lg',
+          'h-6 w-6 rounded-md md:h-8 md:w-8 md:rounded-lg lg:h-10 lg:w-10 lg:rounded-xl':
+            size === 'lg',
         },
         className,
       )}
@@ -28,11 +29,9 @@ export default function Avatar({
         alt='프로필 이미지'
         className={cn(
           imgSrc && 'h-full w-full object-cover',
-          !imgSrc && 'object-contain',
+          !imgSrc && 'h-5 w-5 object-contain md:h-6 md:w-6',
           !imgSrc && {
-            'h-5 w-5': size === 'sm',
-            'h-[26px] w-[26px]': size === 'md',
-            'h-8 w-8': size === 'lg',
+            'lg:h-8 lg:w-8': size === 'lg',
           },
         )}
       />
