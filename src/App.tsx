@@ -1,7 +1,7 @@
 import Modal from '@/components/ui/Modal';
+import Toast from '@/components/ui/Toast';
 import routes from '@/routes';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { Toaster } from 'sonner';
 
 function App() {
   const router = createBrowserRouter(routes);
@@ -9,7 +9,7 @@ function App() {
     <>
       <RouterProvider router={router} />
       <Modal />
-      <Toaster />
+      <Toast />
     </>
   );
 }
