@@ -22,7 +22,7 @@ export default function Toast() {
         classNames: {
           toast: `
             group toast flex items-center rounded-2xl gap-2 p-2 shadow-[0px_15px_50px_-12px_rgba(0,0,0,0.05)] text-md text-text-inverse font-semibold w-auto whitespace-nowrap
-            md:gap-[10px] md:text-base md:p-3 md:pl-6 md:gap-[10px]
+            md:gap-[10px] md:text-base md:p-3 md:gap-[10px]
           `,
           actionButton: `
             ml-auto inline-flex py-2 px-3 shrink-0 rounded-lg bg-bg-primary font-semibold text-md shrink-0 text-default
