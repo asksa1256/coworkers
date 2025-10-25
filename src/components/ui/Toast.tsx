@@ -36,12 +36,12 @@ export default function Toast() {
             'inline-flex h-8 shrink-0 items-center justify-center rounded-md bg-muted px-3 text-xs font-medium text-muted-foreground',
           closeButton:
             'absolute right-3 top-3 rounded-full p-1.5 text-foreground/50 opacity-0 transition-opacity hover:bg-accent hover:text-foreground group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2',
-          loader:
-            'h-5 w-5 animate-spin rounded-full border-4 border-muted border-t-primary',
+          loader: '!static !transform-none',
           success: 'bg-green-500',
           info: 'bg-primary',
           warning: 'bg-yellow-500',
           error: 'bg-red-500',
+          loading: 'bg-black',
           icon: 'hidden h-6 w-6 shrink-0 md:block',
         },
       }}

@@ -39,6 +39,10 @@ const ToastTriggerButtons = () => {
     toast.warning('날짜를 다시 지정해주세요!');
   };
 
+  const handleLoadingToast = () => {
+    toast.loading('로딩중');
+  };
+
   return (
     <div className='flex h-screen items-center justify-center gap-4 p-8'>
       <button className='rounded-md border px-2' onClick={handleInfoToast}>
@@ -52,6 +56,9 @@ const ToastTriggerButtons = () => {
       </button>
       <button className='rounded-md border px-2' onClick={handleWarningToast}>
         warning
+      </button>
+      <button className='rounded-md border px-2' onClick={handleLoadingToast}>
+        loading
       </button>
     </div>
   );
