@@ -1,3 +1,4 @@
+import Modal from '@/components/ui/Modal';
 import routes from '@/routes';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
@@ -11,6 +12,9 @@ function App() {
     <>
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
+        <Toaster />
+        <RouterProvider router={router} />
+        <Modal />
         <Toaster />
       </QueryClientProvider>
     </>
