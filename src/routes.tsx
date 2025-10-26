@@ -8,6 +8,7 @@ import TeamPage from '@/pages/TeamPage';
 import SignInPage from '@/pages/auth/SignInPage';
 import BoardPage from '@/pages/board/BoardPage';
 import type { ReactNode } from 'react';
+import KakaoRedirectPage from './pages/auth/KakaoRedirectPage';
 import SignUpPage from './pages/auth/SignUpPage';
 import PostDetailPage from './pages/board/PostDetailPage';
 
@@ -50,6 +51,17 @@ const routes = [
       {
         path: 'signup',
         element: withAuth(<SignUpPage />),
+      },
+    ],
+  },
+  {
+    path: '/oauth',
+    element: <Layout />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: 'kakao',
+        element: withAuth(<KakaoRedirectPage />),
       },
     ],
   },
