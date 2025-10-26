@@ -18,14 +18,14 @@ function DropdownMenuPortal({
   );
 }
 
-// Select 형태 드롭다운 (문자열 children + 필수 suffix)
+// 셀렉트 형태 드롭다운 (문자열 children + suffix)
 interface SelectTriggerProps {
   children: string;
   suffix: React.ReactNode;
   className?: string;
 }
 
-// 아이콘 트리거 형태 드롭다운 (ReactNode children + suffix 없음)
+// 아이콘 트리거 형태 드롭다운 (ReactNode children only)
 interface IconTriggerProps {
   children: React.ReactNode;
   suffix?: never;
