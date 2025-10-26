@@ -1,4 +1,3 @@
-import KakaotalkIcon from '@/assets/images/KakaotalkIcon.png';
 import Button from '@/components/ui/Button';
 import InputField from '@/components/ui/Input/InputField';
 import PasswordField from '@/components/ui/Input/PasswordField';
@@ -12,8 +11,9 @@ import axios, { AxiosError } from 'axios';
 import { useSetAtom } from 'jotai';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
+import KakaoSignInButton from './KakaoSignInButton';
 
 interface ErrorResponse {
   message: string;
@@ -25,7 +25,6 @@ interface ErrorResponse {
 
 export default function SignInForm() {
   const [globalError, setGlobalError] = useState('');
-  const navigate = useNavigate();
   const setUser = useSetAtom(userAtom);
 
   const {
@@ -156,14 +155,7 @@ export default function SignInForm() {
         <span className='text-md text-text-default md:text-base'>
           간편 로그인하기
         </span>
-        <Button
-          type='button'
-          size='icon-lg'
-          variant='ghost'
-          className='h-[42px] w-[42px]'
-        >
-          <img src={KakaotalkIcon} alt='카카오톡 로그인' />
-        </Button>
+        <KakaoSignInButton />
       </div>
     </form>
   );
