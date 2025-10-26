@@ -32,7 +32,10 @@ function DropdownMenuTrigger({
   return (
     <DropdownMenuPrimitive.Trigger
       data-slot='dropdown-menu-trigger'
-      className={cn('flex items-center gap-2', className)}
+      className={cn(
+        'text-text-default border-border-primary md:text-md flex h-10 min-w-[94px] items-center justify-between gap-2 rounded-lg border p-2 text-xs md:h-11 md:min-w-[120px] md:rounded-xl md:px-3.5 md:py-2.5',
+        className,
+      )}
       {...props}
     >
       {children}
@@ -52,7 +55,12 @@ function DropdownMenuContent({
         data-slot='dropdown-menu-content'
         sideOffset={sideOffset}
         className={cn(
-          'bg-popover text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 max-h-(--radix-dropdown-menu-content-available-height) min-w-[8rem] origin-(--radix-dropdown-menu-content-transform-origin) overflow-x-hidden overflow-y-auto rounded-md border p-1 shadow-md',
+          'text-text-primary border-border-primary md:text-md z-30 overflow-x-hidden overflow-y-auto rounded-lg border bg-white text-xs shadow-md md:rounded-xl',
+
+          'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
+
+          'max-h-(--radix-dropdown-menu-content-available-height) min-w-[94px] origin-(--radix-dropdown-menu-content-transform-origin) md:min-w-[120px]',
+
           className,
         )}
         {...props}
@@ -84,7 +92,14 @@ function DropdownMenuItem({
       data-inset={inset}
       data-variant={variant}
       className={cn(
-        "focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:!text-destructive [&_svg:not([class*='text-'])]:text-muted-foreground relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[inset]:pl-8 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        'hover:bg-bg-secondary relative flex cursor-pointer items-center gap-2 px-4 py-3 outline-hidden select-none md:py-3.5',
+
+        'focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive',
+
+        'data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[inset]:pl-8',
+
+        "[&_svg:not([class*='text-'])]:text-muted-foreground data-[variant=destructive]:*:[svg]:!text-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+
         className,
       )}
       {...props}
@@ -240,7 +255,12 @@ function DropdownMenuSubContent({
     <DropdownMenuPrimitive.SubContent
       data-slot='dropdown-menu-sub-content'
       className={cn(
-        'bg-popover text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 min-w-[8rem] origin-(--radix-dropdown-menu-content-transform-origin) overflow-hidden rounded-md border p-1 shadow-lg',
+        'text-text-primary z-30 overflow-hidden rounded-md border bg-white shadow-lg',
+
+        'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
+
+        'origin-(--radix-dropdown-menu-content-transform-origin)',
+
         className,
       )}
       {...props}
