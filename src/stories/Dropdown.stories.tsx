@@ -71,8 +71,8 @@ export const DropdownWithSuffix: Story = {
 export const DropdownWithTriggerIcon: Story = {
   args: {
     triggerChildren: <Avatar imgSrc={null} size='md' />,
-    showSuffix: false,
     menuItems: ['마이 히스토리', '계정 설정', '팀 참여', '로그아웃'],
+    showSuffix: false,
   },
   name: '아이콘 트리거 드롭다운',
 };
