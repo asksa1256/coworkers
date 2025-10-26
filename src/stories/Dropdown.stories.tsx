@@ -1,9 +1,6 @@
 import TriangleDownIcon from '@/assets/icons/TriangleDownIcon.svg?react';
 import Avatar from '@/components/ui/Avatar';
-import {
-  Dropdown,
-  type SelectDropdownProps,
-} from '@/components/ui/Dropdown/DropdownElements';
+import Dropdown, { type SelectDropdownProps } from '@/components/ui/Dropdown';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
