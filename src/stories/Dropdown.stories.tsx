@@ -50,6 +50,7 @@ export const DropdownSelect: Story = {
     suffix: <TriangleDownIcon className='h-6 w-6' />,
     menuItems: ['최신순', '좋아요순'],
     align: 'start',
+    onSelect: () => console.log('추가 동작...'),
   },
   name: '셀렉트 형태 드롭다운',
 };

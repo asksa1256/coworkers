@@ -19,7 +19,7 @@ export interface SelectDropdownProps extends DropdownBaseProps {
   triggerChildren: string;
   menuItems: string[];
   suffix: React.ReactNode;
-  onSelect?: (value: string) => void;
+  onSelect: (value: string) => void;
 }
 
 // 아이콘 형태 드롭다운
