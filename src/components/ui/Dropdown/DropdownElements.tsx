@@ -18,10 +18,25 @@ function DropdownMenuPortal({
   );
 }
 
-interface DropdownMenuTriggerProps
-  extends React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Trigger> {
-  suffix?: React.ReactNode;
+// Select 형태 드롭다운 (문자열 children + 필수 suffix)
+interface SelectTriggerProps {
+  children: string;
+  suffix: React.ReactNode;
+  className?: string;
 }
+
+// 아이콘 트리거 형태 드롭다운 (ReactNode children + suffix 없음)
+interface IconTriggerProps {
+  children: React.ReactNode;
+  suffix?: never;
+  className?: string;
+}
+
+type DropdownMenuTriggerProps = (SelectTriggerProps | IconTriggerProps) &
+  Omit<
+    React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Trigger>,
+    'children'
+  >;
 
 function DropdownMenuTrigger({
   suffix,
@@ -29,21 +44,20 @@ function DropdownMenuTrigger({
   className,
   ...props
 }: DropdownMenuTriggerProps) {
-  const showSuffix = typeof children === 'string' && suffix;
-  const isTriggerIcon = !showSuffix;
+  const isSelectTrigger = typeof children === 'string';
 
   return (
     <DropdownMenuPrimitive.Trigger
       data-slot='dropdown-menu-trigger'
       className={cn(
-        !isTriggerIcon &&
+        isSelectTrigger &&
           'text-text-default border-border-primary md:text-md flex h-10 min-w-[94px] items-center justify-between gap-2 rounded-lg border bg-white p-2 text-xs md:h-11 md:min-w-[120px] md:rounded-xl md:px-3.5 md:py-2.5',
         className,
       )}
       {...props}
     >
       {children}
-      {showSuffix && <span>{suffix}</span>}
+      {isSelectTrigger && suffix && <span>{suffix}</span>}
     </DropdownMenuPrimitive.Trigger>
   );
 }
@@ -64,6 +78,7 @@ function DropdownMenuContent({
       <DropdownMenuPrimitive.Content
         data-slot='dropdown-menu-content'
         sideOffset={sideOffset}
+        align={align}
         className={cn(
           'text-text-primary border-border-primary md:text-md z-30 overflow-x-hidden overflow-y-auto rounded-lg border bg-white text-xs shadow-md md:rounded-xl',
 
