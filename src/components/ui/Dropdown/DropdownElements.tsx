@@ -29,26 +29,36 @@ function DropdownMenuTrigger({
   className,
   ...props
 }: DropdownMenuTriggerProps) {
+  const showSuffix = typeof children === 'string' && suffix;
+  const isTriggerIcon = !showSuffix;
+
   return (
     <DropdownMenuPrimitive.Trigger
       data-slot='dropdown-menu-trigger'
       className={cn(
-        'text-text-default border-border-primary md:text-md flex h-10 min-w-[94px] items-center justify-between gap-2 rounded-lg border p-2 text-xs md:h-11 md:min-w-[120px] md:rounded-xl md:px-3.5 md:py-2.5',
+        !isTriggerIcon &&
+          'text-text-default border-border-primary md:text-md flex h-10 min-w-[94px] items-center justify-between gap-2 rounded-lg border bg-white p-2 text-xs md:h-11 md:min-w-[120px] md:rounded-xl md:px-3.5 md:py-2.5',
         className,
       )}
       {...props}
     >
       {children}
-      {suffix && <span>{suffix}</span>}
+      {showSuffix && <span>{suffix}</span>}
     </DropdownMenuPrimitive.Trigger>
   );
+}
+
+interface DropdownMenuContentProps
+  extends React.ComponentProps<typeof DropdownMenuPrimitive.Content> {
+  align?: 'start' | 'center' | 'end';
 }
 
 function DropdownMenuContent({
   className,
   sideOffset = 4,
+  align = 'start',
   ...props
-}: React.ComponentProps<typeof DropdownMenuPrimitive.Content>) {
+}: DropdownMenuContentProps) {
   return (
     <DropdownMenuPrimitive.Portal>
       <DropdownMenuPrimitive.Content
@@ -92,7 +102,7 @@ function DropdownMenuItem({
       data-inset={inset}
       data-variant={variant}
       className={cn(
-        'hover:bg-bg-secondary relative flex cursor-pointer items-center gap-2 px-4 py-3 outline-hidden select-none md:py-3.5',
+        'hover:bg-bg-secondary relative cursor-pointer px-4 py-3 text-left outline-hidden select-none md:py-3.5',
 
         'focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive',
 
