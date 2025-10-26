@@ -155,7 +155,7 @@ export default function SignInForm() {
         <span className='text-md text-text-default md:text-base'>
           간편 로그인하기
         </span>
-        <KakaoSignInButton />
+        <KakaoSignInButton authType='signin' />
       </div>
     </form>
   );

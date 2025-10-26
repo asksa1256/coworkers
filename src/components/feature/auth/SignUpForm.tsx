@@ -1,4 +1,3 @@
-import KakaotalkIcon from '@/assets/images/KakaotalkIcon.png';
 import Button from '@/components/ui/Button';
 import InputField from '@/components/ui/Input/InputField';
 import PasswordField from '@/components/ui/Input/PasswordField';
@@ -13,6 +12,7 @@ import { useSetAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import KakaoOAuthButton from './KakaoSignInButton';
 
 interface ErrorResponse {
   message: string;
@@ -170,14 +170,15 @@ export default function SignInForm() {
         <span className='text-md text-text-default md:text-base'>
           간편 회원가입하기
         </span>
-        <Button
+        {/* <Button
           type='button'
           size='icon-lg'
           variant='ghost'
           className='h-[42px] w-[42px]'
         >
           <img src={KakaotalkIcon} alt='카카오톡 로그인' />
-        </Button>
+        </Button> */}
+        <KakaoOAuthButton authType='signup' />
       </div>
     </form>
   );
