@@ -1,14 +1,20 @@
+import { getGroup, getGroupMembership } from '@/api/api';
 import ConfigIcon from '@/assets/icons/ConfigIcon.svg?react';
 import MemberCard from '@/components/feature/teamPage/MemberListCard';
 import ReportCard from '@/components/feature/teamPage/ReportCard';
 import TaskKanbanBoard from '@/components/feature/teamPage/TaskKanbanBoard';
 import GroupTitleBar from '@/components/ui/GroupTitleBar';
+import type { GroupDetialType } from '@/types/groupType';
+import { calcTodayDone, calcTodayTodos } from '@/utils/calculations';
+import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 //Todo - api 연결 이후 삭제
 const MOCK_DATA = {
   TEAM: {
-    teamId: 'kyungyoung',
+    groupId: 'kyungyoung',
     updatedAt: '2025-10-20T17:37:13.606Z',
     createdAt: '2025-10-20T17:37:13.606Z',
     image: 'string',
@@ -65,22 +71,52 @@ const MOCK_DATA = {
 };
 
 export default function TeamPage() {
-  //Todo - 로그인 유저의 role로 변경
-  const isAdmin = true;
+  const { pathname } = useLocation();
+  const groupId = Number(pathname.slice(1));
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
+
+  const { data: groupData } = useQuery<GroupDetialType>({
+    queryKey: ['group', groupId],
+    queryFn: () => getGroup(groupId),
+  });
+
+  const getUserRole = async () => {
+    const user = localStorage.getItem('user');
+
+    if (!user) return;
+
+    try {
+      const data = await getGroupMembership(groupId, JSON.parse(user).id);
+      setIsAdmin(data.role === 'ADMIN');
+    } catch (e) {
+      console.log('유저 권한 가져오기 실패: ', e);
+      throw e;
+    }
+  };
+
+  useEffect(() => {
+    getUserRole();
+  }, []);
+
+  if (isAdmin === null || !groupData) return;
 
   return (
     <div className='w-full max-w-280 py-6 md:py-18 lg:mx-auto lg:py-30'>
       <div className='flex flex-col gap-3 md:gap-5'>
         <GroupTitleBar className='flex justify-between'>
           <div className='flex gap-2'>
-            <h2>{MOCK_DATA.TEAM.name}</h2>
+            <h2>{groupData.name}</h2>
             <div className='lg:hidden'>{'[멤버아바타]'}</div>
           </div>
           <ConfigIcon className={clsx('w-5 md:w-6', { hidden: !isAdmin })} />
         </GroupTitleBar>
 
-        {/* Todo - count 연결 */}
-        {isAdmin && <ReportCard todosCount={6} doneCount={3} />}
+        {isAdmin && (
+          <ReportCard
+            todosCount={calcTodayTodos(groupData.taskLists)}
+            doneCount={calcTodayDone(groupData.taskLists)}
+          />
+        )}
       </div>
 
       {isAdmin && (
@@ -94,11 +130,11 @@ export default function TeamPage() {
         )}
       >
         할 일 목록
-        <span className='text-text-default font-normal'>{` (${MOCK_DATA.TEAM.taskLists.length}개)`}</span>
+        <span className='text-text-default font-normal'>{` (${groupData.taskLists.length}개)`}</span>
       </h2>
 
       <div className='flex lg:gap-7'>
-        <TaskKanbanBoard tasklist={MOCK_DATA.TEAM.taskLists} />
+        <TaskKanbanBoard tasklists={groupData.taskLists} />
         <MemberCard members={MOCK_DATA.TEAM.members} />
       </div>
     </div>
