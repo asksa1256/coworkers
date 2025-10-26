@@ -17,11 +17,12 @@ export default function Toast() {
         error: <OctagonXIcon className='size-6' />,
         loading: <Loader2Icon className='size-6 animate-spin' />,
       }}
+      position='bottom-center'
       toastOptions={{
         unstyled: true,
         classNames: {
           toast: `
-            group toast flex items-center rounded-2xl gap-2 p-2 shadow-[0px_15px_50px_-12px_rgba(0,0,0,0.05)] text-md text-text-inverse font-semibold w-auto whitespace-nowrap
+            group toast flex items-center rounded-2xl gap-2 p-2 shadow-[0px_15px_50px_-12px_rgba(0,0,0,0.05)] text-md text-text-inverse font-semibold w-auto max-w-[90vw]
             md:gap-[10px] md:text-base md:p-3 md:gap-[10px]
           `,
           actionButton: `
