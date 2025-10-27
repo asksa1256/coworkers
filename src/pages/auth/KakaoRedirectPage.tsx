@@ -1,3 +1,4 @@
+import { KAKAO_REDIRECT_URI } from '@/constants';
 import axiosInstance from '@/lib/axios';
 import { userAtom } from '@/store/authAtom';
 import { setTokens } from '@/utils/tokenStorage';
@@ -23,7 +24,7 @@ export default function KakaoRedirectPage() {
       try {
         const { data } = await axiosInstance.post('/auth/signIn/KAKAO', {
           state,
-          redirectUri: import.meta.env.VITE_KAKAO_REDIRECT_URI,
+          redirectUri: KAKAO_REDIRECT_URI,
           token: code,
         });
 

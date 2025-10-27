@@ -1,5 +1,6 @@
 import KakaotalkIcon from '@/assets/images/KakaotalkIcon.png';
 import Button from '@/components/ui/Button';
+import { KAKAO_REDIRECT_URI } from '@/constants';
 
 interface Props {
   authType: 'signin' | 'signup';
@@ -9,7 +10,7 @@ export default function KakaoOAuthButton({ authType }: Props) {
   const state = authType;
 
   const handleKakaoOauth = () => {
-    const url = `https://kauth.kakao.com/oauth/authorize?response_type=code&state=${state}&client_id=${import.meta.env.VITE_KAKAO_REST_API_KEY}&redirect_uri=${import.meta.env.VITE_KAKAO_REDIRECT_URI}`;
+    const url = `https://kauth.kakao.com/oauth/authorize?response_type=code&state=${state}&client_id=${import.meta.env.VITE_KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}`;
 
     window.location.href = url;
   };
