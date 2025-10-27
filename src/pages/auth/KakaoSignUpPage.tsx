@@ -3,7 +3,10 @@ import InputField from '@/components/ui/Input/InputField';
 import { Label } from '@/components/ui/Label';
 import axiosInstance from '@/lib/axios';
 import { userAtom } from '@/store/authAtom';
-import { type SignUpFormData, signUpSchema } from '@/types/SignUpSchema';
+import {
+  type SignUpRequest,
+  SignUpRequestSchema,
+} from '@/types/SignUpRequestSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios, { AxiosError } from 'axios';
 import { useSetAtom } from 'jotai';
@@ -20,7 +23,7 @@ interface ErrorResponse {
   }[];
 }
 
-type KakaoSignUpFormData = Pick<SignUpFormData, 'nickname'>;
+type KakaoSignUpRequest = Pick<SignUpRequest, 'nickname'>;
 
 export default function KakaoSignUpPage() {
   const [globalError, setGlobalError] = useState('');
@@ -31,12 +34,12 @@ export default function KakaoSignUpPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<KakaoSignUpFormData>({
-    resolver: zodResolver(signUpSchema.pick({ nickname: true })), // 닉네임만 검증
+  } = useForm<KakaoSignUpRequest>({
+    resolver: zodResolver(SignUpRequestSchema.pick({ nickname: true })), // 닉네임만 검증
     mode: 'onBlur',
   });
 
-  const onSubmit = async (data: KakaoSignUpFormData) => {
+  const onSubmit = async (data: KakaoSignUpRequest) => {
     const payload = {
       nickname: data.nickname,
       image: '',
@@ -50,7 +53,7 @@ export default function KakaoSignUpPage() {
       const user = res.data;
 
       if (!user) {
-        console.error('❌ GET /user 응답에 user 없음:', res.data);
+        console.error(res.data);
         setGlobalError('회원 정보를 불러오지 못했습니다.');
         return;
       }

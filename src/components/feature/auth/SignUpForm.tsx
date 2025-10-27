@@ -5,7 +5,10 @@ import { Label } from '@/components/ui/Label';
 import axiosInstance from '@/lib/axios';
 import { userAtom } from '@/store/authAtom';
 import { type ErrorResponse } from '@/types';
-import { type SignUpFormData, signUpSchema } from '@/types/SignUpSchema';
+import {
+  type SignUpRequest,
+  SignUpRequestSchema,
+} from '@/types/SignUpRequestSchema';
 import { setTokens } from '@/utils/tokenStorage';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios, { AxiosError } from 'axios';
@@ -25,8 +28,8 @@ export default function SignInForm() {
     watch,
     trigger,
     formState: { errors, isSubmitting },
-  } = useForm<SignUpFormData>({
-    resolver: zodResolver(signUpSchema),
+  } = useForm<SignUpRequest>({
+    resolver: zodResolver(SignUpRequestSchema),
     mode: 'onBlur',
   });
 
@@ -39,7 +42,7 @@ export default function SignInForm() {
     }
   }, [password, passwordConfirmation, trigger]);
 
-  const onSubmit = async (data: SignUpFormData) => {
+  const onSubmit = async (data: SignUpRequest) => {
     try {
       const res = await axiosInstance.post('/auth/signup', data);
 
