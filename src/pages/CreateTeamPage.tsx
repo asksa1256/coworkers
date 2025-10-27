@@ -1,3 +1,5 @@
+import CreateTeamForm from '@/components/feature/createTeamPage/CreateTeamForm';
+
 export default function CreateTeamPage() {
-  return <div>팀 생성 페이지</div>;
+  return <CreateTeamForm />;
 }
