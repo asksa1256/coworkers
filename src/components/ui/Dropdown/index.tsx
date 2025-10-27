@@ -14,16 +14,18 @@ interface DropdownBaseProps {
   align?: 'start' | 'center' | 'end';
 }
 
-// 셀렉트 형태 드롭다운
+// 셀렉트 형태 드롭다운 타입
 export interface SelectDropdownProps extends DropdownBaseProps {
+  type: 'select';
   triggerChildren: string;
   menuItems: string[];
   suffix: React.ReactNode;
   onSelect: (value: string) => void;
 }
 
-// 아이콘 형태 드롭다운
+// 아이콘 형태 드롭다운 타입
 export interface IconDropdownProps extends DropdownBaseProps {
+  type: 'icon';
   triggerChildren: React.ReactNode;
   menuItems: MenuItem[];
   suffix?: never;
@@ -32,49 +34,51 @@ export interface IconDropdownProps extends DropdownBaseProps {
 
 export type DropdownProps = SelectDropdownProps | IconDropdownProps;
 
-export default function Dropdown({
-  triggerChildren,
-  suffix,
-  menuItems,
-  align = 'start',
-  onSelect,
-}: DropdownProps) {
-  const handleItemClick = (item: string | MenuItem) => {
-    if (typeof item === 'string') {
-      // 셀렉트 형태: onSelect 호출
-      onSelect?.(item);
-    } else {
-      // 아이콘 형태: onClick 실행
-      item.onClick?.();
-    }
-  };
+export default function Dropdown(props: DropdownProps) {
+  const { type, triggerChildren, align = 'start' } = props;
 
-  const isSelectTrigger = typeof triggerChildren === 'string';
+  // 셀렉트 형태 드롭다운
+  if (type === 'select') {
+    const { menuItems, suffix, onSelect } = props;
+
+    const handleItemClick = (item: string) => {
+      onSelect(item);
+    };
+
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger suffix={suffix}>
+          {triggerChildren}
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent align={align}>
+          {menuItems.map((item, i) => (
+            <DropdownMenuItem key={i} onClick={() => handleItemClick(item)}>
+              {item}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  }
+
+  // 아이콘 형태 드롭다운
+  const { menuItems } = props;
+
+  const handleItemClick = (item: MenuItem) => {
+    item.onClick?.();
+  };
 
   return (
     <DropdownMenu>
-      {/* 드롭다운 트리거 */}
-      {isSelectTrigger ? (
-        // 셀렉트 트리거
-        <DropdownMenuTrigger suffix={suffix as React.ReactNode}>
-          {triggerChildren}
-        </DropdownMenuTrigger>
-      ) : (
-        // 아이콘 트리거
-        <DropdownMenuTrigger>{triggerChildren}</DropdownMenuTrigger>
-      )}
+      <DropdownMenuTrigger>{triggerChildren}</DropdownMenuTrigger>
 
-      {/* 드롭다운 메뉴 */}
       <DropdownMenuContent align={align}>
-        {menuItems.map((item, i) => {
-          const text = typeof item === 'string' ? item : item.label;
-
-          return (
-            <DropdownMenuItem key={i} onClick={() => handleItemClick(item)}>
-              {text}
-            </DropdownMenuItem>
-          );
-        })}
+        {menuItems.map((item, i) => (
+          <DropdownMenuItem key={i} onClick={() => handleItemClick(item)}>
+            {item.label}
+          </DropdownMenuItem>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

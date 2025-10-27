@@ -12,6 +12,11 @@ const meta = {
   },
   tags: ['autodocs'],
   argTypes: {
+    type: {
+      control: 'select',
+      options: ['select', 'icon'],
+      description: '드롭다운 형태',
+    },
     triggerChildren: {
       control: false,
       description: '드롭다운 트리거 내용',
@@ -46,6 +51,7 @@ export const DropdownSelect: Story = {
     );
   },
   args: {
+    type: 'select',
     triggerChildren: '최신순',
     suffix: <TriangleDownIcon className='h-6 w-6' />,
     menuItems: ['최신순', '좋아요순'],
@@ -57,6 +63,7 @@ export const DropdownSelect: Story = {
 
 export const DropdownWithTriggerIcon: Story = {
   args: {
+    type: 'icon',
     triggerChildren: <Avatar imgSrc={null} size='md' />,
     menuItems: [
       {
