@@ -3,8 +3,10 @@ import { userAtom } from '@/store/authAtom';
 import { setTokens } from '@/utils/tokenStorage';
 import axios from 'axios';
 import { useSetAtom } from 'jotai';
+import { Loader2 } from 'lucide-react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 export default function KakaoRedirectPage() {
   const navigate = useNavigate();
@@ -30,6 +32,7 @@ export default function KakaoRedirectPage() {
         if (state === 'signin') {
           setUser(data.user);
           navigate('/', { replace: true });
+          toast.success(`환영합니다, ${data.user.nickname}님!`);
         } else {
           navigate('/oauth/signup/kakao', { replace: true });
         }
@@ -49,5 +52,14 @@ export default function KakaoRedirectPage() {
     handleSignInKakao();
   }, [navigate, setUser]);
 
-  return <section>카카오 로그인</section>;
+  return (
+    <section className='flex min-h-screen flex-col items-center justify-center transition-colors dark:bg-gray-900'>
+      <div className='animate-fadeIn flex flex-col items-center gap-4'>
+        <Loader2 className='text-primary size-10 animate-spin' />
+        <p className='font-medium text-gray-700 dark:text-gray-200'>
+          카카오 계정 연동중...
+        </p>
+      </div>
+    </section>
+  );
 }
