@@ -145,7 +145,7 @@ export default function HeaderGnb({
             </>
           )}
           <Link
-            to=''
+            to='/create-team'
             className='border-primary text-md text-primary mt-2 flex h-[33px] shrink-0 items-center justify-center gap-1 rounded-lg border font-semibold'
           >
             <GnbPlusIcon />팀 추가하기
