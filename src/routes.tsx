@@ -27,7 +27,10 @@ const routes = [
     errorElement: <ErrorPage />,
     children: [
       { path: '/', element: <LandingPage /> },
-      { path: '/create-team', element: <CreateTeamPage /> },
+      {
+        path: '/create-team',
+        element: withPrivate(<CreateTeamPage />),
+      },
       {
         path: '/list/:groupId',
         element: withPrivate(<ListPage />),
