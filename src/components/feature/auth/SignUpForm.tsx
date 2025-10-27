@@ -16,7 +16,7 @@ import { useSetAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import KakaoOAuthButton from './KakaoSignInButton';
+import KakaoOAuthButton from './KakaoOAuthButton';
 
 export default function SignInForm() {
   const [globalError, setGlobalError] = useState('');

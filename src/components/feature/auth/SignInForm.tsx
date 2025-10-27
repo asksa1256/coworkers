@@ -17,7 +17,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
-import KakaoSignInButton from './KakaoSignInButton';
+import KakaoSignInButton from './KakaoOAuthButton';
 
 export default function SignInForm() {
   const [globalError, setGlobalError] = useState('');
