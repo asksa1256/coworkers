@@ -28,7 +28,6 @@ export interface IconDropdownProps extends DropdownBaseProps {
   type: 'icon';
   triggerChildren: React.ReactNode;
   menuItems: MenuItem[];
-  suffix?: never;
   onSelect?: never; // onSelect 대신 onClick 사용
 }
 
