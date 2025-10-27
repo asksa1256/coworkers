@@ -12,8 +12,6 @@ function App() {
     <>
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
-        <Toaster />
-        <RouterProvider router={router} />
         <Modal />
         <Toaster />
       </QueryClientProvider>
