@@ -31,7 +31,10 @@ const routes = [
     children: [
       { index: true, element: <LandingPage /> },
       { path: '/', element: <LandingPage /> },
-      { path: '/create-team', element: <CreateTeamPage /> },
+      {
+        path: '/create-team',
+        element: withPrivate(<CreateTeamPage />),
+      },
       {
         path: '/list/:groupId',
         element: withPrivate(<ListPage />),
