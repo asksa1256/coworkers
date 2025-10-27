@@ -225,6 +225,12 @@
     background-color: var(--color-primary);
     color: var(--color-white);
   }
+
+  [data-sonner-toaster] {
+    display: flex;
+    justify-content: center;
+    width: 100% !important;
+  }
 }
 
 @layer utilities {
