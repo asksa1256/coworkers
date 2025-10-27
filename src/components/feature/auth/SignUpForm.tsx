@@ -4,6 +4,7 @@ import PasswordField from '@/components/ui/Input/PasswordField';
 import { Label } from '@/components/ui/Label';
 import axiosInstance from '@/lib/axios';
 import { userAtom } from '@/store/authAtom';
+import { type ErrorResponse } from '@/types';
 import { type SignUpFormData, signUpSchema } from '@/types/SignUpSchema';
 import { setTokens } from '@/utils/tokenStorage';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -13,14 +14,6 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import KakaoOAuthButton from './KakaoSignInButton';
-
-interface ErrorResponse {
-  message: string;
-  errors?: {
-    field: string;
-    message: string;
-  }[];
-}
 
 export default function SignInForm() {
   const [globalError, setGlobalError] = useState('');
