@@ -2,6 +2,7 @@ import TitleBarPattern from '@/assets/images/TitleBarPattern.png';
 import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
 
+// variant - team: 팀 페이지 ui, list: 리스트 페이지 ui
 interface Props {
   children: React.ReactNode;
   className?: string;

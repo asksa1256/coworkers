@@ -1,6 +1,6 @@
 import DoneIcon from '@/assets/icons/ProgressDone.svg?react';
 import { cn } from '@/lib/utils';
-import calcPercentage from '@/utils/calcPercentage';
+import { calcPercentage } from '@/utils/calculations';
 
 /**
  * size - L: 팀 페이지 리포트 ui, S: task ui

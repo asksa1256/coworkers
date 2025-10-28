@@ -2,6 +2,10 @@ import VCheckIcon from '@/assets/icons/VCheckIcon.svg?react';
 import { cn } from '@/lib/utils';
 import clsx from 'clsx';
 
+/**
+ * isDone - 체크 박스의 체크 상태를 나타냄. task의 doneAt이 null이면 false
+ * taskId - task.id
+ */
 interface Props extends Omit<React.ComponentProps<'input'>, 'type'> {
   children: React.ReactNode;
   isDone: boolean;
