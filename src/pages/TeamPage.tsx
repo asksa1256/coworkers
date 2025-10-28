@@ -4,7 +4,7 @@ import MemberCard from '@/components/feature/teamPage/MemberListCard';
 import ReportCard from '@/components/feature/teamPage/ReportCard';
 import TaskKanbanBoard from '@/components/feature/teamPage/TaskKanbanBoard';
 import GroupTitleBar from '@/components/ui/GroupTitleBar';
-import type { GroupDetialType } from '@/types/groupType';
+import type { GroupDetailResponse } from '@/types/groupType';
 import { calcTodayDone, calcTodayTodos } from '@/utils/calculations';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
@@ -75,7 +75,7 @@ export default function TeamPage() {
   const groupId = Number(pathname.slice(1));
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
 
-  const { data: groupData } = useQuery<GroupDetialType>({
+  const { data: groupData } = useQuery<GroupDetailResponse>({
     queryKey: ['group', groupId],
     queryFn: () => getGroup(groupId),
   });

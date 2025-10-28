@@ -1,4 +1,4 @@
-import type { TaskListsType, TasksType } from '@/types/taskType';
+import type { TaskListsResponse, TasksResponse } from '@/types/taskType';
 
 export const calcPercentage = (numerator: number, denominator: number) => {
   if (!denominator) return 0;
@@ -6,7 +6,7 @@ export const calcPercentage = (numerator: number, denominator: number) => {
   return Math.floor((numerator / denominator) * 100);
 };
 
-export const calcTodayTodos = (taskLists: TaskListsType) => {
+export const calcTodayTodos = (taskLists: TaskListsResponse) => {
   let count = 0;
 
   for (let i = 0; i < taskLists.length; i++) {
@@ -16,7 +16,7 @@ export const calcTodayTodos = (taskLists: TaskListsType) => {
   return count;
 };
 
-export const countDone = (tasks: TasksType) => {
+export const countDone = (tasks: TasksResponse) => {
   let count = 0;
 
   for (const task of tasks) {
@@ -28,7 +28,7 @@ export const countDone = (tasks: TasksType) => {
   return count;
 };
 
-export const calcTodayDone = (taskLists: TaskListsType) => {
+export const calcTodayDone = (taskLists: TaskListsResponse) => {
   let count = 0;
 
   for (let i = 0; i < taskLists.length; i++) {

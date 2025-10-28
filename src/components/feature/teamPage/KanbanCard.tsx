@@ -3,7 +3,7 @@ import KebabIcon from '@/assets/icons/KebabIcon.svg?react';
 import CircularProgressbar from '@/components/ui/CircularProgressbar';
 import TaskCheckbox from '@/components/ui/TaskCheckbox';
 import { cn } from '@/lib/utils';
-import type { TaskListsType } from '@/types/taskType';
+import type { TaskListsResponse } from '@/types/taskType';
 import { calcMouseLocation, countDone } from '@/utils/calculations';
 import { useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
@@ -11,7 +11,7 @@ import { useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 interface Props {
-  taskList: TaskListsType[number];
+  taskList: TaskListsResponse[number];
   tab: 'todo' | 'done';
 }
 

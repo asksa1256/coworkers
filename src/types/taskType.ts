@@ -2,7 +2,7 @@ import type { UserType } from './userType';
 
 type FrequencyType = 'ONCE' | 'DAILY' | 'WEEKLY' | 'MONTHLY';
 
-export interface RecurringType {
+export interface RecurringResponse {
   id: number;
   name: string;
   description: string | null;
@@ -17,7 +17,7 @@ export interface RecurringType {
   writerId: number;
 }
 
-export interface TaskDetailType {
+export interface TaskDetailResponse {
   id: number;
   name: string;
   description: string | null;
@@ -27,7 +27,7 @@ export interface TaskDetailType {
   recurringId: number;
   deletedAt: string | null;
   displayIndex: 0;
-  recurring: RecurringType;
+  recurring: RecurringResponse;
   writer: Pick<UserType, 'id' | 'nickname' | 'image'>;
   doneBy: {
     user: Pick<UserType, 'id' | 'nickname' | 'image'> | null;
@@ -37,16 +37,16 @@ export interface TaskDetailType {
 }
 
 //swagger상으로 user에 대한 schema가 정확하지 않고 응답도 null만 확인되어 일단 조건부 처리
-export type TasksType = (Omit<TaskDetailType, 'recurring'> & {
+export type TasksResponse = (Omit<TaskDetailResponse, 'recurring'> & {
   user?: Pick<UserType, 'id' | 'nickname' | 'image'> | null;
 })[];
 
-export type TaskListsType = {
+export type TaskListsResponse = {
   id: number;
   name: string;
   createdAt: string;
   updatedAt: string;
   groupId: number;
   displayIndex: number;
-  tasks: TasksType;
+  tasks: TasksResponse;
 }[];
