@@ -92,7 +92,7 @@ export default function ResetPasswordModal() {
   const modalContent = useMemo(
     () => (
       <form
-        className='flex flex-col items-center justify-center px-9 pt-8'
+        className='flex flex-col items-center justify-center px-9 pt-4'
         onSubmit={handleSubmit(onSubmit)}
         noValidate
       >

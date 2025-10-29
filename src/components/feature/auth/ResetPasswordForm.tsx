@@ -1,26 +1,27 @@
 import Button from '@/components/ui/Button';
 import PasswordField from '@/components/ui/Input/PasswordField';
 import { Label } from '@/components/ui/Label';
+import useSignOut from '@/hooks/useSignOut';
 import axiosInstance from '@/lib/axios';
-import { userAtom } from '@/store/authAtom';
 import { type ErrorResponse } from '@/types';
 import {
   type ResetPasswordFormRequest,
   resetPasswordFormRequestSchema,
 } from '@/types/ResetPasswordSchema';
-import { setTokens } from '@/utils/tokenStorage';
+import { getAccessToken } from '@/utils/tokenStorage';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios, { AxiosError } from 'axios';
-import { useSetAtom } from 'jotai';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 export default function ResetPasswordForm() {
   const [globalError, setGlobalError] = useState('');
-  const setUser = useSetAtom(userAtom);
+  const [token, setToken] = useState(''); // 비밀번호 변경용 토큰
   const navigate = useNavigate();
+  const accessToken = getAccessToken();
+  const signOut = useSignOut();
 
   const {
     register,
@@ -33,16 +34,25 @@ export default function ResetPasswordForm() {
 
   const onSubmit = async (data: ResetPasswordFormRequest) => {
     try {
-      const res = await axiosInstance.post('/auth/signin', data);
+      if (accessToken) {
+        // 로그인 사용자
+        await axiosInstance.patch('/user/password', data);
 
-      const { user, accessToken, refreshToken } = res.data;
+        // 강제 로그아웃 (로그인 페이지에서 재로그인 유도)
+        signOut();
+      } else {
+        // 로그인하지 않은 사용자
+        const payload = {
+          password: data.password,
+          passwordConfirmation: data.passwordConfirmation,
+          token,
+        };
 
-      // 토큰 저장
-      setTokens(accessToken, refreshToken); // 로컬 스토리지
-      setUser(user); // 전역 상태
+        await axiosInstance.patch('/user/reset-password', payload);
+      }
 
       toast.success('비밀번호 변경이 완료되었습니다.');
-      navigate('/');
+      navigate('/auth/signIn');
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<ErrorResponse>;
@@ -74,13 +84,19 @@ export default function ResetPasswordForm() {
     }
   };
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    setToken(token || '');
+  }, []);
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
       className='w-full max-w-[550px] rounded-[20px] bg-white px-[22px] py-[56px] shadow md:px-[44px] md:py-[70px]'
     >
       <h3 className='mb-8 text-center text-xl font-bold md:mb-16 md:text-2xl'>
-        로그인
+        비밀번호 재설정
       </h3>
 
       <div className='mb-10 space-y-6'>
@@ -116,7 +132,7 @@ export default function ResetPasswordForm() {
           className='mb-6 text-base'
           disabled={isSubmitting}
         >
-          {isSubmitting ? '로그인 중...' : '로그인'}
+          {isSubmitting ? '재설정 중...' : '재설정'}
         </Button>
       </div>
     </form>

@@ -37,6 +37,10 @@ const routes = [
         path: '/:groupId',
         element: withPrivate(<TeamPage />),
       },
+      {
+        path: 'reset-password',
+        element: <ResetPasswordPage />,
+      },
     ],
   },
 
@@ -85,19 +89,6 @@ const routes = [
       {
         path: ':postId',
         element: withPrivate(<PostDetailPage />),
-      },
-    ],
-  },
-
-  // user pages
-  {
-    path: '/user',
-    element: <Layout />,
-    errorElement: <ErrorPage />,
-    children: [
-      {
-        path: 'reset-password',
-        element: withPrivate(<ResetPasswordPage />),
       },
     ],
   },
