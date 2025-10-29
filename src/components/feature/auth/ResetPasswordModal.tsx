@@ -12,6 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import axios, { AxiosError } from 'axios';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 export default function ResetPasswordModal() {
   const { openModal, closeModal, modal } = useModal();
@@ -43,7 +44,9 @@ export default function ResetPasswordModal() {
           '/user/send-reset-password-email',
           payload,
         );
-        console.log(res);
+
+        toast.success(`${res.data.message}`);
+
         reset();
       } catch (error) {
         let errorMessage: string;
@@ -56,11 +59,9 @@ export default function ResetPasswordModal() {
 
             switch (status) {
               case 400:
-                // 400: 유효성 검사 오류 (등록되지 않은 유저 등)
                 errorMessage = '등록되지 않은 유저입니다.';
                 break;
               case 500:
-                // 500: 서버 오류
                 errorMessage = '서버 오류가 발생했습니다.';
                 break;
               default:
@@ -78,7 +79,7 @@ export default function ResetPasswordModal() {
           errorMessage = '요청 처리 중 오류가 발생했습니다.';
         }
 
-        // API 에러 메시지 'email' 필드에 적용
+        // API 에러 메시지 email 필드에 적용
         setError('email', {
           type: 'manual',
           message: errorMessage,
