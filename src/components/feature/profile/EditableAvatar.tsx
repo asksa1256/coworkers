@@ -15,7 +15,7 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 interface EditableAvatarProps {
   imgSrc: string | null;
   className?: string;
-  onImageChange: (file: File) => void;
+  onImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export default function EditableAvatar({
@@ -23,23 +23,6 @@ export default function EditableAvatar({
   className,
   onImageChange,
 }: EditableAvatarProps) {
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-        alert('jpg, png, webp, avif 형식의 이미지만 업로드 가능합니다.');
-        return;
-      }
-
-      if (file.size > MAX_FILE_SIZE) {
-        alert('파일 크기는 10MB 이하여야 합니다.');
-        return;
-      }
-
-      onImageChange(file);
-    }
-  };
-
   return (
     <label
       className={cn(
@@ -53,7 +36,7 @@ export default function EditableAvatar({
         id='profile-image-upload'
         className='sr-only'
         accept='image/jpeg,image/png,image/webp,image/avif'
-        onChange={handleFileChange}
+        onChange={onImageChange}
       />
 
       <Avatar
