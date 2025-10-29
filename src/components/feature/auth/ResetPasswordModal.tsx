@@ -157,7 +157,7 @@ export default function ResetPasswordModal() {
       // [errors, isSubmitting] 상태가 변경될 때마다 2가지 동작 실행
       // 1. 최신 errors가 반영된 modalContent 리렌더링 (useMemo)
       // 2. openModal을 호출하여 모달의 children 옵션 갱신
-      // 이 useEffect를 사용하지 않으면 유효성 검사 에러 피드백이 지연되어 적용됨 (모달을 닫았다가 열어야 에러 메시지 렌더링)
+      // 이 useEffect를 사용하지 않으면 유효성 검사 에러 피드백이 지연되어 적용됨 (모달을 닫았다가 열어야 에러 메시지가 렌더링되는 현상)
       openModal({
         mode: 'normal',
         closeIconButton: false,
