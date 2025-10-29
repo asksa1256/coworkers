@@ -10,12 +10,11 @@ import {
 } from '@/types/ResetPasswordSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios, { AxiosError } from 'axios';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 
 export default function ResetPasswordModal() {
   const { openModal, closeModal, modal } = useModal();
-  const [globalError, setGlobalError] = useState('');
 
   const {
     register,
@@ -114,9 +113,6 @@ export default function ResetPasswordModal() {
               {...register('email')}
               error={errors.email}
             />
-            {globalError && (
-              <p className='text-danger text-md mb-2'>{globalError}</p>
-            )}
           </div>
         </Modal.Body>
         <Modal.Foot className='w-full'>
@@ -143,16 +139,7 @@ export default function ResetPasswordModal() {
         </Modal.Foot>
       </form>
     ),
-    [
-      errors,
-      isSubmitting,
-      handleSubmit,
-      onSubmit,
-      register,
-      closeModal,
-      reset,
-      globalError,
-    ],
+    [errors, isSubmitting, handleSubmit, onSubmit, register, closeModal, reset],
   );
 
   const handleOpenModal = () => {
