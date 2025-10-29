@@ -3,16 +3,19 @@ import InputField from '@/components/ui/Input/InputField';
 import Modal from '@/components/ui/Modal';
 import useModal from '@/hooks/useModal';
 import axiosInstance from '@/lib/axios';
+import { type ErrorResponse } from '@/types';
 import {
   type ResetPasswordData,
   resetPasswordSchema,
 } from '@/types/ResetPasswordSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCallback, useEffect, useMemo } from 'react';
+import axios, { AxiosError } from 'axios';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 export default function ResetPasswordModal() {
   const { openModal, closeModal, modal } = useModal();
+  const [globalError, setGlobalError] = useState('');
 
   const {
     register,
@@ -43,7 +46,33 @@ export default function ResetPasswordModal() {
         console.log(res);
         reset();
       } catch (error) {
-        console.error(error);
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<ErrorResponse>;
+
+          if (axiosError.response) {
+            const { status } = axiosError.response;
+
+            switch (status) {
+              case 400:
+                setGlobalError('등록되지 않은 유저입니다.');
+                break;
+              case 500:
+                setGlobalError('서버 오류가 발생했습니다.');
+                break;
+              default:
+                setGlobalError('비밀번호 재설정 메일 전송에 실패했습니다.');
+            }
+          } else if (axiosError.request) {
+            // 요청은 보냈지만 응답을 받지 못한 경우
+            setGlobalError('서버와 연결할 수 없습니다.');
+          } else {
+            // 요청 설정 중 오류 발생
+            setGlobalError('요청 처리 중 오류가 발생했습니다.');
+          }
+        } else {
+          console.error('예상치 못한 에러:', error);
+          setGlobalError('알 수 없는 오류가 발생했습니다.');
+        }
       }
     },
     [reset],
@@ -74,6 +103,9 @@ export default function ResetPasswordModal() {
               {...register('email')}
               error={errors.email}
             />
+            {globalError && (
+              <p className='text-danger text-md mb-2'>{globalError}</p>
+            )}
           </div>
         </Modal.Body>
         <Modal.Foot className='w-full'>
@@ -100,14 +132,23 @@ export default function ResetPasswordModal() {
         </Modal.Foot>
       </form>
     ),
-    [errors, isSubmitting, handleSubmit, onSubmit, register, closeModal, reset],
+    [
+      errors,
+      isSubmitting,
+      handleSubmit,
+      onSubmit,
+      register,
+      closeModal,
+      reset,
+      globalError,
+    ],
   );
 
   const handleOpenModal = () => {
     reset();
     openModal({
       mode: 'normal',
-      closeIconButton: true,
+      closeIconButton: false,
       children: modalContent,
     });
   };
@@ -117,10 +158,11 @@ export default function ResetPasswordModal() {
       // [errors, isSubmitting] 상태가 변경될 때마다 2가지 동작 실행
       // 1. 최신 errors가 반영된 modalContent 리렌더링 (useMemo)
       // 2. openModal을 호출하여 모달의 children 옵션 갱신
+      // 이 useEffect를 사용하지 않으면 유효성 검사 에러 피드백이 지연되어 적용됨 (모달을 닫았다가 열어야 에러 메시지 렌더링)
       openModal({
         mode: 'normal',
-        closeIconButton: true,
-        children: modalContent, // 최신 errors 상태가 반영된 children 전달
+        closeIconButton: false,
+        children: modalContent, // 최신 errors 상태가 반영된 children 전달 -> 에러 ui 즉시 반영
       });
     }
   }, [errors, isSubmitting, openModal, modal.isOpen, modalContent]);
