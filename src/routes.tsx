@@ -98,6 +98,19 @@ const routes = [
       },
     ],
   },
+
+  // user pages
+  {
+    path: '/user',
+    element: <Layout />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: 'reset-password',
+        element: withPrivate(<ResetPasswordPage />),
+      },
+    ],
+  },
 ];
 
 export default routes;
