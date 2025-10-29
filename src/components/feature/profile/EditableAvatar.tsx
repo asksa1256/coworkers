@@ -2,16 +2,6 @@ import PencilIcon from '@/assets/icons/PencilIcon.svg?react';
 import Avatar from '@/components/ui/Avatar';
 import { cn } from '@/lib/utils';
 
-const ALLOWED_IMAGE_TYPES = [
-  'image/jpeg',
-  'image/jpg',
-  'image/png',
-  'image/webp',
-  'image/avif',
-];
-
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
-
 interface EditableAvatarProps {
   imgSrc: string | null;
   className?: string;
