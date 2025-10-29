@@ -1,43 +1,38 @@
-import KakaotalkIcon from '@/assets/images/KakaotalkIcon.png';
 import Button from '@/components/ui/Button';
 import InputField from '@/components/ui/Input/InputField';
 import PasswordField from '@/components/ui/Input/PasswordField';
 import { Label } from '@/components/ui/Label';
 import axiosInstance from '@/lib/axios';
 import { userAtom } from '@/store/authAtom';
-import { type SignInFormData, signInSchema } from '@/types/SignInSchema';
+import { type ErrorResponse } from '@/types';
+import {
+  type SignInRequest,
+  SignInRequestSchema,
+} from '@/types/SignInRequestSchema';
 import { setTokens } from '@/utils/tokenStorage';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios, { AxiosError } from 'axios';
 import { useSetAtom } from 'jotai';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
-
-interface ErrorResponse {
-  message: string;
-  errors?: {
-    field: string;
-    message: string;
-  }[];
-}
+import KakaoSignInButton from './KakaoOAuthButton';
 
 export default function SignInForm() {
   const [globalError, setGlobalError] = useState('');
-  const navigate = useNavigate();
   const setUser = useSetAtom(userAtom);
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<SignInFormData>({
-    resolver: zodResolver(signInSchema),
+  } = useForm<SignInRequest>({
+    resolver: zodResolver(SignInRequestSchema),
     mode: 'onBlur',
   });
 
-  const onSubmit = async (data: SignInFormData) => {
+  const onSubmit = async (data: SignInRequest) => {
     try {
       const res = await axiosInstance.post('/auth/signin', data);
 
@@ -156,14 +151,7 @@ export default function SignInForm() {
         <span className='text-md text-text-default md:text-base'>
           간편 로그인하기
         </span>
-        <Button
-          type='button'
-          size='icon-lg'
-          variant='ghost'
-          className='h-[42px] w-[42px]'
-        >
-          <img src={KakaotalkIcon} alt='카카오톡 로그인' />
-        </Button>
+        <KakaoSignInButton authType='signin' />
       </div>
     </form>
   );
