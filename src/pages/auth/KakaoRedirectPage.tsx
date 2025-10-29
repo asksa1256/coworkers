@@ -30,7 +30,8 @@ export default function KakaoRedirectPage() {
 
         setTokens(data.accessToken, data.refreshToken);
 
-        if (state === 'signin') {
+        if (state === 'signin' || data.user.createdAt !== data.user.updatedAt) {
+          // 기존 카카오 계정 유저는 간편 회원가입 생략
           setUser(data.user);
           navigate('/', { replace: true });
           toast.success(`환영합니다, ${data.user.nickname}님!`);
