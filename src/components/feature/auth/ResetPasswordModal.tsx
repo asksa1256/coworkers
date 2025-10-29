@@ -22,6 +22,7 @@ export default function ResetPasswordModal() {
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
+    setError,
   } = useForm<ResetPasswordData>({
     resolver: zodResolver(resetPasswordSchema),
     mode: 'onSubmit',
@@ -46,6 +47,8 @@ export default function ResetPasswordModal() {
         console.log(res);
         reset();
       } catch (error) {
+        let errorMessage: string;
+
         if (axios.isAxiosError(error)) {
           const axiosError = error as AxiosError<ErrorResponse>;
 
@@ -54,28 +57,36 @@ export default function ResetPasswordModal() {
 
             switch (status) {
               case 400:
-                setGlobalError('등록되지 않은 유저입니다.');
+                // 400: 유효성 검사 오류 (등록되지 않은 유저 등)
+                errorMessage = '등록되지 않은 유저입니다.';
                 break;
               case 500:
-                setGlobalError('서버 오류가 발생했습니다.');
+                // 500: 서버 오류
+                errorMessage = '서버 오류가 발생했습니다.';
                 break;
               default:
-                setGlobalError('비밀번호 재설정 메일 전송에 실패했습니다.');
+                errorMessage = '비밀번호 재설정 메일 전송에 실패했습니다.';
             }
           } else if (axiosError.request) {
             // 요청은 보냈지만 응답을 받지 못한 경우
-            setGlobalError('서버와 연결할 수 없습니다.');
+            errorMessage = '서버와 연결할 수 없습니다.';
           } else {
             // 요청 설정 중 오류 발생
-            setGlobalError('요청 처리 중 오류가 발생했습니다.');
+            errorMessage = '요청 처리 중 오류가 발생했습니다.';
           }
         } else {
           console.error('예상치 못한 에러:', error);
-          setGlobalError('알 수 없는 오류가 발생했습니다.');
+          errorMessage = '요청 처리 중 오류가 발생했습니다.';
         }
+
+        // API 에러 메시지 'email' 필드에 적용
+        setError('email', {
+          type: 'manual',
+          message: errorMessage,
+        });
       }
     },
-    [reset],
+    [reset, setError],
   );
 
   const modalContent = useMemo(
