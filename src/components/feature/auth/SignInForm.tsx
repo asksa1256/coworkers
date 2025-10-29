@@ -18,6 +18,7 @@ import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import KakaoSignInButton from './KakaoOAuthButton';
+import ResetPasswordModal from './ResetPasswordModal';
 
 export default function SignInForm() {
   const [globalError, setGlobalError] = useState('');
@@ -109,13 +110,7 @@ export default function SignInForm() {
             error={errors.password}
           />
           <div className='text-right'>
-            <Button
-              type='button'
-              variant='link'
-              className='text-md w-auto p-0 font-normal underline underline-offset-4 hover:font-medium md:text-base'
-            >
-              비밀번호를 잊으셨나요?
-            </Button>
+            <ResetPasswordModal />
           </div>
         </div>
       </div>
