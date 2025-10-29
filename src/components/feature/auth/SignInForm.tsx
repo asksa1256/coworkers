@@ -41,7 +41,10 @@ export default function SignInForm() {
 
       // 토큰 저장
       setTokens(accessToken, refreshToken); // 로컬 스토리지
-      setUser(user); // 전역 상태
+
+      // /user 데이터 저장
+      const { data: userRes } = await axiosInstance('/user');
+      setUser(userRes);
 
       toast.success(`환영합니다, ${user.nickname}님!`);
     } catch (error) {
