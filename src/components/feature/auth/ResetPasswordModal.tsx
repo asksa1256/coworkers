@@ -5,8 +5,8 @@ import useModal from '@/hooks/useModal';
 import axiosInstance from '@/lib/axios';
 import { type ErrorResponse } from '@/types';
 import {
-  type ResetPasswordData,
-  resetPasswordSchema,
+  resetPasswordEmailRequestSchema,
+  type ResetPasswordEmailRequest,
 } from '@/types/ResetPasswordSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios, { AxiosError } from 'axios';
@@ -23,8 +23,8 @@ export default function ResetPasswordModal() {
     formState: { errors, isSubmitting },
     reset,
     setError,
-  } = useForm<ResetPasswordData>({
-    resolver: zodResolver(resetPasswordSchema),
+  } = useForm<ResetPasswordEmailRequest>({
+    resolver: zodResolver(resetPasswordEmailRequestSchema),
     mode: 'onSubmit',
   });
 
@@ -33,7 +33,7 @@ export default function ResetPasswordModal() {
     // handleSubmit이 기대하는 onSubmit 타입: (data: FormData) => void | Promise<void>
     // onSubmit = useCallback(() => async () => {...})의 타입: () => async (data: ResetPasswordData) => {...}
     // 따라서 useCallback의 화살표 함수 형태 생략
-    async (data: ResetPasswordData) => {
+    async (data: ResetPasswordEmailRequest) => {
       const payload = {
         email: data.email,
         redirectUrl: window.location.origin,
