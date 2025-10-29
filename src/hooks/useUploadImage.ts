@@ -1,5 +1,4 @@
 import axiosInstance from '@/lib/axios';
-import { getAccessToken } from '@/utils/tokenStorage';
 import { useState, type ChangeEvent } from 'react';
 import { toast } from 'sonner';
 
@@ -28,7 +27,6 @@ export default function useUploadImage() {
       const res = await axiosInstance.post('/images/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${getAccessToken()}`,
         },
       });
 
