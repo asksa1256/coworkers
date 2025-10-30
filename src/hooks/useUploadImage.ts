@@ -33,6 +33,7 @@ export default function useUploadImage() {
       return res.data.url;
     } catch (error) {
       setUploadImage(null); // 업로드 실패시 uploadImage 초기화
+      toast.error('이미지 업로드에 실패했습니다.');
       console.error(error);
     } finally {
       setIsUploading(false);
@@ -41,6 +42,7 @@ export default function useUploadImage() {
 
   const handleUploadImage = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    e.target.value = ''; // onChange 초기화 코드
 
     if (!file) return;
 
