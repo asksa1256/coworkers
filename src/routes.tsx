@@ -1,6 +1,7 @@
 import AuthRoute from '@/components/feature/auth/AuthRoute';
 import PrivateRoute from '@/components/feature/auth/PrivateRoute';
 import Layout from '@/components/layout/Layout';
+import CreateTeamPage from '@/pages/CreateTeamPage';
 import ErrorPage from '@/pages/ErrorPage';
 import LandingPage from '@/pages/LandingPage';
 import ListPage from '@/pages/ListPage';
@@ -28,6 +29,10 @@ const routes = [
     errorElement: <ErrorPage />,
     children: [
       { path: '/', element: <LandingPage /> },
+      {
+        path: '/create-team',
+        element: withPrivate(<CreateTeamPage />),
+      },
       {
         path: '/list/:groupId',
         element: withPrivate(<ListPage />),
