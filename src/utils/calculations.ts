@@ -39,7 +39,7 @@ export const calcTodayDone = (taskLists: TaskListsResponse) => {
 };
 
 // kanbanCard의 중간 좌표를 구해 위쪽 절반과 아래쪽 절반 중 어느 부분이 drop 동작의 대상이 될 지 결정
-export const calcMouseLocation = (e: React.DragEvent, ref: HTMLLinkElement) => {
+export const calcMouseLocation = (e: React.DragEvent, ref: Element) => {
   const rect = ref.getBoundingClientRect();
   const centerY = (rect.bottom - rect.top) / 2;
   const currentY = e.clientY - rect.top;

@@ -134,7 +134,7 @@ export default function TeamPage() {
       </h2>
 
       <div className='flex lg:gap-7'>
-        <TaskKanbanBoard tasklists={groupData.taskLists} />
+        <TaskKanbanBoard taskLists={groupData.taskLists} />
         <MemberCard members={MOCK_DATA.TEAM.members} />
       </div>
     </div>
