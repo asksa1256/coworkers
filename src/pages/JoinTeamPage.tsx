@@ -13,11 +13,12 @@ import { toast } from 'sonner';
 
 export default function JoinTeamPage() {
   const navigate = useNavigate();
+  const user = useAtomValue(userAtom);
   const searchParams = useSearchParams()[0];
   const token = searchParams.get('token');
   const groupId = searchParams.get('groupId');
   const [groupInfo, setGroupInfo] = useState<GroupDetailResponse | null>(null);
-  const user = useAtomValue(userAtom);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (!token || !groupId) {
@@ -41,6 +42,7 @@ export default function JoinTeamPage() {
   const handleClickJoin = async () => {
     if (!user) return;
 
+    setIsLoading(true);
     try {
       const payload = {
         userEmail: user.email,
@@ -59,6 +61,8 @@ export default function JoinTeamPage() {
       const message =
         err.response?.data?.message ?? '알 수 없는 에러가 발생했습니다.';
       toast.error(message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -67,26 +71,29 @@ export default function JoinTeamPage() {
       <div className='bg-bg-primary mx-auto w-full max-w-[550px] rounded-[20px] px-5 pt-[46px] pb-[60px] md:px-[45px] md:pt-[60px] md:pb-[62px]'>
         <h2 className='text-xl font-bold md:text-2xl'>팀 참여하기</h2>
 
-        <div className='mt-5 text-center'>
-          <Avatar
-            imgSrc={groupInfo?.image || null}
-            size='lg'
-            className='h-16 w-16 rounded-full! md:h-[100px] md:w-[100px] lg:h-[100px] lg:w-[100px]'
-          />
-          <h3 className='mt-2 text-lg font-bold md:text-xl'>
-            {groupInfo?.name}
-          </h3>
-          <span className='text-text-default text-md mt-1 flex items-center justify-center gap-1'>
-            <UserRound className='w-4' /> {groupInfo?.members.length ?? 1}명
-          </span>
-        </div>
+        {groupInfo && (
+          <div className='mt-5 text-center'>
+            <Avatar
+              imgSrc={groupInfo.image || null}
+              size='lg'
+              className='h-16 w-16 rounded-full! md:h-[100px] md:w-[100px] lg:h-[100px] lg:w-[100px]'
+            />
+            <h3 className='mt-2 text-lg font-bold md:text-xl'>
+              {groupInfo.name}
+            </h3>
+            <span className='text-text-default text-md mt-1 flex items-center justify-center gap-1'>
+              <UserRound className='w-4' /> {groupInfo.members.length ?? 1}명
+            </span>
+          </div>
+        )}
 
         <Button
           type='button'
           className='mt-10 text-base'
           onClick={handleClickJoin}
+          disabled={isLoading}
         >
-          참여하기
+          {isLoading ? '참여 요청 중...' : '참여하기'}
         </Button>
         <p className='text-text-default mt-5 text-center text-xs md:mt-6 md:text-base'>
           {`참여를 원하시면, '참여하기' 버튼을 클릭해주세요.`}
