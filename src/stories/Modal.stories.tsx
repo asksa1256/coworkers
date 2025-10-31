@@ -14,6 +14,24 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj<typeof Modal>;
 
+const ModalContentComponenet = () => {
+  const { closeModal } = useModal();
+  console.log('모달 컨텐츠가 컴포넌트인 경우');
+
+  return (
+    <>
+      <Modal.Body>
+        <div className='h-screen'>내용이 들어가요</div>
+      </Modal.Body>
+      <Modal.Foot>
+        <button onClick={closeModal} className='bg-primary w-full'>
+          닫기
+        </button>
+      </Modal.Foot>
+    </>
+  );
+};
+
 const ModalTriggerButtons = () => {
   const { openModal, closeModal } = useModal();
 
@@ -45,10 +63,21 @@ const ModalTriggerButtons = () => {
     });
   };
 
+  const handleNormalModalComponent = () => {
+    openModal({
+      mode: 'normal',
+      closeIconButton: true,
+      children: () => <ModalContentComponenet />,
+    });
+  };
+
   return (
     <div className='flex h-screen items-center justify-center gap-4 p-8'>
       <button onClick={handleBottomSheetModal}>Bottom Sheet 모달</button>
       <button onClick={handleNormalModal}>Normal 모달</button>
+      <button onClick={handleNormalModalComponent}>
+        컨텐츠가 컴포넌트인 경우
+      </button>
     </div>
   );
 };

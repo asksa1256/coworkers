@@ -50,6 +50,7 @@ export default function Modal() {
 
   if (options === null) return;
   const { children, closeIconButton, className, mode, round } = options;
+  const content = typeof children === 'function' ? children() : children;
 
   return (
     <Dialog open={isOpen} onOpenChange={closeModal}>
@@ -78,7 +79,7 @@ export default function Modal() {
             <SheetCloseIcon />
           </DialogClose>
         )}
-        {children}
+        {content}
       </DialogContent>
     </Dialog>
   );
