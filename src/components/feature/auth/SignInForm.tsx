@@ -18,6 +18,7 @@ import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import KakaoSignInButton from './KakaoOAuthButton';
+import ResetPasswordModal from './ResetPasswordModal';
 
 export default function SignInForm() {
   const [globalError, setGlobalError] = useState('');
@@ -40,7 +41,10 @@ export default function SignInForm() {
 
       // 토큰 저장
       setTokens(accessToken, refreshToken); // 로컬 스토리지
-      setUser(user); // 전역 상태
+
+      // /user 데이터 저장
+      const { data: userRes } = await axiosInstance('/user');
+      setUser(userRes);
 
       toast.success(`환영합니다, ${user.nickname}님!`);
     } catch (error) {
@@ -109,13 +113,7 @@ export default function SignInForm() {
             error={errors.password}
           />
           <div className='text-right'>
-            <Button
-              type='button'
-              variant='link'
-              className='text-md w-auto p-0 font-normal underline underline-offset-4 hover:font-medium md:text-base'
-            >
-              비밀번호를 잊으셨나요?
-            </Button>
+            <ResetPasswordModal />
           </div>
         </div>
       </div>

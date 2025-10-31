@@ -30,12 +30,16 @@ export default function KakaoRedirectPage() {
 
         setTokens(data.accessToken, data.refreshToken);
 
+        // 기존 카카오 계정 유저는 간편 회원가입 생략
         if (state === 'signin' || data.user.createdAt !== data.user.updatedAt) {
-          // 기존 카카오 계정 유저는 간편 회원가입 생략
-          setUser(data.user);
+          // /user 데이터 저장
+          const { data: userRes } = await axiosInstance('/user');
+          setUser(userRes);
+
           navigate('/', { replace: true });
           toast.success(`환영합니다, ${data.user.nickname}님!`);
         } else {
+          // 신규 카카오 계정 유저는 간편 회원가입 페이지로 이동
           navigate('/oauth/signup/kakao', { replace: true });
         }
       } catch (error) {

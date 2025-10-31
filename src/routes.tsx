@@ -12,6 +12,7 @@ import BoardPage from '@/pages/board/BoardPage';
 import type { ReactNode } from 'react';
 import KakaoRedirectPage from './pages/auth/KakaoRedirectPage';
 import KakaoSignUpPage from './pages/auth/KakaoSignUpPage';
+import ResetPasswordPage from './pages/auth/ResetPasswordPage';
 import SignUpPage from './pages/auth/SignUpPage';
 import PostDetailPage from './pages/board/PostDetailPage';
 
@@ -29,6 +30,7 @@ const routes = [
     element: <Layout />,
     errorElement: <ErrorPage />,
     children: [
+      { index: true, element: <LandingPage /> },
       { path: '/', element: <LandingPage /> },
       {
         path: '/create-team',
@@ -45,6 +47,10 @@ const routes = [
       {
         path: '/:groupId',
         element: withPrivate(<TeamPage />),
+      },
+      {
+        path: 'reset-password',
+        element: <ResetPasswordPage />,
       },
     ],
   },
@@ -94,6 +100,19 @@ const routes = [
       {
         path: ':postId',
         element: withPrivate(<PostDetailPage />),
+      },
+    ],
+  },
+
+  // user pages
+  {
+    path: '/user',
+    element: <Layout />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: 'reset-password',
+        element: withPrivate(<ResetPasswordPage />),
       },
     ],
   },
