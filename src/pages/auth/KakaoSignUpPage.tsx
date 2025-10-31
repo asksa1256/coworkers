@@ -48,7 +48,7 @@ export default function KakaoSignUpPage() {
     try {
       await axiosInstance.patch('/user', payload);
 
-      const res = await axiosInstance.get('/user');
+      const res = await axiosInstance('/user');
 
       const user = res.data;
 
