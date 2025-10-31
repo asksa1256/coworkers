@@ -4,6 +4,7 @@ import GnbPlusIcon from '@/assets/icons/GnbPlusIcon.svg?react';
 import GnbTeamIcon from '@/assets/icons/GnbTeamIcon.svg?react';
 import { cn } from '@/lib/utils';
 import type { MembershipsType, UserType } from '@/types/userType';
+import { MailCheck } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 
@@ -26,7 +27,7 @@ function GnbItem({ type, href, title, current }: GnbItemProps) {
       <Link
         to={href}
         className={cn(
-          'text-md flex h-11 items-center gap-2 whitespace-normal md:h-auto md:min-h-[52px] md:rounded-xl md:px-4 md:py-[10px] md:hover:bg-slate-50 lg:text-base',
+          'text-md flex h-11 items-center gap-2 whitespace-normal md:h-auto md:min-h-[52px] md:gap-3 md:rounded-xl md:px-4 md:py-[10px] md:hover:bg-slate-50 lg:text-base',
           current && 'text-primary font-semibold md:bg-blue-50',
           'transition-all group-[.is-fold]:md:h-[52px] group-[.is-fold]:md:w-[52px] group-[.is-fold]:md:gap-0 group-[.is-fold]:md:px-0',
         )}
@@ -148,7 +149,13 @@ export default function HeaderGnb({
             to='/create-team'
             className='border-primary text-md text-primary mt-2 flex h-[33px] shrink-0 items-center justify-center gap-1 rounded-lg border font-semibold'
           >
-            <GnbPlusIcon />팀 추가하기
+            <GnbPlusIcon />팀 생성하기
+          </Link>
+          <Link
+            to='/join-team'
+            className='border-primary text-md bg-primary text-text-inverse mt-2 flex h-[33px] shrink-0 items-center justify-center gap-1 rounded-lg border font-semibold'
+          >
+            <MailCheck className='size-4' />팀 참여하기
           </Link>
         </div>
       </div>
