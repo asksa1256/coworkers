@@ -19,8 +19,8 @@ export default function KanbanCard({ taskList, tab, onDragStart }: Props) {
   const { pathname } = useLocation();
 
   /**
-   * dataTransfer은 현재 이동중인 카드 id와 속한 탭 전달
-   * onDragStart는 이동중인 카드 인덱스 전달
+   * dataTransfer은 현재 이동중인 카드 id와 속한 탭을 dragovder, drop이벤트에 전달
+   * onDragStart는 이동(dragging)중인 카드의 인덱스 전달
    */
   const handleDragStart = (e: React.DragEvent) => {
     e.dataTransfer.setData(tab, String(taskList.id));
