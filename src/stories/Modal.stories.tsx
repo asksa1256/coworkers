@@ -14,7 +14,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj<typeof Modal>;
 
-const ModalContentComponenet = () => {
+const ModalContentComponent = () => {
   const { closeModal } = useModal();
   console.log('모달 컨텐츠가 컴포넌트인 경우');
 
@@ -67,7 +67,7 @@ const ModalTriggerButtons = () => {
     openModal({
       mode: 'normal',
       closeIconButton: true,
-      children: () => <ModalContentComponenet />,
+      children: () => <ModalContentComponent />,
     });
   };
 
