@@ -160,6 +160,7 @@ export default function TaskKanbanBoard({ taskLists }: Props) {
         <KanbanCardList
           taskLists={todoTaskLists}
           draggingRef={draggingIndex}
+          tab='todo'
           onDragOver={e => {
             handleDragOver(e, 'todo');
           }}
@@ -180,6 +181,7 @@ export default function TaskKanbanBoard({ taskLists }: Props) {
         <KanbanCardList
           taskLists={doneTaskLists}
           draggingRef={draggingIndex}
+          tab='done'
           onDragOver={e => {
             handleDragOver(e, 'done');
           }}
