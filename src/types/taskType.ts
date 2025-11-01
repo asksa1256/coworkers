@@ -50,3 +50,9 @@ export type TaskListsResponse = {
   displayIndex: number;
   tasks: TasksResponse;
 }[];
+
+export interface TaskUpdateRequestBody {
+  name: string;
+  description: string | null;
+  done: boolean;
+}

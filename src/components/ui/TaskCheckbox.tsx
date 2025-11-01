@@ -21,9 +21,15 @@ export default function TaskCheckbox({
   ...props
 }: Props) {
   return (
-    <div className={cn('flex items-center gap-2', className)}>
+    // 체크박스 클릭으로 link이동이되지 않도록 propagation방지
+    <div
+      className={cn('flex items-center gap-2', className)}
+      onClick={e => {
+        e.stopPropagation();
+      }}
+    >
       <input
-        className='hidden'
+        className='sr-only'
         type='checkbox'
         onChange={onChange}
         id={String(taskId)}
