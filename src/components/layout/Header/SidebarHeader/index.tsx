@@ -4,20 +4,18 @@ import HeaderGnb from '@/components/layout/Header/HeaderGnb';
 import HeaderLogo from '@/components/layout/Header/HeaderLogo';
 import SidebarUser from '@/components/layout/Header/SidebarHeader/SidebarUser';
 import { cn } from '@/lib/utils';
-import type { MembershipsType, UserType } from '@/types/userType';
+import type { GroupType } from '@/types/userType';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 interface Props {
   isLoggedIn: boolean;
-  user: UserType;
-  currentGroup: MembershipsType | null;
-  onUpdateCurrentGroup: (group: MembershipsType) => void;
+  currentGroup: GroupType | null;
+  onUpdateCurrentGroup: (group: GroupType) => void;
 }
 
 export default function SidebarHeader({
   isLoggedIn,
-  user,
   currentGroup,
   onUpdateCurrentGroup,
 }: Props) {
@@ -59,7 +57,6 @@ export default function SidebarHeader({
           )}
         >
           <HeaderGnb
-            user={user}
             currentGroup={currentGroup}
             onUpdateCurrentGroup={onUpdateCurrentGroup}
           />
@@ -68,7 +65,7 @@ export default function SidebarHeader({
       {/* 하단 영역 */}
       <div className='mt-auto shrink-0'>
         {isLoggedIn ? (
-          <SidebarUser user={user} currentGroup={currentGroup} />
+          <SidebarUser currentGroup={currentGroup} />
         ) : (
           <Link
             className={cn(

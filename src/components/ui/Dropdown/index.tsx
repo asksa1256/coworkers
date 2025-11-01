@@ -72,7 +72,7 @@ export default function Dropdown(props: DropdownProps) {
     <DropdownMenu>
       <DropdownMenuTrigger>{triggerChildren}</DropdownMenuTrigger>
 
-      <DropdownMenuContent align={align}>
+      <DropdownMenuContent align={align} className='z-50'>
         {menuItems.map((item, i) => (
           <DropdownMenuItem key={i} onClick={() => handleItemClick(item)}>
             {item.label}
