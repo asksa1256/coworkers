@@ -7,7 +7,6 @@ export default function ResetPasswordModal() {
 
   const handleOpenModal = () => {
     openModal({
-      mode: 'normal',
       closeIconButton: false,
       children: () => <ResetPasswordEmailForm />,
     });

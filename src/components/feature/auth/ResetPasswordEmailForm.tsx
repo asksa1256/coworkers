@@ -20,10 +20,10 @@ export default function ResetPasswordEmailForm() {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isValid },
   } = useForm<ResetPasswordEmailRequest>({
     resolver: zodResolver(resetPasswordEmailRequestSchema),
-    mode: 'onBlur',
+    mode: 'onSubmit',
   });
 
   const onSubmit = async (data: ResetPasswordEmailRequest) => {
@@ -76,7 +76,7 @@ export default function ResetPasswordEmailForm() {
 
   return (
     <form
-      className='flex flex-col items-center justify-center px-9 pt-4'
+      className='flex flex-col items-center justify-center'
       onSubmit={handleSubmit(onSubmit)}
       noValidate
     >
@@ -116,7 +116,7 @@ export default function ResetPasswordEmailForm() {
         <Button
           size='lg'
           className='w-[50%]'
-          disabled={isSubmitting}
+          disabled={isSubmitting || !isValid}
           type='submit'
         >
           {isSubmitting ? '링크 전송중...' : '링크 보내기'}

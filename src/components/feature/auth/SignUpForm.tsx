@@ -27,7 +27,7 @@ export default function SignInForm() {
     handleSubmit,
     watch,
     trigger,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isValid },
   } = useForm<SignUpRequest>({
     resolver: zodResolver(SignUpRequestSchema),
     mode: 'onBlur',
@@ -150,7 +150,7 @@ export default function SignInForm() {
         <Button
           type='submit'
           className='mb-6 text-base'
-          disabled={isSubmitting}
+          disabled={isSubmitting || !isValid}
         >
           {isSubmitting ? '회원가입 중...' : '회원가입'}
         </Button>
@@ -166,14 +166,6 @@ export default function SignInForm() {
         <span className='text-md text-text-default md:text-base'>
           간편 회원가입하기
         </span>
-        {/* <Button
-          type='button'
-          size='icon-lg'
-          variant='ghost'
-          className='h-[42px] w-[42px]'
-        >
-          <img src={KakaotalkIcon} alt='카카오톡 로그인' />
-        </Button> */}
         <KakaoOAuthButton authType='signup' />
       </div>
     </form>
