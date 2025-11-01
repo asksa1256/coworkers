@@ -8,6 +8,13 @@ const config: StorybookConfig = {
     '@storybook/addon-a11y',
     '@storybook/addon-vitest',
   ],
+  staticDirs: [
+    '../src',
+    {
+      from: '../src/assets/fonts',
+      to: 'src/assets/fonts',
+    },
+  ],
   framework: {
     name: '@storybook/react-vite',
     options: {},
