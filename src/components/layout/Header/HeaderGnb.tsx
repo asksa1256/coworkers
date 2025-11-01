@@ -4,7 +4,6 @@ import GnbPlusIcon from '@/assets/icons/GnbPlusIcon.svg?react';
 import GnbTeamIcon from '@/assets/icons/GnbTeamIcon.svg?react';
 import { cn } from '@/lib/utils';
 import type { MembershipsType, UserType } from '@/types/userType';
-import { MailCheck } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 
@@ -150,12 +149,6 @@ export default function HeaderGnb({
             className='border-primary text-md text-primary mt-2 flex h-[33px] shrink-0 items-center justify-center gap-1 rounded-lg border font-semibold'
           >
             <GnbPlusIcon />팀 생성하기
-          </Link>
-          <Link
-            to='/join-team'
-            className='border-primary text-md bg-primary text-text-inverse mt-2 flex h-[33px] shrink-0 items-center justify-center gap-1 rounded-lg border font-semibold'
-          >
-            <MailCheck className='size-4' />팀 참여하기
           </Link>
         </div>
       </div>
