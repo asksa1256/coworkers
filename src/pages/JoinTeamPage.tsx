@@ -8,17 +8,18 @@ import type { AxiosError } from 'axios';
 import { useAtomValue } from 'jotai';
 import { UserRound } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 export default function JoinTeamPage() {
   const navigate = useNavigate();
   const user = useAtomValue(userAtom);
-  const searchParams = useSearchParams()[0];
-  const token = searchParams.get('token');
-  const groupId = searchParams.get('groupId');
   const [groupInfo, setGroupInfo] = useState<GroupDetailResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('token');
+  const groupId = params.get('groupId');
 
   useEffect(() => {
     if (!token || !groupId) {
