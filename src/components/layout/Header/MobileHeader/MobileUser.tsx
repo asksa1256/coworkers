@@ -1,12 +1,14 @@
 import DefaultProfileIcon from '@/assets/icons/DefaultProfileIcon.svg?react';
-import type { UserType } from '@/types/userType';
+import { userAtom } from '@/store/authAtom';
+import { useAtomValue } from 'jotai';
 
-interface Props {
-  user: UserType;
-}
+export default function MobileUser() {
+  const user = useAtomValue(userAtom);
 
-export default function MobileUser({ user }: Props) {
+  if (!user) return;
+
   const { image, nickname } = user;
+
   return (
     <div className='relative'>
       <button className='flex h-7 w-7 items-center justify-center overflow-hidden rounded-full bg-slate-300'>

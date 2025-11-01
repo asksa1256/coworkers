@@ -1,19 +1,17 @@
 import HeaderLogo from '@/components/layout/Header/HeaderLogo';
 import MobileMenu from '@/components/layout/Header/MobileHeader/MobileMenu';
 import MobileUser from '@/components/layout/Header/MobileHeader/MobileUser';
-import type { MembershipsType, UserType } from '@/types/userType';
+import type { GroupType } from '@/types/userType';
 import { Link } from 'react-router-dom';
 
 interface Props {
   isLoggedIn: boolean;
-  user: UserType;
-  currentGroup: MembershipsType | null;
-  onUpdateCurrentGroup: (group: MembershipsType) => void;
+  currentGroup: GroupType | null;
+  onUpdateCurrentGroup: (group: GroupType) => void;
 }
 
 export default function MobileHeader({
   isLoggedIn,
-  user,
   currentGroup,
   onUpdateCurrentGroup,
 }: Props) {
@@ -22,7 +20,6 @@ export default function MobileHeader({
       <div className='flex h-full items-center gap-3'>
         {isLoggedIn && (
           <MobileMenu
-            user={user}
             currentGroup={currentGroup}
             onUpdateCurrentGroup={onUpdateCurrentGroup}
           />
@@ -31,7 +28,7 @@ export default function MobileHeader({
       </div>
       <div className='flex h-full items-center'>
         {isLoggedIn ? (
-          <MobileUser user={user} />
+          <MobileUser />
         ) : (
           <Link
             to='/login'

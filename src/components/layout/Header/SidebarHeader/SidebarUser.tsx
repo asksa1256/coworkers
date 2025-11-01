@@ -1,12 +1,17 @@
 import DefaultProfileIcon from '@/assets/icons/DefaultProfileIcon.svg?react';
-import type { MembershipsType, UserType } from '@/types/userType';
+import { userAtom } from '@/store/authAtom';
+import type { GroupType } from '@/types/userType';
+import { useAtomValue } from 'jotai';
 
 interface Props {
-  user: UserType;
-  currentGroup: MembershipsType | null;
+  currentGroup: GroupType | null;
 }
 
-export default function SidebarUser({ user, currentGroup }: Props) {
+export default function SidebarUser({ currentGroup }: Props) {
+  const user = useAtomValue(userAtom);
+
+  if (!user) return;
+
   const { nickname, image } = user;
 
   return (
@@ -26,7 +31,7 @@ export default function SidebarUser({ user, currentGroup }: Props) {
           </strong>
           {currentGroup && (
             <span className='text-md mt-0.5 block overflow-hidden leading-[1.1] text-ellipsis whitespace-nowrap text-slate-400'>
-              {currentGroup.group.name}
+              {currentGroup.name}
             </span>
           )}
         </div>

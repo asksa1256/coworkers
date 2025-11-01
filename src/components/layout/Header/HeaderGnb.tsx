@@ -2,8 +2,12 @@ import GnbArrowIcon from '@/assets/icons/GnbArrowIcon.svg?react';
 import GnbBoardIcon from '@/assets/icons/GnbBoardIcon.svg?react';
 import GnbPlusIcon from '@/assets/icons/GnbPlusIcon.svg?react';
 import GnbTeamIcon from '@/assets/icons/GnbTeamIcon.svg?react';
+import axiosInstance from '@/lib/axios';
 import { cn } from '@/lib/utils';
-import type { MembershipsType, UserType } from '@/types/userType';
+import { userAtom } from '@/store/authAtom';
+import type { GroupType } from '@/types/userType';
+import { useQuery } from '@tanstack/react-query';
+import { useAtomValue } from 'jotai';
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 
@@ -54,29 +58,36 @@ function GnbItem({ type, href, title, current }: GnbItemProps) {
 }
 
 interface HeaderGnbProps {
-  user: UserType;
-  currentGroup: MembershipsType | null;
-  onUpdateCurrentGroup: (group: MembershipsType) => void;
+  currentGroup: GroupType | null;
+  onUpdateCurrentGroup: (group: GroupType) => void;
 }
 
 export default function HeaderGnb({
-  user,
   currentGroup,
   onUpdateCurrentGroup,
 }: HeaderGnbProps) {
   const location = useLocation();
-  const params = useParams();
+  const { groupId } = useParams();
   const [isGroupOpen, setIsGroupOpen] = useState(true);
 
-  const { memberships } = user;
+  const user = useAtomValue(userAtom);
+
+  const { data: userGroups } = useQuery({
+    queryKey: ['userGroups', user?.id],
+    queryFn: async () => {
+      const { data } = await axiosInstance.get<GroupType[]>('/user/groups');
+      return data;
+    },
+    enabled: !!user?.id,
+  });
 
   useEffect(() => {
-    if (!params.teamId) return;
-    const findGroup = memberships.find(
-      item => String(item.group.id) === params.teamId,
-    );
+    if (!groupId) return;
+    const findGroup = userGroups?.find(item => String(item.id) === groupId);
     if (findGroup) onUpdateCurrentGroup(findGroup);
-  }, [params.teamId]);
+  }, [groupId]);
+
+  if (!userGroups) return <div>로딩중....</div>;
 
   return (
     <nav className='lg:-mx-4 lg:flex lg:w-[270px] lg:grow-1 lg:flex-col lg:overflow-hidden lg:px-4'>
@@ -92,7 +103,7 @@ export default function HeaderGnb({
             'group-[.is-fold]:lg:hidden',
           )}
         >
-          {!!memberships.length && (
+          {!!userGroups.length && (
             <>
               <button
                 className={cn(
@@ -116,7 +127,7 @@ export default function HeaderGnb({
                     currentGroup && 'text-primary',
                   )}
                 >
-                  {currentGroup === null ? '팀 선택' : currentGroup.group.name}
+                  {currentGroup === null ? '팀 선택' : currentGroup.name}
                 </span>
                 <span className='shrink-0'>
                   <GnbArrowIcon
@@ -131,13 +142,13 @@ export default function HeaderGnb({
                 )}
               >
                 <ul>
-                  {memberships.map(team => (
+                  {userGroups.map(team => (
                     <GnbItem
                       type='team'
-                      title={team.group.name}
-                      href={`/${team.group.id}`}
-                      key={team.group.id}
-                      current={currentGroup?.group?.id === team.group.id}
+                      title={team.name}
+                      href={`/${team.id}`}
+                      key={team.id}
+                      current={currentGroup?.id === team.id}
                     />
                   ))}
                 </ul>
@@ -157,8 +168,8 @@ export default function HeaderGnb({
         <ul className='mb-2 hidden group-[.is-fold]:lg:block'>
           <GnbItem
             type='team'
-            title={currentGroup?.group.name}
-            href={`/${currentGroup.group.id}`}
+            title={currentGroup?.name}
+            href={`/${currentGroup.id}`}
             current={true}
           />
         </ul>
