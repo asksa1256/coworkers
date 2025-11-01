@@ -1,17 +1,12 @@
 import axiosInstance from '@/lib/axios';
+import type { TaskUpdateRequestBody } from '@/types/taskType';
 import type { MembershipsType } from '@/types/userType';
-import { getAccessToken } from '@/utils/tokenStorage';
 
-export const getGroup = async <GroupDetialType>(
+export const getGroup = async <GroupDetailResponse>(
   groupId: number,
-): Promise<GroupDetialType> => {
-  // Todo - 인터셉터 구현 후 삭제
+): Promise<GroupDetailResponse> => {
   try {
-    const response = await axiosInstance.get(`/groups/${groupId}`, {
-      headers: {
-        Authorization: `Bearer ${getAccessToken()}`,
-      },
-    });
+    const response = await axiosInstance(`/groups/${groupId}`);
     return response.data;
   } catch (e) {
     console.log('그룹 데이터 에러: ', e);
@@ -23,15 +18,9 @@ export const getGroupMembership = async <T = Omit<MembershipsType, 'group'>>(
   groupId: number,
   memberId: number,
 ): Promise<T> => {
-  // Todo - 인터셉터 구현 후 삭제
   try {
-    const response = await axiosInstance.get(
+    const response = await axiosInstance(
       `/groups/${groupId}/member/${memberId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${getAccessToken()}`,
-        },
-      },
     );
     return response.data;
   } catch (e) {
@@ -47,19 +36,28 @@ export const updateTaskListOrder = async (
     displayIndex: number;
   },
 ) => {
-  // Todo - 인터셉터 구현 후 삭제
   try {
     await axiosInstance.patch(
       `/groups/${groupId}/task-lists/${taskListId}/order`,
       body,
-      {
-        headers: {
-          Authorization: `Bearer ${getAccessToken()}`,
-        },
-      },
     );
   } catch (e) {
     console.log('리스트 항목 순서 변경 실패:', e);
+    throw e;
+  }
+};
+
+export const updateTask = async (
+  taskId: number,
+  body: TaskUpdateRequestBody,
+) => {
+  try {
+    await axiosInstance.patch(
+      `/groups/{groupId}/task-lists/{taskListId}/tasks/${taskId}`,
+      body,
+    );
+  } catch (e) {
+    console.log('태스크 업데이트 실패:', e);
     throw e;
   }
 };

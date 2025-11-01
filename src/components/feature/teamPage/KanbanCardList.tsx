@@ -5,11 +5,13 @@ import KanbanCard from './KanbanCard';
 interface Props extends ComponentProps<'ul'> {
   taskLists: TaskListsResponse;
   draggingRef: RefObject<number | null>;
+  tab: 'todo' | 'done';
 }
 
 export default function KanbanCardList({
   taskLists,
   draggingRef,
+  tab,
   onDragOver,
   onDrop,
   onDragEnd,
@@ -25,7 +27,7 @@ export default function KanbanCardList({
         <KanbanCard
           key={taskList.id}
           taskList={taskList}
-          tab='todo'
+          tab={tab}
           onDragStart={(index: number) => {
             draggingRef.current = index;
           }}
