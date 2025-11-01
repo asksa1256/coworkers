@@ -41,7 +41,7 @@ const routes = [
         element: withPrivate(<JoinTeamPage />),
       },
       {
-        path: '/list/:groupId',
+        path: '/:groupId/details',
         element: withPrivate(<ListPage />),
       },
       {

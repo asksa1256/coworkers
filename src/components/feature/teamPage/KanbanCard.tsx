@@ -96,7 +96,7 @@ export default function KanbanCard({ taskList, tab, onDragStart }: Props) {
           'card-common relative block px-4 py-5',
           isDragging && 'border-primary opacity-50',
         )}
-        to={`/list${pathname}`}
+        to={`${pathname}/details`}
       >
         <div
           className={clsx('flex items-center justify-between', {
