@@ -23,7 +23,7 @@ export default function ResetPasswordEmailForm() {
     formState: { errors, isSubmitting },
   } = useForm<ResetPasswordEmailRequest>({
     resolver: zodResolver(resetPasswordEmailRequestSchema),
-    mode: 'onBlur',
+    mode: 'onSubmit',
   });
 
   const onSubmit = async (data: ResetPasswordEmailRequest) => {
@@ -76,7 +76,7 @@ export default function ResetPasswordEmailForm() {
 
   return (
     <form
-      className='flex flex-col items-center justify-center px-9 pt-4'
+      className='flex flex-col items-center justify-center'
       onSubmit={handleSubmit(onSubmit)}
       noValidate
     >
