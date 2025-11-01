@@ -5,15 +5,19 @@ import { setTokens } from '@/utils/tokenStorage';
 import axios from 'axios';
 import { useSetAtom } from 'jotai';
 import { Loader2 } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 export default function KakaoRedirectPage() {
   const navigate = useNavigate();
   const setUser = useSetAtom(userAtom);
+  const hasExecuted = useRef(false); // handleSignInKakao 2회 실행 방지
 
   useEffect(() => {
+    if (hasExecuted.current) return;
+    hasExecuted.current = true;
+
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code'); // URL 파라미터에 담긴 인가 코드
     const state = params.get('state'); // signin | signup
@@ -30,10 +34,10 @@ export default function KakaoRedirectPage() {
 
         setTokens(data.accessToken, data.refreshToken);
 
-        // 기존 카카오 계정 유저는 간편 회원가입 생략
+        // 기존 카카오 계정 유저는 간편 회원가입 생략하고 간편 로그인 바로 진행
         if (state === 'signin' || data.user.createdAt !== data.user.updatedAt) {
           // /user 데이터 저장
-          const { data: userRes } = await axiosInstance('/user');
+          const { data: userRes } = await axiosInstance('/user1');
           setUser(userRes);
 
           navigate('/', { replace: true });
@@ -45,13 +49,16 @@ export default function KakaoRedirectPage() {
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error(
-            'Axios Error:',
+            'Axios 에러:',
             error.response?.status,
             error.response?.data,
           );
         } else {
-          console.error('Unexpected Error:', error);
+          console.error('예상치 못한 에러 발생:', error);
         }
+
+        toast.error('카카오 계정 연동에 실패했습니다.');
+        navigate('/auth/signIn');
       }
     };
 
