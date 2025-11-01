@@ -68,7 +68,9 @@ export default function TaskKanbanBoard({ taskLists }: Props) {
       queryClient.setQueryData(['group', groupId], context?.prevSnapshot);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['group', groupId] });
+      if (queryClient.isMutating({ mutationKey: ['group', groupId] }) === 1) {
+        queryClient.invalidateQueries({ queryKey: ['group', groupId] });
+      }
     },
   });
 
