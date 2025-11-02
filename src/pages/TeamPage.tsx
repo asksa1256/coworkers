@@ -11,6 +11,7 @@ import { isAxiosError } from 'axios';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 //Todo - api 연결 이후 삭제
 const MOCK_DATA = {
@@ -95,6 +96,8 @@ export default function TeamPage() {
       if (isAxiosError(e) && e.response?.status === 404) {
         // 그룹 멤버 아닐 시 홈으로 이동
         navigate('/', { replace: true });
+      } else {
+        toast.error('사용자 권한을 가져올 수 없습니다. 다시 시도해주세요.');
       }
       throw e;
     }
