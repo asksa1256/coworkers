@@ -33,7 +33,7 @@ export default function KakaoSignUpPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isValid },
   } = useForm<KakaoSignUpRequest>({
     resolver: zodResolver(SignUpRequestSchema.pick({ nickname: true })), // 닉네임만 검증
     mode: 'onBlur',
@@ -121,7 +121,7 @@ export default function KakaoSignUpPage() {
           <Button
             type='submit'
             className='mb-6 text-base'
-            disabled={isSubmitting}
+            disabled={isSubmitting || !isValid}
           >
             {isSubmitting ? '회원가입 중...' : '회원가입'}
           </Button>

@@ -27,7 +27,7 @@ export default function SignInForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isValid },
   } = useForm<SignInRequest>({
     resolver: zodResolver(SignInRequestSchema),
     mode: 'onBlur',
@@ -52,13 +52,11 @@ export default function SignInForm() {
         const axiosError = error as AxiosError<ErrorResponse>;
 
         if (axiosError.response) {
-          const { status, data } = axiosError.response;
+          const { status } = axiosError.response;
 
           switch (status) {
             case 400:
-              setGlobalError(
-                data.message || '이메일 혹은 비밀번호를 확인해주세요.',
-              );
+              setGlobalError('이메일 혹은 비밀번호를 확인해주세요.');
               break;
             case 500:
               setGlobalError('서버 오류가 발생했습니다.');
@@ -123,7 +121,7 @@ export default function SignInForm() {
         <Button
           type='submit'
           className='mb-6 text-base'
-          disabled={isSubmitting}
+          disabled={isSubmitting || !isValid}
         >
           {isSubmitting ? '로그인 중...' : '로그인'}
         </Button>
