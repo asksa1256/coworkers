@@ -33,6 +33,7 @@ export default function TaskKanbanBoard({ taskLists }: Props) {
   const { pathname } = useLocation();
   const groupId = Number(pathname.slice(1));
   const taskListsOrderMutation = useMutation({
+    mutationKey: ['taskListOrder'],
     mutationFn: (args: Parameters<typeof updateTaskListOrder>) =>
       updateTaskListOrder(...args),
     onMutate: async () => {
@@ -68,7 +69,7 @@ export default function TaskKanbanBoard({ taskLists }: Props) {
       queryClient.setQueryData(['group', groupId], context?.prevSnapshot);
     },
     onSettled: () => {
-      if (queryClient.isMutating({ mutationKey: ['group', groupId] }) === 1) {
+      if (queryClient.isMutating({ mutationKey: ['taskListOrder'] }) === 1) {
         queryClient.invalidateQueries({ queryKey: ['group', groupId] });
       }
     },

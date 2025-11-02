@@ -23,6 +23,7 @@ export default function KanbanCard({ taskList, tab, onDragStart }: Props) {
   const { pathname } = useLocation();
   const groupId = Number(pathname.slice(1));
   const taskDoneMutation = useMutation({
+    mutationKey: ['taskDone'],
     mutationFn: (args: Parameters<typeof updateTask>) => updateTask(...args),
     onMutate: async variables => {
       await queryClient.cancelQueries({
@@ -65,7 +66,7 @@ export default function KanbanCard({ taskList, tab, onDragStart }: Props) {
       queryClient.setQueryData(['group', groupId], context?.prevSnapshot);
     },
     onSettled: () => {
-      if (queryClient.isMutating({ mutationKey: ['group', groupId] }) === 1) {
+      if (queryClient.isMutating({ mutationKey: ['taskDone'] }) === 1) {
         queryClient.invalidateQueries({ queryKey: ['group', groupId] });
       }
     },
