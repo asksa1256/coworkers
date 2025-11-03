@@ -21,6 +21,10 @@ const meta = {
       control: false,
       description: '드롭다운 트리거 내용',
     },
+    defaultValue: {
+      control: 'text',
+      description: '셀렉트 드롭다운의 기본 선택값',
+    },
     suffix: {
       control: false,
       description: '드롭다운 suffix 아이콘 (셀렉트 형태에만 필수)',
@@ -41,35 +45,35 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+function SelectDropdownStory(args: SelectDropdownProps) {
+  const [selected, setSelected] = useState(args.defaultValue ?? 'recent');
+
+  const handleSelect = (value: string) => {
+    setSelected(value); // 내부 상태 갱신
+    args.onSelect?.(value); // 외부 콜백 실행 (console.log)
+  };
+
+  return <Dropdown {...args} defaultValue={selected} onSelect={handleSelect} />;
+}
+
 export const DropdownSelect: Story = {
   // 메뉴 선택 시 선택값 표시(리렌더링)를 위해 render 사용
-  render: function Render(args) {
-    const [selected, setSelected] = useState(args.triggerChildren as string);
-
-    return (
-      <Dropdown
-        {...(args as SelectDropdownProps)}
-        triggerChildren={selected}
-        onSelect={setSelected}
-      />
-    );
-  },
+  render: args =>
+    args.type === 'select' ? (
+      <SelectDropdownStory {...(args as SelectDropdownProps)} />
+    ) : (
+      <></>
+    ),
   args: {
     type: 'select',
-    triggerChildren: '최신순',
-    suffix: <TriangleDownIcon className='h-6 w-6' />,
     menuItems: [
-      {
-        label: '최신순',
-        value: 'recent',
-      },
-      {
-        label: '좋아요순',
-        value: 'like',
-      },
+      { label: '최신순', value: 'recent' },
+      { label: '좋아요순', value: 'like' },
     ],
+    defaultValue: 'recent',
+    suffix: <TriangleDownIcon className='h-5 w-5' />,
     align: 'start',
-    onSelect: () => console.log('추가 동작...'),
+    onSelect: value => console.log('선택됨:', value),
   },
   name: '셀렉트 형태 드롭다운',
 };
