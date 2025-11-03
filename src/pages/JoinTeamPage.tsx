@@ -4,6 +4,7 @@ import Button from '@/components/ui/Button';
 import axiosInstance from '@/lib/axios';
 import { userAtom } from '@/store/authAtom';
 import type { GroupDetailResponse } from '@/types/groupType';
+import { useQueryClient } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 import { useAtomValue } from 'jotai';
 import { UserRound } from 'lucide-react';
@@ -12,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 export default function JoinTeamPage() {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const user = useAtomValue(userAtom);
   const [groupInfo, setGroupInfo] = useState<GroupDetailResponse | null>(null);
@@ -38,7 +40,7 @@ export default function JoinTeamPage() {
       }
     };
     getInfo();
-  }, [token, groupId, navigate]);
+  }, []);
 
   const handleClickJoin = async () => {
     if (!user) return;
@@ -56,6 +58,7 @@ export default function JoinTeamPage() {
       );
 
       toast.success('팀 참여하기 성공! 팀페이지로 이동합니다.');
+      queryClient.invalidateQueries({ queryKey: ['userGroups', user?.id] });
       navigate(`/${data.groupId}`);
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
