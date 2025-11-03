@@ -41,12 +41,12 @@ const routes = [
         element: withPrivate(<JoinTeamPage />),
       },
       {
-        path: '/:groupId/details',
-        element: withPrivate(<ListPage />),
-      },
-      {
         path: '/:groupId',
         element: withPrivate(<TeamPage />),
+      },
+      {
+        path: '/:groupId/details',
+        element: withPrivate(<ListPage />),
       },
       {
         path: 'reset-password',
