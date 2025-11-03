@@ -9,7 +9,7 @@ import { countDone } from '@/utils/calculations';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 interface Props {
   taskList: TaskListsResponse[number];
@@ -20,8 +20,8 @@ interface Props {
 export default function KanbanCard({ taskList, tab, onDragStart }: Props) {
   const queryClient = useQueryClient();
   const [isDragging, setIsDragging] = useState(false);
-  const { pathname } = useLocation();
-  const groupId = Number(pathname.slice(1));
+  const params = useParams();
+  const groupId = Number(params.groupId);
   const taskDoneMutation = useMutation({
     mutationKey: ['taskDone'],
     mutationFn: (args: Parameters<typeof updateTask>) => updateTask(...args),
@@ -99,7 +99,7 @@ export default function KanbanCard({ taskList, tab, onDragStart }: Props) {
           'card-common relative block px-4 py-5',
           isDragging && 'border-primary opacity-50',
         )}
-        to={`/list${pathname}`}
+        to={`/list/${groupId}`}
       >
         <div
           className={clsx('flex items-center justify-between', {

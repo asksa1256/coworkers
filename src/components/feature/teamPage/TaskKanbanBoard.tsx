@@ -1,12 +1,14 @@
 import { updateTaskListOrder } from '@/api/api';
+import useModal from '@/hooks/useModal';
 import type { GroupDetailResponse } from '@/types/groupType';
 import type { TaskListsResponse } from '@/types/taskType';
 import { calcMouseLocation } from '@/utils/calculations';
 import changeListOrder from '@/utils/changeListOrder';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
+import AddTaskListForm from './AddTaskListForm';
 import KanbanCardList from './KanbanCardList';
 import KanbanTab from './KanbanTab';
 
@@ -22,6 +24,7 @@ interface Props {
  * doneTaskLists - 모두 완료되었으면 done에 저장
  */
 export default function TaskKanbanBoard({ taskLists }: Props) {
+  const { openModal } = useModal();
   const [dragOverCopy, setDragOverCopy] = useState<TaskListsResponse | null>(
     null,
   );
@@ -30,8 +33,8 @@ export default function TaskKanbanBoard({ taskLists }: Props) {
   const todoTaskLists: TaskListsResponse = [];
   const doneTaskLists: TaskListsResponse = [];
   const queryClient = useQueryClient();
-  const { pathname } = useLocation();
-  const groupId = Number(pathname.slice(1));
+  const params = useParams();
+  const groupId = Number(params.groupId);
   const taskListsOrderMutation = useMutation({
     mutationKey: ['taskListOrder'],
     mutationFn: (args: Parameters<typeof updateTaskListOrder>) =>
@@ -156,10 +159,17 @@ export default function TaskKanbanBoard({ taskLists }: Props) {
     setDragOverCopy(null);
   };
 
+  const handleOpenAddTaskListModal = () => {
+    openModal({
+      children: <AddTaskListForm groupId={groupId} />,
+      closeIconButton: true,
+    });
+  };
+
   return (
     <section className='relative flex w-full flex-col gap-8 lg:max-w-[846px] lg:flex-row lg:gap-4'>
       <div className='w-full'>
-        <KanbanTab title='할 일' />
+        <KanbanTab title='할 일' onClick={handleOpenAddTaskListModal} />
         <KanbanCardList
           taskLists={todoTaskLists}
           draggingRef={draggingIndex}

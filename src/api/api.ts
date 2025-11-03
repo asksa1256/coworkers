@@ -32,14 +32,14 @@ export const getGroupMembership = async <T = Omit<MembershipsType, 'group'>>(
 export const updateTaskListOrder = async (
   groupId: number,
   taskListId: number,
-  body: {
+  payload: {
     displayIndex: number;
   },
 ) => {
   try {
     await axiosInstance.patch(
       `/groups/${groupId}/task-lists/${taskListId}/order`,
-      body,
+      payload,
     );
   } catch (e) {
     console.log('리스트 항목 순서 변경 실패:', e);
@@ -49,15 +49,27 @@ export const updateTaskListOrder = async (
 
 export const updateTask = async (
   taskId: number,
-  body: TaskUpdateRequestBody,
+  payload: TaskUpdateRequestBody,
 ) => {
   try {
     await axiosInstance.patch(
       `/groups/{groupId}/task-lists/{taskListId}/tasks/${taskId}`,
-      body,
+      payload,
     );
   } catch (e) {
     console.log('태스크 업데이트 실패:', e);
+    throw e;
+  }
+};
+
+export const addTaskList = async (
+  groupId: number,
+  payload: { name: string },
+) => {
+  try {
+    await axiosInstance.post(`groups/${groupId}/task-lists`, payload);
+  } catch (e) {
+    console.log('태스크 리스트 추가 실패:', e);
     throw e;
   }
 };

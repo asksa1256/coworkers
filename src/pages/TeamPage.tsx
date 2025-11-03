@@ -10,7 +10,7 @@ import { useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
 //Todo - api 연결 이후 삭제
@@ -74,8 +74,8 @@ const MOCK_DATA = {
 
 export default function TeamPage() {
   const navigate = useNavigate();
-  const { pathname } = useLocation();
-  const groupId = Number(pathname.slice(1));
+  const params = useParams();
+  const groupId = Number(params.groupId);
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
 
   const { data: groupData } = useQuery<GroupDetailResponse>({
@@ -106,7 +106,7 @@ export default function TeamPage() {
   useEffect(() => {
     setIsAdmin(null);
     getUserRole();
-  }, [pathname]);
+  }, [groupId]);
 
   if (isAdmin === null || !groupData) return;
 
