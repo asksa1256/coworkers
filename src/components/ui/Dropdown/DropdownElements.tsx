@@ -9,14 +9,6 @@ export function DropdownMenu({
   return <DropdownMenuPrimitive.Root data-slot='dropdown-menu' {...props} />;
 }
 
-export function DropdownMenuPortal({
-  ...props
-}: React.ComponentProps<typeof DropdownMenuPrimitive.Portal>) {
-  return (
-    <DropdownMenuPrimitive.Portal data-slot='dropdown-menu-portal' {...props} />
-  );
-}
-
 // 셀렉트 형태 드롭다운 (문자열 children + suffix)
 interface SelectTriggerProps {
   children: string;
@@ -78,23 +70,21 @@ export function DropdownMenuContent({
   ...props
 }: DropdownMenuContentProps) {
   return (
-    <DropdownMenuPrimitive.Portal>
-      <DropdownMenuPrimitive.Content
-        data-slot='dropdown-menu-content'
-        sideOffset={sideOffset}
-        align={align}
-        className={cn(
-          'text-text-primary border-border-primary md:text-md z-30 overflow-x-hidden overflow-y-auto rounded-lg border bg-white text-xs shadow-md md:rounded-xl',
+    <DropdownMenuPrimitive.Content
+      data-slot='dropdown-menu-content'
+      sideOffset={sideOffset}
+      align={align}
+      className={cn(
+        'text-text-primary border-border-primary md:text-md z-30 overflow-x-hidden overflow-y-auto rounded-lg border bg-white text-xs shadow-md md:rounded-xl',
 
-          'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
+        'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
 
-          'max-h-(--radix-dropdown-menu-content-available-height) min-w-[94px] origin-(--radix-dropdown-menu-content-transform-origin) md:min-w-[120px]',
+        'max-h-(--radix-dropdown-menu-content-available-height) min-w-[94px] origin-(--radix-dropdown-menu-content-transform-origin) md:min-w-[120px]',
 
-          className,
-        )}
-        {...props}
-      />
-    </DropdownMenuPrimitive.Portal>
+        className,
+      )}
+      {...props}
+    />
   );
 }
 
