@@ -6,6 +6,7 @@ import axiosInstance from '@/lib/axios';
 import { type ArticleListResponse } from '@/types/boardTypes';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useRef } from 'react';
+import ArticleCard from './ArticleCard';
 
 export default function ArticleList() {
   const scrollRef = useRef(null);
@@ -68,7 +69,9 @@ export default function ArticleList() {
     <>
       <ol>
         {data.pages.flatMap(page =>
-          page.list.map(a => <li key={a.id}>{a.title}</li>),
+          page.list.map(article => (
+            <ArticleCard key={article.id} article={article} />
+          )),
         )}
       </ol>
 

@@ -14,7 +14,17 @@ export interface ArticleResponse {
   commentCount: number;
 }
 
+export interface ArticleDetailResponse extends ArticleResponse {
+  content: string;
+  isLiked: boolean;
+}
+
 export interface ArticleListResponse {
   list: ArticleResponse[];
   totalCount: number;
 }
+
+export type ArticleCard = ArticleResponse & {
+  content: string;
+  isLiked?: boolean; // 상세 페이지에서만 필요
+};
