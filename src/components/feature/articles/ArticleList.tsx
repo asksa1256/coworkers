@@ -1,14 +1,18 @@
+import TriangleDownIcon from '@/assets/icons/TriangleDownIcon.svg?react';
 import Button from '@/components/ui/Button';
+import Dropdown from '@/components/ui/Dropdown';
 import EmptyContent from '@/components/ui/EmptyContent';
 import InfiniteScrollObserver from '@/components/ui/InfiniteScrollObserver';
+import { ARTICLE_SORT_LIST } from '@/constants';
 import useIntersectionObserver from '@/hooks/useIntersectionObserver';
 import axiosInstance from '@/lib/axios';
 import { type ArticleListResponse } from '@/types/boardTypes';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import ArticleCard from './ArticleCard';
 
 export default function ArticleList() {
+  const [sort, setSort] = useState(ARTICLE_SORT_LIST[0]);
   const scrollRef = useRef(null);
 
   const {
@@ -67,7 +71,18 @@ export default function ArticleList() {
 
   return (
     <>
-      <ol>
+      <div className='mb-5 flex items-center justify-between'>
+        <h3 className='text-2lg font-bold md:text-xl'>전체</h3>
+        <Dropdown
+          type='select'
+          triggerChildren={sort}
+          suffix={<TriangleDownIcon />}
+          menuItems={ARTICLE_SORT_LIST}
+          onSelect={setSort}
+        />
+      </div>
+
+      <ol className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
         {data.pages.flatMap(page =>
           page.list.map(article => (
             <ArticleCard key={article.id} article={article} />
