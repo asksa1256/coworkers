@@ -31,6 +31,10 @@ const meta = {
       options: ['start', 'center', 'end'],
       description: '드롭다운 메뉴 정렬',
     },
+    className: {
+      control: 'text',
+      description: '커스텀 스타일',
+    },
   },
 } satisfies Meta<typeof Dropdown>;
 
@@ -84,6 +88,7 @@ export const DropdownWithTriggerIcon: Story = {
       },
     ],
     align: 'end',
+    className: 'text-center',
   },
   name: '아이콘 트리거 드롭다운',
 };

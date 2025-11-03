@@ -12,6 +12,7 @@ export interface MenuItem {
 
 interface DropdownBaseProps {
   align?: 'start' | 'center' | 'end';
+  className?: string;
 }
 
 // 셀렉트 형태 드롭다운 타입
@@ -34,7 +35,7 @@ export interface IconDropdownProps extends DropdownBaseProps {
 export type DropdownProps = SelectDropdownProps | IconDropdownProps;
 
 export default function Dropdown(props: DropdownProps) {
-  const { type, triggerChildren, align = 'start' } = props;
+  const { type, triggerChildren, align = 'start', className } = props;
 
   // 셀렉트 형태 드롭다운
   if (type === 'select') {
@@ -52,7 +53,11 @@ export default function Dropdown(props: DropdownProps) {
 
         <DropdownMenuContent align={align}>
           {menuItems.map((item, i) => (
-            <DropdownMenuItem key={i} onClick={() => handleItemClick(item)}>
+            <DropdownMenuItem
+              key={i}
+              className={className}
+              onClick={() => handleItemClick(item)}
+            >
               {item}
             </DropdownMenuItem>
           ))}
@@ -74,7 +79,11 @@ export default function Dropdown(props: DropdownProps) {
 
       <DropdownMenuContent align={align}>
         {menuItems.map((item, i) => (
-          <DropdownMenuItem key={i} onClick={() => handleItemClick(item)}>
+          <DropdownMenuItem
+            key={i}
+            className={className}
+            onClick={() => handleItemClick(item)}
+          >
             {item.label}
           </DropdownMenuItem>
         ))}
