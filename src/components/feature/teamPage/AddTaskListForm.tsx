@@ -38,7 +38,7 @@ export default function AddTaskListForm({ groupId }: { groupId: number }) {
           message: e.response.data.message,
         });
       } else {
-        toast.error('목록 생성에 실패했습니다. 다시 시도해주세요.');
+        toast.error('목록 생성 실패. 다시 시도해주세요.');
       }
       throw e;
     },
