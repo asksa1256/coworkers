@@ -2,11 +2,13 @@ import Button from '@/components/ui/Button';
 import useSignOut from '@/hooks/useSignOut';
 import { userAtom } from '@/store/authAtom';
 import { useAtomValue } from 'jotai';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 export default function LandingPage() {
   const user = useAtomValue(userAtom);
   const signOut = useSignOut();
+  const navigate = useNavigate();
 
   return (
     <main>
@@ -44,7 +46,12 @@ export default function LandingPage() {
           </Button>
         </>
       ) : (
-        <span>로그인 전</span>
+        <span>
+          로그인 전{' '}
+          <Button className='w-auto' onClick={() => navigate('/auth/signIn')}>
+            로그인
+          </Button>
+        </span>
       )}
     </main>
   );

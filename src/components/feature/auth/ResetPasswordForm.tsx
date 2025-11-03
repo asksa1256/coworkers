@@ -26,7 +26,7 @@ export default function ResetPasswordForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isValid },
   } = useForm<ResetPasswordFormRequest>({
     resolver: zodResolver(resetPasswordFormRequestSchema),
     mode: 'onBlur',
@@ -130,7 +130,7 @@ export default function ResetPasswordForm() {
         <Button
           type='submit'
           className='mb-6 text-base'
-          disabled={isSubmitting}
+          disabled={isSubmitting || !isValid}
         >
           {isSubmitting ? '재설정 중...' : '재설정'}
         </Button>
