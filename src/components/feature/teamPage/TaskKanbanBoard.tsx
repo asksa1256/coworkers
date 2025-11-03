@@ -172,11 +172,11 @@ export default function TaskKanbanBoard({ taskLists }: Props) {
           }}
           onDragEnd={handleDragEnd}
         />
-        {!taskLists.length ? (
+        {!taskLists.length && (
           <div className='text-text-default text-md flex h-[150px] w-full items-center justify-center lg:hidden'>
             아직 할 일 목록이 없어요.
           </div>
-        ) : undefined}
+        )}
       </div>
 
       <div className='w-full'>
@@ -195,11 +195,11 @@ export default function TaskKanbanBoard({ taskLists }: Props) {
         />
       </div>
 
-      {!taskLists.length ? (
+      {!taskLists.length && (
         <div className='text-text-default text-md absolute top-[55%] hidden w-full text-center lg:block'>
           아직 할 일 목록이 없어요.
         </div>
-      ) : undefined}
+      )}
     </section>
   );
 }
