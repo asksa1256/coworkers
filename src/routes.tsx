@@ -10,6 +10,7 @@ import TeamPage from '@/pages/TeamPage';
 import SignInPage from '@/pages/auth/SignInPage';
 import BoardPage from '@/pages/board/BoardPage';
 import type { ReactNode } from 'react';
+import BoardLayout from './components/layout/BoardLayout';
 import KakaoRedirectPage from './pages/auth/KakaoRedirectPage';
 import KakaoSignUpPage from './pages/auth/KakaoSignUpPage';
 import ResetPasswordPage from './pages/auth/ResetPasswordPage';
@@ -90,7 +91,7 @@ const routes = [
   // board pages
   {
     path: '/board',
-    element: <Layout />,
+    element: <BoardLayout />,
     errorElement: <ErrorPage />,
     children: [
       {
