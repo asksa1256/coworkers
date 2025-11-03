@@ -10,6 +10,11 @@ export interface MenuItem {
   onClick?: () => void;
 }
 
+interface SelectMenuItem {
+  label: string;
+  value: string;
+}
+
 interface DropdownBaseProps {
   align?: 'start' | 'center' | 'end';
   className?: string;
@@ -19,7 +24,7 @@ interface DropdownBaseProps {
 export interface SelectDropdownProps extends DropdownBaseProps {
   type: 'select';
   triggerChildren: string;
-  menuItems: string[];
+  menuItems: SelectMenuItem[];
   suffix: React.ReactNode;
   onSelect: (value: string) => void;
 }
@@ -56,9 +61,9 @@ export default function Dropdown(props: DropdownProps) {
             <DropdownMenuItem
               key={i}
               className={className}
-              onClick={() => handleItemClick(item)}
+              onClick={() => handleItemClick(item.value)}
             >
-              {item}
+              {item.label}
             </DropdownMenuItem>
           ))}
         </DropdownMenuContent>
