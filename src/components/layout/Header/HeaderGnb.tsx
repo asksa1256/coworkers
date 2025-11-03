@@ -2,6 +2,7 @@ import GnbArrowIcon from '@/assets/icons/GnbArrowIcon.svg?react';
 import GnbBoardIcon from '@/assets/icons/GnbBoardIcon.svg?react';
 import GnbPlusIcon from '@/assets/icons/GnbPlusIcon.svg?react';
 import GnbTeamIcon from '@/assets/icons/GnbTeamIcon.svg?react';
+import { Spinner } from '@/components/ui/spinner';
 import axiosInstance from '@/lib/axios';
 import { cn } from '@/lib/utils';
 import { userAtom } from '@/store/authAtom';
@@ -87,7 +88,12 @@ export default function HeaderGnb({
     if (findGroup) onUpdateCurrentGroup(findGroup);
   }, [groupId]);
 
-  if (!userGroups) return <div>로딩중....</div>;
+  if (!userGroups)
+    return (
+      <div className='flex justify-center py-10'>
+        <Spinner />
+      </div>
+    );
 
   return (
     <nav className='lg:-mx-4 lg:flex lg:w-[270px] lg:grow-1 lg:flex-col lg:overflow-hidden lg:px-4'>
