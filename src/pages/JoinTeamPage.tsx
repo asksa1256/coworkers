@@ -1,4 +1,5 @@
 import { getGroup } from '@/api/api';
+import { groupQueries } from '@/api/queries';
 import Avatar from '@/components/ui/Avatar';
 import Button from '@/components/ui/Button';
 import axiosInstance from '@/lib/axios';
@@ -58,7 +59,7 @@ export default function JoinTeamPage() {
       );
 
       toast.success('팀 참여하기 성공! 팀페이지로 이동합니다.');
-      queryClient.invalidateQueries({ queryKey: ['userGroups', user?.id] });
+      queryClient.invalidateQueries({ queryKey: groupQueries.groups(user) });
       navigate(`/${data.groupId}`);
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
