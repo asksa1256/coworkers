@@ -33,6 +33,7 @@ export default function TaskKanbanBoard({ taskLists }: Props) {
   const { pathname } = useLocation();
   const groupId = Number(pathname.slice(1));
   const taskListsOrderMutation = useMutation({
+    mutationKey: ['taskListOrder'],
     mutationFn: (args: Parameters<typeof updateTaskListOrder>) =>
       updateTaskListOrder(...args),
     onMutate: async () => {
@@ -68,7 +69,9 @@ export default function TaskKanbanBoard({ taskLists }: Props) {
       queryClient.setQueryData(['group', groupId], context?.prevSnapshot);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['group', groupId] });
+      if (queryClient.isMutating({ mutationKey: ['taskListOrder'] }) === 1) {
+        queryClient.invalidateQueries({ queryKey: ['group', groupId] });
+      }
     },
   });
 
@@ -154,7 +157,7 @@ export default function TaskKanbanBoard({ taskLists }: Props) {
   };
 
   return (
-    <section className='flex w-full flex-col gap-8 lg:max-w-[846px] lg:flex-row lg:gap-4'>
+    <section className='relative flex w-full flex-col gap-8 lg:max-w-[846px] lg:flex-row lg:gap-4'>
       <div className='w-full'>
         <KanbanTab title='할 일' />
         <KanbanCardList
@@ -169,6 +172,11 @@ export default function TaskKanbanBoard({ taskLists }: Props) {
           }}
           onDragEnd={handleDragEnd}
         />
+        {!taskLists.length && (
+          <div className='text-text-default text-md flex h-[150px] w-full items-center justify-center lg:hidden'>
+            아직 할 일 목록이 없어요.
+          </div>
+        )}
       </div>
 
       <div className='w-full'>
@@ -186,6 +194,12 @@ export default function TaskKanbanBoard({ taskLists }: Props) {
           onDragEnd={handleDragEnd}
         />
       </div>
+
+      {!taskLists.length && (
+        <div className='text-text-default text-md absolute top-[55%] hidden w-full text-center lg:block'>
+          아직 할 일 목록이 없어요.
+        </div>
+      )}
     </section>
   );
 }

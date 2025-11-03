@@ -7,9 +7,11 @@ import GroupTitleBar from '@/components/ui/GroupTitleBar';
 import type { GroupDetailResponse } from '@/types/groupType';
 import { calcTodayDone, calcTodayTodos } from '@/utils/calculations';
 import { useQuery } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 //Todo - api 연결 이후 삭제
 const MOCK_DATA = {
@@ -71,6 +73,7 @@ const MOCK_DATA = {
 };
 
 export default function TeamPage() {
+  const navigate = useNavigate();
   const { pathname } = useLocation();
   const groupId = Number(pathname.slice(1));
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
@@ -90,18 +93,25 @@ export default function TeamPage() {
       setIsAdmin(data.role === 'ADMIN');
     } catch (e) {
       console.log('유저 권한 가져오기 실패: ', e);
+      if (isAxiosError(e) && e.response?.status === 404) {
+        // 그룹 멤버 아닐 시 홈으로 이동
+        navigate('/', { replace: true });
+      } else {
+        toast.error('사용자 권한을 가져올 수 없습니다. 다시 시도해주세요.');
+      }
       throw e;
     }
   };
 
   useEffect(() => {
+    setIsAdmin(null);
     getUserRole();
-  }, []);
+  }, [pathname]);
 
   if (isAdmin === null || !groupData) return;
 
   return (
-    <div className='w-full max-w-280 py-6 md:py-18 lg:mx-auto lg:py-30'>
+    <div className='mx-auto w-full max-w-280 py-6 md:py-18 lg:py-30'>
       <div className='flex flex-col gap-3 md:gap-5'>
         <GroupTitleBar className='flex justify-between'>
           <div className='flex gap-2'>
