@@ -58,7 +58,16 @@ export const DropdownSelect: Story = {
     type: 'select',
     triggerChildren: '최신순',
     suffix: <TriangleDownIcon className='h-6 w-6' />,
-    menuItems: ['최신순', '좋아요순'],
+    menuItems: [
+      {
+        label: '최신순',
+        value: 'recent',
+      },
+      {
+        label: '좋아요순',
+        value: 'like',
+      },
+    ],
     align: 'start',
     onSelect: () => console.log('추가 동작...'),
   },
