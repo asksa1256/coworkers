@@ -1,9 +1,9 @@
+import { groupQueries } from '@/api/queries';
 import GnbArrowIcon from '@/assets/icons/GnbArrowIcon.svg?react';
 import GnbBoardIcon from '@/assets/icons/GnbBoardIcon.svg?react';
 import GnbPlusIcon from '@/assets/icons/GnbPlusIcon.svg?react';
 import GnbTeamIcon from '@/assets/icons/GnbTeamIcon.svg?react';
 import { Spinner } from '@/components/ui/spinner';
-import axiosInstance from '@/lib/axios';
 import { cn } from '@/lib/utils';
 import { userAtom } from '@/store/authAtom';
 import type { GroupType } from '@/types/userType';
@@ -72,21 +72,13 @@ export default function HeaderGnb({
   const [isGroupOpen, setIsGroupOpen] = useState(true);
 
   const user = useAtomValue(userAtom);
-
-  const { data: userGroups } = useQuery({
-    queryKey: ['userGroups', user?.id],
-    queryFn: async () => {
-      const { data } = await axiosInstance.get<GroupType[]>('/user/groups');
-      return data;
-    },
-    enabled: !!user?.id,
-  });
+  const { data: userGroups } = useQuery(groupQueries.groupsOptions(user));
 
   useEffect(() => {
     if (!groupId) return;
     const findGroup = userGroups?.find(item => String(item.id) === groupId);
     if (findGroup) onUpdateCurrentGroup(findGroup);
-  }, [groupId]);
+  }, [groupId, userGroups]);
 
   if (!userGroups)
     return (
