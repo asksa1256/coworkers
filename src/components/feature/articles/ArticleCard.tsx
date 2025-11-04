@@ -1,3 +1,5 @@
+import CommentIcon from '@/assets/icons/CommentIcon.svg?react';
+import HeartIcon from '@/assets/icons/HeartIcon.svg?react';
 import axiosInstance from '@/lib/axios';
 import type {
   ArticleDetailResponse,
@@ -23,29 +25,39 @@ export default function ArticleCard({ article }: ArticleCardProps) {
   });
 
   return (
-    <div className='border-border-primary rounded-[20px] border p-4 md:px-6 md:py-5'>
-      <div className='left'>
-        <h6 className='md:text-2lg text-base font-bold'>{title}</h6>
-        <p>{isPending ? <p>내용 불러오는 중...</p> : detail?.content}</p>
+    <div className='border-border-primary flex flex-col justify-between rounded-[20px] border p-4 md:px-6 md:py-5'>
+      <div className='flex items-center justify-between md:gap-6'>
+        <div className='w-[60%]'>
+          <h6 className='md:text-2lg mb-2 text-base font-bold'>{title}</h6>
+          <p className='text-text-default md:text-md pre-line line-clamp-2 text-sm break-keep'>
+            {isPending ? '내용 불러오는 중...' : detail?.content}
+          </p>
+        </div>
 
-        <div className='flex'>
-          <b>{writer.nickname}</b>|<span>{createdAt}</span>
+        <div className='right'>
+          {image && (
+            <figure className='h-20 w-20 overflow-hidden rounded-lg md:h-[88px] md:w-[88px]'>
+              <img src={image} alt='이미지 미리보기' />
+            </figure>
+          )}
         </div>
       </div>
 
-      <div className='right'>
-        <figure>
-          <img src={image ?? ''} alt='이미지 미리보기' />
-        </figure>
+      <div className='mt-4 flex items-center justify-between'>
+        <div className='flex gap-1 text-sm'>
+          <b className='text-text-primary font-medium'>{writer.nickname}</b>
+          <span className='text-text-secondary'>|</span>
+          <span className='text-text-default'>{createdAt}</span>
+        </div>
 
-        <div className='flex'>
-          <span className='flex'>
-            좋아요
-            {likeCount}개
+        <div className='text-text-default flex gap-2 text-sm'>
+          <span className='flex items-center gap-1'>
+            <HeartIcon className='text-text-default h-4 w-4' />
+            {likeCount}
           </span>
-          <span className='flex'>
-            댓글
-            {commentCount}개
+          <span className='flex items-center gap-1'>
+            <CommentIcon className='text-text-default h-4 w-4' />
+            {commentCount}
           </span>
         </div>
       </div>
