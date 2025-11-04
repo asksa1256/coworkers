@@ -9,7 +9,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
 import type { ChangeEvent } from 'react';
 import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
 
 export interface TeamFormDataType {
   image?: string | null;
@@ -26,6 +25,7 @@ export default function TeamForm({ initialData, onSubmit }: Props) {
     register,
     handleSubmit,
     setValue,
+    setError,
     watch,
     formState: { errors, isSubmitting, isValid, isDirty },
   } = useForm<TeamFormDataType>({
@@ -60,7 +60,9 @@ export default function TeamForm({ initialData, onSubmit }: Props) {
     const { name } = formData;
     const hasDuplicateName = userGroups.some(group => group.name === name);
     if (hasDuplicateName) {
-      toast.error('이미 존재하는 이름입니다.');
+      setError('name', {
+        message: '이미 존재하는 이름입니다.',
+      });
       return;
     }
 
