@@ -6,7 +6,7 @@ import axiosInstance from '@/lib/axios';
 import { userAtom } from '@/store/authAtom';
 import type { GroupDetailResponse } from '@/types/groupType';
 import { useQueryClient } from '@tanstack/react-query';
-import type { AxiosError } from 'axios';
+import { isAxiosError } from 'axios';
 import { useAtomValue } from 'jotai';
 import { UserRound } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -62,9 +62,9 @@ export default function JoinTeamPage() {
       queryClient.invalidateQueries({ queryKey: groupQueries.groups(user) });
       navigate(`/${data.groupId}`);
     } catch (error) {
-      const err = error as AxiosError<{ message: string }>;
-      const message =
-        err.response?.data?.message ?? '알 수 없는 에러가 발생했습니다.';
+      const message = isAxiosError(error)
+        ? error.response?.data?.message
+        : '알 수 없는 에러가 발생했습니다.';
       toast.error(message);
     } finally {
       setIsLoading(false);
