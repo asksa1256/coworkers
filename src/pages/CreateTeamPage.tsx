@@ -10,7 +10,7 @@ import { useAtomValue } from 'jotai';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-const createGroups = async (
+const createGroup = async (
   formData: TeamFormDataType,
 ): Promise<CreateGroupResponse> => {
   const { data } = await axiosInstance.post('/groups', formData);
@@ -22,7 +22,7 @@ export default function CreateTeamPage() {
   const user = useAtomValue(userAtom);
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
-    mutationFn: (formData: TeamFormDataType) => createGroups(formData),
+    mutationFn: (formData: TeamFormDataType) => createGroup(formData),
     onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: groupQueries.groups(user) });
       toast.success('팀 생성에 성공하였습니다. 생성한 팀페이지로 이동합니다.');
