@@ -4,7 +4,7 @@ import Layout from '@/components/layout/Layout';
 import CreateTeamPage from '@/pages/CreateTeamPage';
 import ErrorPage from '@/pages/ErrorPage';
 import LandingPage from '@/pages/LandingPage';
-import ListPage from '@/pages/ListPage';
+import TaskListPage from '@/pages/TaskListPage';
 import TeamPage from '@/pages/TeamPage';
 import SignInPage from '@/pages/auth/SignInPage';
 import BoardPage from '@/pages/board/BoardPage';
@@ -37,7 +37,7 @@ const routes = [
       },
       {
         path: '/list/:groupId',
-        element: withPrivate(<ListPage />),
+        element: withPrivate(<TaskListPage />),
       },
       {
         path: '/:groupId',
