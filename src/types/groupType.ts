@@ -13,3 +13,11 @@ export interface CreateGroupResponse {
   name: string;
   updatedAt: string;
 }
+
+export interface JoinGroupPayload {
+  userEmail: string;
+  token: string;
+}
+export interface JoinGroupResponse {
+  groupId: number;
+}

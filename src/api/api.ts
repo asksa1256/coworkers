@@ -1,5 +1,9 @@
 import axiosInstance from '@/lib/axios';
-import type { GroupDetailResponse } from '@/types/groupType';
+import type {
+  GroupDetailResponse,
+  JoinGroupPayload,
+  JoinGroupResponse,
+} from '@/types/groupType';
 import type { TaskUpdateRequestBody } from '@/types/taskType';
 import type { MembershipsType } from '@/types/userType';
 
@@ -61,4 +65,14 @@ export const updateTask = async (
     console.log('태스크 업데이트 실패:', e);
     throw e;
   }
+};
+
+export const joinGroup = async (
+  payload: JoinGroupPayload,
+): Promise<JoinGroupResponse> => {
+  const { data } = await axiosInstance.post(
+    '/groups/accept-invitation',
+    payload,
+  );
+  return data;
 };
