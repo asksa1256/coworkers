@@ -1,8 +1,9 @@
 import axiosInstance from '@/lib/axios';
+import type { GroupDetailResponse } from '@/types/groupType';
 import type { TaskUpdateRequestBody } from '@/types/taskType';
 import type { MembershipsType } from '@/types/userType';
 
-export const getGroup = async <GroupDetailResponse>(
+export const getGroup = async (
   groupId: number,
 ): Promise<GroupDetailResponse> => {
   try {
