@@ -83,30 +83,30 @@ export default function TeamPage() {
     queryFn: () => getGroup(groupId),
   });
 
-  const getUserRole = async () => {
-    const user = localStorage.getItem('user');
-
-    if (!user) return;
-
-    try {
-      const data = await getGroupMembership(groupId, JSON.parse(user).id);
-      setIsAdmin(data.role === 'ADMIN');
-    } catch (e) {
-      console.log('유저 권한 가져오기 실패: ', e);
-      if (isAxiosError(e) && e.response?.status === 404) {
-        // 그룹 멤버 아닐 시 홈으로 이동
-        navigate('/', { replace: true });
-      } else {
-        toast.error('사용자 권한을 가져올 수 없습니다. 다시 시도해주세요.');
-      }
-      throw e;
-    }
-  };
-
   useEffect(() => {
+    const getUserRole = async () => {
+      const user = localStorage.getItem('user');
+
+      if (!user) return;
+
+      try {
+        const data = await getGroupMembership(groupId, JSON.parse(user).id);
+        setIsAdmin(data.role === 'ADMIN');
+      } catch (e) {
+        console.log('유저 권한 가져오기 실패: ', e);
+        if (isAxiosError(e) && e.response?.status === 404) {
+          // 그룹 멤버 아닐 시 홈으로 이동
+          navigate('/', { replace: true });
+        } else {
+          toast.error('사용자 권한을 가져올 수 없습니다. 다시 시도해주세요.');
+        }
+        throw e;
+      }
+    };
+
     setIsAdmin(null);
     getUserRole();
-  }, [groupId]);
+  }, [navigate, groupId]);
 
   if (isAdmin === null || !groupData) return;
 
