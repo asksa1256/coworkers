@@ -1,21 +1,13 @@
+import { createGroup } from '@/api/api';
 import { groupQueries } from '@/api/queries';
 import TeamForm, {
   type TeamFormDataType,
 } from '@/components/feature/form/TeamForm';
-import axiosInstance from '@/lib/axios';
 import { userAtom } from '@/store/authAtom';
-import type { CreateGroupResponse } from '@/types/groupType';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-
-const createGroup = async (
-  formData: TeamFormDataType,
-): Promise<CreateGroupResponse> => {
-  const { data } = await axiosInstance.post('/groups', formData);
-  return data;
-};
 
 export default function CreateTeamPage() {
   const nav = useNavigate();

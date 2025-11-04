@@ -1,5 +1,7 @@
+import type { TeamFormDataType } from '@/components/feature/form/TeamForm';
 import axiosInstance from '@/lib/axios';
 import type {
+  CreateGroupResponse,
   GroupDetailResponse,
   JoinGroupPayload,
   JoinGroupResponse,
@@ -74,5 +76,12 @@ export const joinGroup = async (
     '/groups/accept-invitation',
     payload,
   );
+  return data;
+};
+
+export const createGroup = async (
+  formData: TeamFormDataType,
+): Promise<CreateGroupResponse> => {
+  const { data } = await axiosInstance.post('/groups', formData);
   return data;
 };
