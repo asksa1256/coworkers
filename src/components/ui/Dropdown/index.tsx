@@ -4,22 +4,29 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/Dropdown/DropdownElements';
+import { useState } from 'react';
 
 export interface MenuItem {
   label: string;
   onClick?: () => void;
 }
 
+interface SelectMenuItem {
+  label: string;
+  value: string;
+}
+
 interface DropdownBaseProps {
   align?: 'start' | 'center' | 'end';
+  className?: string;
 }
 
 // 셀렉트 형태 드롭다운 타입
 export interface SelectDropdownProps extends DropdownBaseProps {
   type: 'select';
-  triggerChildren: string;
-  menuItems: string[];
-  suffix: React.ReactNode;
+  menuItems: SelectMenuItem[];
+  defaultValue?: string;
+  suffix?: React.ReactNode;
   onSelect: (value: string) => void;
 }
 
@@ -34,36 +41,60 @@ export interface IconDropdownProps extends DropdownBaseProps {
 export type DropdownProps = SelectDropdownProps | IconDropdownProps;
 
 export default function Dropdown(props: DropdownProps) {
-  const { type, triggerChildren, align = 'start' } = props;
+  const { type, align = 'start', className } = props;
 
-  // 셀렉트 형태 드롭다운
   if (type === 'select') {
-    const { menuItems, suffix, onSelect } = props;
-
-    const handleItemClick = (item: string) => {
-      onSelect(item);
-    };
-
-    return (
-      <DropdownMenu>
-        <DropdownMenuTrigger suffix={suffix}>
-          {triggerChildren}
-        </DropdownMenuTrigger>
-
-        <DropdownMenuContent align={align}>
-          {menuItems.map((item, i) => (
-            <DropdownMenuItem key={i} onClick={() => handleItemClick(item)}>
-              {item}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
-    );
+    return <SelectDropdown {...props} align={align} className={className} />;
   }
 
-  // 아이콘 형태 드롭다운
-  const { menuItems } = props;
+  return <IconDropdown {...props} align={align} className={className} />;
+}
 
+// 셀렉트 드롭다운 별도 컴포넌트
+function SelectDropdown({
+  menuItems,
+  defaultValue = menuItems[0]?.value,
+  suffix,
+  align = 'start',
+  className,
+  onSelect,
+}: SelectDropdownProps & { align?: 'start' | 'center' | 'end' }) {
+  const [selectedValue, setSelectedValue] = useState(defaultValue);
+
+  const selectedLabel =
+    menuItems.find(item => item.value === selectedValue)?.label || defaultValue;
+
+  const handleItemClick = (value: string) => {
+    setSelectedValue(value);
+    onSelect(value);
+  };
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger suffix={suffix}>{selectedLabel}</DropdownMenuTrigger>
+
+      <DropdownMenuContent align={align}>
+        {menuItems.map(item => (
+          <DropdownMenuItem
+            key={item.value}
+            className={className}
+            onClick={() => handleItemClick(item.value)}
+          >
+            {item.label}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+// 아이콘 드롭다운 별도 컴포넌트
+function IconDropdown({
+  triggerChildren,
+  menuItems,
+  align = 'start',
+  className,
+}: IconDropdownProps & { align?: 'start' | 'center' | 'end' }) {
   const handleItemClick = (item: MenuItem) => {
     item.onClick?.();
   };
@@ -74,7 +105,11 @@ export default function Dropdown(props: DropdownProps) {
 
       <DropdownMenuContent align={align}>
         {menuItems.map((item, i) => (
-          <DropdownMenuItem key={i} onClick={() => handleItemClick(item)}>
+          <DropdownMenuItem
+            key={i}
+            className={className}
+            onClick={() => handleItemClick(item)}
+          >
             {item.label}
           </DropdownMenuItem>
         ))}
