@@ -1,17 +1,10 @@
+import { createInviteToken } from '@/api/api';
 import Button from '@/components/ui/Button';
-import axiosInstance from '@/lib/axios';
 import { copyToClipboard } from '@/utils/copyToClipboard';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
-
-const createInviteToken = async (groupId: string): Promise<string> => {
-  const { data: token } = await axiosInstance.get(
-    `/groups/${groupId}/invitation`,
-  );
-  return token;
-};
 
 export default function InviteLinkCopyButton() {
   const { groupId } = useParams();

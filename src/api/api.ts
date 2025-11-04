@@ -85,3 +85,10 @@ export const createGroup = async (
   const { data } = await axiosInstance.post('/groups', formData);
   return data;
 };
+
+export const createInviteToken = async (groupId: string): Promise<string> => {
+  const { data: token } = await axiosInstance.get(
+    `/groups/${groupId}/invitation`,
+  );
+  return token;
+};
