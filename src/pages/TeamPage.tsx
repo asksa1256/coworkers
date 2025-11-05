@@ -1,10 +1,10 @@
-import { getGroup, getGroupMembership } from '@/api/api';
+import { getGroupMembership } from '@/api/api';
+import { groupQueries } from '@/api/queries';
 import ConfigIcon from '@/assets/icons/ConfigIcon.svg?react';
 import MemberCard from '@/components/feature/teamPage/MemberListCard';
 import ReportCard from '@/components/feature/teamPage/ReportCard';
 import TaskKanbanBoard from '@/components/feature/teamPage/TaskKanbanBoard';
 import GroupTitleBar from '@/components/ui/GroupTitleBar';
-import type { GroupDetailResponse } from '@/types/groupType';
 import { calcTodayDone, calcTodayTodos } from '@/utils/calculations';
 import { useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
@@ -78,10 +78,7 @@ export default function TeamPage() {
   const groupId = Number(params.groupId);
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
 
-  const { data: groupData } = useQuery<GroupDetailResponse>({
-    queryKey: ['group', groupId],
-    queryFn: () => getGroup(groupId),
-  });
+  const { data: groupData } = useQuery(groupQueries.groupOptions(groupId));
 
   useEffect(() => {
     const getUserRole = async () => {

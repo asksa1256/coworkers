@@ -1,4 +1,4 @@
-import { addTaskList } from '@/api/api';
+import { taskListMutations } from '@/api/mutations';
 import Button from '@/components/ui/Button';
 import InputField from '@/components/ui/Input/InputField';
 import {
@@ -7,9 +7,7 @@ import {
 } from '@/types/addTaskListSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { isAxiosError } from 'axios';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { toast } from 'sonner';
 
 export default function AddTaskListForm({ groupId }: { groupId: number }) {
   const {
@@ -24,25 +22,9 @@ export default function AddTaskListForm({ groupId }: { groupId: number }) {
   });
 
   const queryClient = useQueryClient();
-  const addTaskListMutation = useMutation({
-    mutationFn: (args: Parameters<typeof addTaskList>) => addTaskList(...args),
-    onSuccess: () => {
-      reset();
-      toast.success('새 할 일 목록이 추가되었습니다.');
-      queryClient.invalidateQueries({ queryKey: ['group', groupId] });
-    },
-    onError: e => {
-      if (isAxiosError(e) && e.response?.status === 409) {
-        setError('name', {
-          type: 'duplicate',
-          message: e.response.data.message,
-        });
-      } else {
-        toast.error('목록 생성 실패. 다시 시도해주세요.');
-      }
-      throw e;
-    },
-  });
+  const addTaskListMutation = useMutation(
+    taskListMutations.addTaskListOptions(groupId, queryClient, reset, setError),
+  );
 
   const onSubmit: SubmitHandler<AddTaskListSchema> = data => {
     addTaskListMutation.mutate([groupId, data]);
