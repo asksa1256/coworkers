@@ -2,6 +2,7 @@ import { boardQueries } from '@/api/queries';
 import CommentIcon from '@/assets/icons/CommentIcon.svg?react';
 import HeartIcon from '@/assets/icons/HeartIcon.svg?react';
 import type { ArticleResponse } from '@/types/boardTypes';
+import { formatRelativeTime } from '@/utils/formatters';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 
@@ -43,17 +44,19 @@ export default function ArticleCard({ article }: ArticleCardProps) {
         <div className='flex gap-1 text-sm'>
           <b className='text-text-primary font-medium'>{writer.nickname}</b>
           <span className='text-text-secondary'>|</span>
-          <span className='text-text-default'>{createdAt}</span>
+          <span className='text-text-default'>
+            {formatRelativeTime(createdAt)}
+          </span>
         </div>
 
         <div className='text-text-default flex gap-2 text-sm'>
           <span className='flex items-center gap-1'>
             <HeartIcon className='text-text-default h-4 w-4' />
-            {likeCount}
+            {likeCount > 99 ? '99+' : likeCount}
           </span>
           <span className='flex items-center gap-1'>
             <CommentIcon className='text-text-default h-4 w-4' />
-            {commentCount}
+            {commentCount > 99 ? '99+' : commentCount}
           </span>
         </div>
       </div>
