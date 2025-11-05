@@ -4,7 +4,7 @@ import SearchField from '@/components/feature/search/SearchField';
 export default function BoardPage() {
   return (
     <div className='w-full max-w-280 pt-6 pb-10 md:pt-[77px] lg:mx-auto lg:pt-[87px]'>
-      <div className='mb-5 md:mb-[30px]'>
+      <div className='mb-5 flex flex-col gap-5 md:mb-[30px] md:flex-row md:items-center md:justify-between'>
         <h2 className='text-xl font-bold md:text-2xl'>자유게시판</h2>
         <SearchField />
       </div>
