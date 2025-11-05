@@ -6,6 +6,7 @@ import type {
   ArticleResponse,
 } from '@/types/boardTypes';
 import { useQuery } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
 
 interface ArticleCardProps {
   article: ArticleResponse;
@@ -13,7 +14,8 @@ interface ArticleCardProps {
 }
 
 export default function ArticleCard({ article }: ArticleCardProps) {
-  const { title, image, createdAt, writer, likeCount, commentCount } = article;
+  const { id, title, image, createdAt, writer, likeCount, commentCount } =
+    article;
 
   // 각 카드마다 상세 데이터 fetch
   const { data: detail, isPending } = useQuery({
@@ -25,7 +27,10 @@ export default function ArticleCard({ article }: ArticleCardProps) {
   });
 
   return (
-    <div className='border-border-primary flex flex-col justify-between rounded-[20px] border p-4 md:px-6 md:py-5'>
+    <Link
+      to={`/board/${id}`}
+      className='border-border-primary flex flex-col justify-between rounded-[20px] border p-4 transition-all duration-200 hover:-translate-y-1 hover:shadow-md md:px-6 md:py-5'
+    >
       <div className='flex items-center justify-between md:gap-6'>
         <div className='w-[60%]'>
           <h6 className='md:text-2lg mb-2 text-base font-bold'>{title}</h6>
@@ -61,6 +66,6 @@ export default function ArticleCard({ article }: ArticleCardProps) {
           </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
