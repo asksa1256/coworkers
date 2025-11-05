@@ -49,7 +49,7 @@ export type TaskListsResponse = {
   groupId: number;
   displayIndex: number;
   tasks: TasksResponse;
-}[];
+};
 
 export interface TaskUpdateRequestBody {
   name: string;

@@ -1,7 +1,7 @@
 import type { TaskListsResponse } from '@/types/taskType';
 
 const changeListOrder = (
-  list: TaskListsResponse,
+  list: TaskListsResponse[],
   fromIndex: number,
   targetIndex: number,
 ) => {
