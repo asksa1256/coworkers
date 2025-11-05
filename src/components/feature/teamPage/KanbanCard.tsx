@@ -1,18 +1,18 @@
 import { updateTask } from '@/api/api';
+import { taskMutations } from '@/api/mutations';
 import KebabIcon from '@/assets/icons/KebabIcon.svg?react';
 import CircularProgressbar from '@/components/ui/CircularProgressbar';
 import TaskCheckbox from '@/components/ui/TaskCheckbox';
 import { cn } from '@/lib/utils';
-import type { GroupDetailResponse } from '@/types/groupType';
 import type { TaskListsResponse } from '@/types/taskType';
 import { countDone } from '@/utils/calculations';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 interface Props {
-  taskList: TaskListsResponse[number];
+  taskList: TaskListsResponse;
   tab: 'todo' | 'done';
   onDragStart: (index: number) => void;
 }
@@ -20,57 +20,11 @@ interface Props {
 export default function KanbanCard({ taskList, tab, onDragStart }: Props) {
   const queryClient = useQueryClient();
   const [isDragging, setIsDragging] = useState(false);
-  const { pathname } = useLocation();
-  const groupId = Number(pathname.slice(1));
-  const taskDoneMutation = useMutation({
-    mutationKey: ['taskDone'],
-    mutationFn: (args: Parameters<typeof updateTask>) => updateTask(...args),
-    onMutate: async variables => {
-      await queryClient.cancelQueries({
-        queryKey: ['group', groupId],
-      });
-
-      const prevSnapshot = queryClient.getQueryData(['group', groupId]);
-
-      queryClient.setQueryData(
-        ['group', groupId],
-        (prev: GroupDetailResponse) => {
-          const taskId = variables[0];
-          const done = variables[1].done;
-
-          const updatedTasks = taskList.tasks.map(task => {
-            return task.id === taskId
-              ? {
-                  ...task,
-                  doneAt: done ? 'temp value' : null,
-                }
-              : task;
-          });
-
-          const updatedLists = prev.taskLists.map(prevList => {
-            return prevList.id === taskList.id
-              ? { ...prevList, tasks: updatedTasks }
-              : prevList;
-          });
-
-          return {
-            ...prev,
-            taskLists: updatedLists,
-          };
-        },
-      );
-
-      return { prevSnapshot };
-    },
-    onError: (error, variables, context) => {
-      queryClient.setQueryData(['group', groupId], context?.prevSnapshot);
-    },
-    onSettled: () => {
-      if (queryClient.isMutating({ mutationKey: ['taskDone'] }) === 1) {
-        queryClient.invalidateQueries({ queryKey: ['group', groupId] });
-      }
-    },
-  });
+  const params = useParams();
+  const groupId = Number(params.groupId);
+  const taskDoneMutation = useMutation(
+    taskMutations.updateTeamPageTaskDoneOptions(groupId, queryClient, taskList),
+  );
 
   /**
    * dataTransfer은 현재 이동중인 카드 id와 속한 탭을 dragovder, drop이벤트에 전달
@@ -99,7 +53,7 @@ export default function KanbanCard({ taskList, tab, onDragStart }: Props) {
           'card-common relative block px-4 py-5',
           isDragging && 'border-primary opacity-50',
         )}
-        to={`${pathname}/details`}
+        to={`/${groupId}/details/${taskList.id}`}
       >
         <div
           className={clsx('flex items-center justify-between', {

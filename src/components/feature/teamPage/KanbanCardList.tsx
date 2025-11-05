@@ -3,7 +3,7 @@ import type { ComponentProps, RefObject } from 'react';
 import KanbanCard from './KanbanCard';
 
 interface Props extends ComponentProps<'ul'> {
-  taskLists: TaskListsResponse;
+  taskLists: TaskListsResponse[];
   draggingRef: RefObject<number | null>;
   tab: 'todo' | 'done';
 }
