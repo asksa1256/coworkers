@@ -1,4 +1,4 @@
-import { getArticles } from '@/api/api';
+import { boardQueries } from '@/api/queries';
 import TriangleDownIcon from '@/assets/icons/TriangleDownIcon.svg?react';
 import Button from '@/components/ui/Button';
 import Dropdown from '@/components/ui/Dropdown';
@@ -6,7 +6,6 @@ import EmptyContent from '@/components/ui/EmptyContent';
 import InfiniteScrollObserver from '@/components/ui/InfiniteScrollObserver';
 import { ARTICLE_SORT_LIST } from '@/constants';
 import useIntersectionObserver from '@/hooks/useIntersectionObserver';
-import { type ArticleListResponse } from '@/types/boardTypes';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -29,20 +28,7 @@ export default function ArticleList() {
     status,
     isPending,
     error,
-  } = useInfiniteQuery<ArticleListResponse>({
-    queryKey: ['articles', sort],
-    queryFn: async ({ pageParam = 1 }) => {
-      const data = await getArticles(pageParam as number, sort);
-      return data as ArticleListResponse;
-    },
-    getNextPageParam: (lastPage, allPages) => {
-      const loadedCount = allPages.flatMap(p => p.list).length;
-      return loadedCount < lastPage.totalCount
-        ? allPages.length + 1 // nextPage
-        : undefined; // nextPage 없음
-    },
-    initialPageParam: 1,
-  });
+  } = useInfiniteQuery(boardQueries.articlesOptions(sort));
 
   useIntersectionObserver({
     target: scrollRef,
