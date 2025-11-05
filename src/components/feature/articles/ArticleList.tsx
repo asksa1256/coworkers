@@ -1,13 +1,14 @@
 import Button from '@/components/ui/Button';
 import EmptyContent from '@/components/ui/EmptyContent';
-import { useInView } from '@/hooks/useInView';
+import InfiniteScrollObserver from '@/components/ui/InfiniteScrollObserver';
+import useIntersectionObserver from '@/hooks/useIntersectionObserver';
 import axiosInstance from '@/lib/axios';
 import { type ArticleListResponse } from '@/types/boardTypes';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { useRef } from 'react';
 
 export default function ArticleList() {
-  const { ref, inView } = useInView();
+  const scrollRef = useRef(null);
 
   const {
     data,
@@ -32,9 +33,11 @@ export default function ArticleList() {
     initialPageParam: 1,
   });
 
-  useEffect(() => {
-    if (inView && hasNextPage) fetchNextPage();
-  }, [inView, hasNextPage, fetchNextPage]);
+  useIntersectionObserver({
+    target: scrollRef,
+    onIntersect: fetchNextPage,
+    enabled: hasNextPage,
+  });
 
   if (status === 'error')
     return (
@@ -68,8 +71,12 @@ export default function ArticleList() {
           page.list.map(a => <li key={a.id}>{a.title}</li>),
         )}
       </ol>
-      <div ref={ref} />
-      {isFetchingNextPage && <p>다음 페이지 불러오는 중...</p>}
+
+      <InfiniteScrollObserver
+        ref={scrollRef}
+        isLoading={isFetchingNextPage}
+        hasNextPage={hasNextPage}
+      />
     </>
   );
 }
