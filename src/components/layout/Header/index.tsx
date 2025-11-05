@@ -20,6 +20,7 @@ export default function Header() {
       setIsLoggedIn(true);
     } else {
       setIsLoggedIn(false);
+      setCurrentGroup(null);
     }
   }, [user]);
 
