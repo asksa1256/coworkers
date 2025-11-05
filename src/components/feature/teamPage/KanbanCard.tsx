@@ -23,7 +23,7 @@ export default function KanbanCard({ taskList, tab, onDragStart }: Props) {
   const params = useParams();
   const groupId = Number(params.groupId);
   const taskDoneMutation = useMutation(
-    taskMutations.updateTaskDoneOptions(groupId, queryClient, taskList),
+    taskMutations.updateTeamPageTaskDoneOptions(groupId, queryClient, taskList),
   );
 
   /**

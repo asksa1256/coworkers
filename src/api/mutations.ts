@@ -109,7 +109,7 @@ export const taskListMutations = {
 export const taskMutations = {
   //할 일 완료 상태 토글
   updateTaskDoneMutation: (groupId: number) => ['updateTaskDone', groupId],
-  updateTaskDoneOptions: (
+  updateTeamPageTaskDoneOptions: (
     groupId: number,
     queryClient: QueryClient,
     taskList: TaskListsResponse,
