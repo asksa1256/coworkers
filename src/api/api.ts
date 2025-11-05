@@ -1,8 +1,15 @@
+import type { TeamFormDataType } from '@/components/feature/form/TeamForm';
 import axiosInstance from '@/lib/axios';
+import type {
+  CreateGroupResponse,
+  GroupDetailResponse,
+  JoinGroupPayload,
+  JoinGroupResponse,
+} from '@/types/groupType';
 import type { TaskUpdateRequestBody } from '@/types/taskType';
 import type { MembershipsType } from '@/types/userType';
 
-export const getGroup = async <GroupDetailResponse>(
+export const getGroup = async (
   groupId: number,
 ): Promise<GroupDetailResponse> => {
   try {
@@ -60,4 +67,28 @@ export const updateTask = async (
     console.log('태스크 업데이트 실패:', e);
     throw e;
   }
+};
+
+export const joinGroup = async (
+  payload: JoinGroupPayload,
+): Promise<JoinGroupResponse> => {
+  const { data } = await axiosInstance.post(
+    '/groups/accept-invitation',
+    payload,
+  );
+  return data;
+};
+
+export const createGroup = async (
+  formData: TeamFormDataType,
+): Promise<CreateGroupResponse> => {
+  const { data } = await axiosInstance.post('/groups', formData);
+  return data;
+};
+
+export const createInviteToken = async (groupId: string): Promise<string> => {
+  const { data: token } = await axiosInstance.get(
+    `/groups/${groupId}/invitation`,
+  );
+  return token;
 };

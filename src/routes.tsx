@@ -3,6 +3,7 @@ import PrivateRoute from '@/components/feature/auth/PrivateRoute';
 import Layout from '@/components/layout/Layout';
 import CreateTeamPage from '@/pages/CreateTeamPage';
 import ErrorPage from '@/pages/ErrorPage';
+import JoinTeamPage from '@/pages/JoinTeamPage';
 import LandingPage from '@/pages/LandingPage';
 import TaskListPage from '@/pages/TaskListPage';
 import TeamPage from '@/pages/TeamPage';
@@ -36,12 +37,16 @@ const routes = [
         element: withPrivate(<CreateTeamPage />),
       },
       {
-        path: '/list/:groupId',
-        element: withPrivate(<TaskListPage />),
+        path: '/join-team',
+        element: withPrivate(<JoinTeamPage />),
       },
       {
         path: '/:groupId',
         element: withPrivate(<TeamPage />),
+      },
+      {
+        path: '/:groupId/details',
+        element: withPrivate(<TaskListPage />),
       },
       {
         path: 'reset-password',

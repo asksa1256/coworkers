@@ -1,23 +1,32 @@
+import { createGroup } from '@/api/api';
+import { groupQueries } from '@/api/queries';
 import TeamForm, {
   type TeamFormDataType,
 } from '@/components/feature/form/TeamForm';
-import axiosInstance from '@/lib/axios';
+import { userAtom } from '@/store/authAtom';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useAtomValue } from 'jotai';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 export default function CreateTeamPage() {
   const nav = useNavigate();
-
-  const handleSubmit = async (formData: TeamFormDataType) => {
-    try {
-      const { data } = await axiosInstance.post('/groups', formData);
-
+  const user = useAtomValue(userAtom);
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationFn: (formData: TeamFormDataType) => createGroup(formData),
+    onSuccess: data => {
+      queryClient.invalidateQueries({ queryKey: groupQueries.groups(user) });
       toast.success('팀 생성에 성공하였습니다. 생성한 팀페이지로 이동합니다.');
       nav(`/${data.id}`);
-    } catch (error) {
-      console.log(error);
+    },
+    onError: () => {
       toast.error('팀 생성에 실패하였습니다. 다시 시도해주세요.');
-    }
+    },
+  });
+
+  const handleSubmit = (formData: TeamFormDataType) => {
+    mutate(formData);
   };
 
   return <TeamForm onSubmit={handleSubmit} />;
