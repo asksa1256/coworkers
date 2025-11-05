@@ -49,7 +49,7 @@ export default function ArticleList() {
     return <p>불러오는 중...</p>;
   }
 
-  if (data.pages.length === 0)
+  if (data.pages[0].totalCount === 0)
     return (
       <EmptyContent>
         <p className='text-text-default text-md font-medium lg:text-base'>
