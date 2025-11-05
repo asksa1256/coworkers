@@ -1,3 +1,4 @@
+import { getArticles } from '@/api/api';
 import TriangleDownIcon from '@/assets/icons/TriangleDownIcon.svg?react';
 import Button from '@/components/ui/Button';
 import Dropdown from '@/components/ui/Dropdown';
@@ -5,7 +6,6 @@ import EmptyContent from '@/components/ui/EmptyContent';
 import InfiniteScrollObserver from '@/components/ui/InfiniteScrollObserver';
 import { ARTICLE_SORT_LIST } from '@/constants';
 import useIntersectionObserver from '@/hooks/useIntersectionObserver';
-import axiosInstance from '@/lib/axios';
 import { type ArticleListResponse } from '@/types/boardTypes';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useRef } from 'react';
@@ -32,10 +32,8 @@ export default function ArticleList() {
   } = useInfiniteQuery<ArticleListResponse>({
     queryKey: ['articles', sort],
     queryFn: async ({ pageParam = 1 }) => {
-      const res = await axiosInstance(
-        `/articles?page=${pageParam}&orderBy=${sort}`,
-      );
-      return res.data as ArticleListResponse;
+      const data = await getArticles(pageParam as number, sort);
+      return data as ArticleListResponse;
     },
     getNextPageParam: (lastPage, allPages) => {
       const loadedCount = allPages.flatMap(p => p.list).length;

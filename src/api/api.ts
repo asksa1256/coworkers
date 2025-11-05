@@ -92,3 +92,16 @@ export const createInviteToken = async (groupId: string): Promise<string> => {
   );
   return token;
 };
+
+// 게시글 불러오기
+export const getArticles = async (pageParam: number, sort: string) => {
+  try {
+    const response = await axiosInstance(
+      `/articles?page=${pageParam}&orderBy=${sort}`,
+    );
+    return response.data;
+  } catch (e) {
+    console.log('게시글 불러오기 에러: ', e);
+    throw e;
+  }
+};
