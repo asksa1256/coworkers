@@ -1,6 +1,11 @@
 import SearchIcon from '@/assets/icons/SearchIcon.svg?react';
 import { cn } from '@/lib/utils';
-import { useState, type ChangeEvent, type KeyboardEvent } from 'react';
+import {
+  useEffect,
+  useState,
+  type ChangeEvent,
+  type KeyboardEvent,
+} from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 interface SearchFieldProps {
@@ -26,6 +31,12 @@ export default function SearchField({
       setSearchParams(newSearchParams);
     }
   };
+
+  // url 쿼리 파라미터와 내부 상태(inputValue) 동기화
+  useEffect(() => {
+    const q = searchParams.get(queryKey) ?? '';
+    setInputValue(q);
+  }, [searchParams, queryKey]);
 
   return (
     <div className={cn('relative', className)}>
