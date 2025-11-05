@@ -14,10 +14,11 @@ import ArticleCard from './ArticleCard';
 export default function ArticleList() {
   const [searchParams, setSearchParams] = useSearchParams();
   const sort = searchParams.get('sort') || ARTICLE_SORT_LIST[0].value;
+  const searchValue = searchParams.get('q') || '';
   const scrollRef = useRef(null);
 
   const handleChangeSort = (value: string) => {
-    setSearchParams({ sort: value });
+    setSearchParams({ sort: value, q: searchValue }); // 정렬 + 검색어 필터 동시 적용
   };
 
   const {
@@ -49,17 +50,35 @@ export default function ArticleList() {
     return <p>불러오는 중...</p>;
   }
 
-  if (data.pages[0].totalCount === 0)
+  const isEmpty = data.pages[0].totalCount === 0;
+  const isSearching = searchValue !== '';
+
+  if (isEmpty) {
     return (
       <EmptyContent>
         <p className='text-text-default text-md font-medium lg:text-base'>
-          아직 작성된 글이 없습니다.
+          {isSearching ? '검색 결과가 없습니다.' : '아직 작성된 글이 없습니다.'}
         </p>
-        <Button size='lg' className='w-auto'>
-          글 작성하기
-        </Button>
+
+        {!isSearching ? (
+          <Button size='lg' className='w-auto'>
+            글 작성하기
+          </Button>
+        ) : (
+          <Button
+            size='lg'
+            className='w-auto'
+            onClick={() => {
+              searchParams.delete('q');
+              setSearchParams(searchParams);
+            }}
+          >
+            돌아가기
+          </Button>
+        )}
       </EmptyContent>
     );
+  }
 
   return (
     <>
