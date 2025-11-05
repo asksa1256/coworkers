@@ -1,7 +1,11 @@
+import InviteLinkCopyButton from '@/components/feature/teamPage/InviteLinkCopyButton';
+
 export default function ListPage() {
   return (
     <>
-      <div className='h-full'>리스트 페이지</div>
+      <div className='h-full'>
+        <InviteLinkCopyButton />
+      </div>
     </>
   );
 }

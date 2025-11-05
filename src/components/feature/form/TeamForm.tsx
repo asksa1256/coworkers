@@ -1,8 +1,12 @@
+import { groupQueries } from '@/api/queries';
 import EditableAvatar from '@/components/feature/profile/EditableAvatar';
 import Button from '@/components/ui/Button';
 import InputField from '@/components/ui/Input/InputField';
 import useUploadImage from '@/hooks/useUploadImage';
+import { userAtom } from '@/store/authAtom';
 import { Label } from '@radix-ui/react-label';
+import { useQuery } from '@tanstack/react-query';
+import { useAtomValue } from 'jotai';
 import type { ChangeEvent } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -21,6 +25,7 @@ export default function TeamForm({ initialData, onSubmit }: Props) {
     register,
     handleSubmit,
     setValue,
+    setError,
     watch,
     formState: { errors, isSubmitting, isValid, isDirty },
   } = useForm<TeamFormDataType>({
@@ -31,6 +36,10 @@ export default function TeamForm({ initialData, onSubmit }: Props) {
     },
   });
   const { handleUploadImage } = useUploadImage();
+  const user = useAtomValue(userAtom);
+  const { data: userGroups } = useQuery(groupQueries.groupsOptions(user));
+
+  if (!userGroups) return null;
 
   const imgSrc = watch('image');
   const isEditMode = !!initialData;
@@ -46,6 +55,16 @@ export default function TeamForm({ initialData, onSubmit }: Props) {
 
   const handleSubmitForm = (formData: TeamFormDataType) => {
     if (imgSrc === null) delete formData.image;
+
+    // 이름 중복 처리
+    const { name } = formData;
+    const hasDuplicateName = userGroups.some(group => group.name === name);
+    if (hasDuplicateName) {
+      setError('name', {
+        message: '이미 존재하는 이름입니다.',
+      });
+      return;
+    }
 
     onSubmit(formData);
   };

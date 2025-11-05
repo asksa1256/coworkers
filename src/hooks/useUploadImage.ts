@@ -1,4 +1,5 @@
 import axiosInstance from '@/lib/axios';
+import { useMutation } from '@tanstack/react-query';
 import { useState, type ChangeEvent } from 'react';
 import { toast } from 'sonner';
 
@@ -12,33 +13,32 @@ const ALLOWED_IMAGE_TYPES = [
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
+const uploadImage = async (file: File): Promise<string> => {
+  const formData = new FormData();
+  formData.append('image', file);
+
+  const { data } = await axiosInstance.post('/images/upload', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+
+  return data.url;
+};
+
 export default function useUploadImage() {
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadImage, setUploadImage] = useState<File | null>(null); // 프리뷰용 파일 객체
+  const [preview, setPreview] = useState<File | null>(null); // 프리뷰용 파일 객체
 
-  const fetchImage = async (file: File) => {
-    const formData = new FormData();
-    formData.append('image', file);
-
-    setIsUploading(true);
-    setUploadImage(file);
-
-    try {
-      const res = await axiosInstance.post('/images/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      return res.data.url;
-    } catch (error) {
-      setUploadImage(null); // 업로드 실패시 uploadImage 초기화
+  const { mutateAsync: uploadImageMutation, isPending } = useMutation({
+    mutationFn: (file: File) => uploadImage(file),
+    onSuccess: () => {
+      toast.success('이미지가 업로드되었습니다.');
+    },
+    onError: () => {
+      setPreview(null);
       toast.error('이미지 업로드에 실패했습니다.');
-      console.error(error);
-    } finally {
-      setIsUploading(false);
-    }
-  };
+    },
+  });
 
   const handleUploadImage = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -58,8 +58,10 @@ export default function useUploadImage() {
       return;
     }
 
-    return await fetchImage(file);
+    setPreview(file);
+    const url = await uploadImageMutation(file);
+    return url;
   };
 
-  return { handleUploadImage, isUploading, uploadImage };
+  return { handleUploadImage, isUploading: isPending, preview };
 }
