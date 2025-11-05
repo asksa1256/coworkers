@@ -9,7 +9,7 @@ import TaskListPage from '@/pages/TaskListPage';
 import TeamPage from '@/pages/TeamPage';
 import SignInPage from '@/pages/auth/SignInPage';
 import BoardPage from '@/pages/board/BoardPage';
-import type { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import KakaoRedirectPage from './pages/auth/KakaoRedirectPage';
 import KakaoSignUpPage from './pages/auth/KakaoSignUpPage';
 import ResetPasswordPage from './pages/auth/ResetPasswordPage';
@@ -42,11 +42,16 @@ const routes = [
       },
       {
         path: '/:groupId',
-        element: withPrivate(<TeamPage />),
-      },
-      {
-        path: '/:groupId/details',
-        element: withPrivate(<TaskListPage />),
+        children: [
+          {
+            index: true,
+            element: withPrivate(<TeamPage />),
+          },
+          {
+            path: 'details',
+            element: withPrivate(<TaskListPage />),
+          },
+        ],
       },
       {
         path: 'reset-password',
