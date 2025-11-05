@@ -25,7 +25,6 @@ export interface SelectDropdownProps extends DropdownBaseProps {
   type: 'select';
   value: string;
   menuItems: SelectMenuItem[];
-  // defaultValue?: string;
   suffix?: React.ReactNode;
   onSelect: (value: string) => void;
 }
@@ -50,10 +49,10 @@ export default function Dropdown(props: DropdownProps) {
   return <IconDropdown {...props} align={align} className={className} />;
 }
 
-// 셀렉트 드롭다운 별도 컴포넌트
+// 셀렉트 드롭다운
 function SelectDropdown({
   menuItems,
-  value, // 제어 컴포넌트 방식으로 변경 (defaultValue → value)
+  value,
   suffix,
   align = 'start',
   className,
@@ -87,7 +86,7 @@ function SelectDropdown({
   );
 }
 
-// 아이콘 드롭다운 별도 컴포넌트
+// 아이콘 드롭다운
 function IconDropdown({
   triggerChildren,
   menuItems,
