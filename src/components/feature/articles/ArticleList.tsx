@@ -8,12 +8,18 @@ import useIntersectionObserver from '@/hooks/useIntersectionObserver';
 import axiosInstance from '@/lib/axios';
 import { type ArticleListResponse } from '@/types/boardTypes';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import ArticleCard from './ArticleCard';
 
 export default function ArticleList() {
-  const [sort, setSort] = useState(ARTICLE_SORT_LIST[0]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const sort = searchParams.get('sort') || ARTICLE_SORT_LIST[0].value;
   const scrollRef = useRef(null);
+
+  const handleChangeSort = (value: string) => {
+    setSearchParams({ sort: value });
+  };
 
   const {
     data,
@@ -24,9 +30,11 @@ export default function ArticleList() {
     isPending,
     error,
   } = useInfiniteQuery<ArticleListResponse>({
-    queryKey: ['articles'],
+    queryKey: ['articles', sort],
     queryFn: async ({ pageParam = 1 }) => {
-      const res = await axiosInstance(`/articles?page=${pageParam}`);
+      const res = await axiosInstance(
+        `/articles?page=${pageParam}&orderBy=${sort}`,
+      );
       return res.data as ArticleListResponse;
     },
     getNextPageParam: (lastPage, allPages) => {
@@ -75,10 +83,10 @@ export default function ArticleList() {
         <h3 className='text-2lg font-bold md:text-xl'>전체</h3>
         <Dropdown
           type='select'
-          triggerChildren={sort}
+          value={sort}
           suffix={<TriangleDownIcon />}
           menuItems={ARTICLE_SORT_LIST}
-          onSelect={setSort}
+          onSelect={handleChangeSort}
         />
       </div>
 
