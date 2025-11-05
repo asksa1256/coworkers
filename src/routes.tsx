@@ -48,7 +48,7 @@ const routes = [
             element: withPrivate(<TeamPage />),
           },
           {
-            path: 'details',
+            path: 'details/:taskListId',
             element: withPrivate(<TaskListPage />),
           },
         ],
