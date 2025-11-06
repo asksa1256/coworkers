@@ -1,10 +1,15 @@
 import { getGroupMembership } from '@/api/api';
 import { groupQueries } from '@/api/queries';
 import ConfigIcon from '@/assets/icons/ConfigIcon.svg?react';
-import MemberCard from '@/components/feature/teamPage/MemberListCard';
+import AvatarGroup from '@/components/feature/teamPage/AvatarGroup';
+import {
+  default as MemberCard,
+  default as MemberListCard,
+} from '@/components/feature/teamPage/MemberListCard';
 import ReportCard from '@/components/feature/teamPage/ReportCard';
 import TaskKanbanBoard from '@/components/feature/teamPage/TaskKanbanBoard';
 import GroupTitleBar from '@/components/ui/GroupTitleBar';
+import useModal from '@/hooks/useModal';
 import { calcTodayDone, calcTodayTodos } from '@/utils/calculations';
 import { useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
@@ -13,71 +18,12 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
-//Todo - api 연결 이후 삭제
-const MOCK_DATA = {
-  TEAM: {
-    groupId: 'kyungyoung',
-    updatedAt: '2025-10-20T17:37:13.606Z',
-    createdAt: '2025-10-20T17:37:13.606Z',
-    image: 'string',
-    name: '경영관리팀',
-    id: 0,
-    members: [
-      {
-        role: 'ADMIN',
-        userImage: '이미지',
-        userEmail: 'codeitCEO@email.com',
-        userName: '강영훈',
-        groupId: 123,
-        userId: 1,
-      },
-      {
-        role: 'MEMBER',
-        userImage: '이미지',
-        userEmail: 'ysub@email.com',
-        userName: '이용섭',
-        groupId: 123,
-        userId: 2,
-      },
-    ],
-    taskLists: [
-      {
-        displayIndex: 0,
-        groupId: 123,
-        updatedAt: '2025-10-20T17:37:13.606Z',
-        createdAt: '2025-10-20T17:37:13.606Z',
-        name: '법인 설립',
-        id: 1,
-        tasks: ['법인 설립 안내 드리기'],
-      },
-      {
-        displayIndex: 1,
-        groupId: 124,
-        updatedAt: '2025-10-21T12:37:13.606Z',
-        createdAt: '2025-10-21T12:37:13.606Z',
-        name: '팀장 회의',
-        id: 2,
-        tasks: ['커피 타기', '회의실 예약하기', '공지 올리기'],
-      },
-      {
-        displayIndex: 1,
-        groupId: 124,
-        updatedAt: '2025-10-22T12:37:13.606Z',
-        createdAt: '2025-10-22T12:37:13.606Z',
-        name: '업무 보고',
-        id: 3,
-        tasks: ['보고서 작성', '자료 전달'],
-      },
-    ],
-  },
-};
-
 export default function TeamPage() {
+  const { openModal } = useModal();
   const navigate = useNavigate();
   const params = useParams();
   const groupId = Number(params.groupId);
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
-
   const { data: groupData } = useQuery(groupQueries.groupOptions(groupId));
 
   useEffect(() => {
@@ -107,13 +53,30 @@ export default function TeamPage() {
 
   if (isAdmin === null || !groupData) return;
 
+  console.log(groupData);
+
+  const handleOpenMembersModal = () => {
+    openModal({
+      children: (
+        <MemberListCard members={groupData.members} isModalDisplay={true} />
+      ),
+      closeIconButton: true,
+      className: 'md:py-12',
+    });
+  };
+
   return (
     <div className='mx-auto w-full max-w-280 py-6 md:py-18 lg:py-30'>
       <div className='flex flex-col gap-3 md:gap-5'>
-        <GroupTitleBar className='flex justify-between'>
-          <div className='flex gap-2'>
+        <GroupTitleBar className='flex items-center justify-between'>
+          <div className='flex items-center gap-2'>
             <h2>{groupData.name}</h2>
-            <div className='lg:hidden'>{'[멤버아바타]'}</div>
+            <div className='lg:hidden'>
+              <AvatarGroup
+                members={groupData.members}
+                onClick={handleOpenMembersModal}
+              />
+            </div>
           </div>
           <ConfigIcon className={clsx('w-5 md:w-6', { hidden: !isAdmin })} />
         </GroupTitleBar>
@@ -142,7 +105,7 @@ export default function TeamPage() {
 
       <div className='flex lg:gap-7'>
         <TaskKanbanBoard taskLists={groupData.taskLists} />
-        <MemberCard members={MOCK_DATA.TEAM.members} />
+        <MemberCard members={groupData.members} />
       </div>
     </div>
   );

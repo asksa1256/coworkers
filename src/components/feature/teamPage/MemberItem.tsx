@@ -1,26 +1,20 @@
 import KebabIcon from '@/assets/icons/KebabIcon.svg?react';
+import Avatar from '@/components/ui/Avatar';
+import type { MemberType } from '@/types/userType';
 
 interface Props {
-  member: {
-    role: string;
-    userImage: string;
-    userEmail: string;
-    userName: string;
-    groupId: number;
-    userId: number;
-  };
+  member: MemberType;
 }
 
 export default function MemberItem({ member }: Props) {
   return (
     <div className='flex items-center gap-3'>
-      {/* Todo - img로 교체 */}
-      <div className='h-8 w-8 rounded-lg border text-xs'>
-        {member.userImage}
-      </div>
+      <Avatar imgSrc={member.userImage} className='shrink-0' />
       <div className='flex grow-1 items-center'>
-        <div className='grow-1'>
-          <div className='text-sm font-semibold'>{member.userName}</div>
+        <div className='w-[138px] grow-1 truncate'>
+          <div className='leading-sm text-sm font-semibold'>
+            {member.userName}
+          </div>
           <div className='text-text-secondary text-xs'>{member.userEmail}</div>
         </div>
         <KebabIcon className='text-icon-secondary hover:text-icon-primary h-4 w-4' />

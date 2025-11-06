@@ -27,3 +27,5 @@ export interface GroupType {
   name: string;
   id: number;
 }
+
+export type MemberType = Omit<MembershipsType, 'group'>;

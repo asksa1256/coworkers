@@ -1,20 +1,24 @@
 import Button from '@/components/ui/Button';
+import { cn } from '@/lib/utils';
+import type { MemberType } from '@/types/userType';
 import MemberItem from './MemberItem';
 
 interface Props {
-  members: {
-    role: string;
-    userImage: string;
-    userEmail: string;
-    userName: string;
-    groupId: number;
-    userId: number;
-  }[];
+  members: MemberType[];
+  isModalDisplay?: boolean;
 }
 
-export default function MemberListCard({ members }: Props) {
+export default function MemberListCard({
+  members,
+  isModalDisplay = false,
+}: Props) {
   return (
-    <section className='card-common hidden h-[275px] w-full max-w-60 px-5 py-6 lg:block'>
+    <section
+      className={cn(
+        'card-common hidden h-[275px] w-full max-w-60 px-5 py-6 lg:block',
+        isModalDisplay && 'block h-58 max-w-none border-none p-0',
+      )}
+    >
       <div className='mb-6 flex items-center justify-between'>
         <h2 className='font-medium'>
           멤버
@@ -28,7 +32,7 @@ export default function MemberListCard({ members }: Props) {
           초대하기 +
         </Button>
       </div>
-      <div className='flex flex-col gap-4'>
+      <div className='hide-scrollbar flex h-44 flex-col gap-4 overflow-x-hidden overflow-y-scroll'>
         {members.map(member => (
           <MemberItem key={member.userId} member={member} />
         ))}
