@@ -1,6 +1,6 @@
-import { getGroup } from '@/api/api';
+import { getArticle, getGroup } from '@/api/api';
 import axiosInstance from '@/lib/axios';
-import { type ArticleListResponse } from '@/types/boardTypes';
+import type { ArticleListResponse } from '@/types/boardTypes';
 import type { GroupType, UserType } from '@/types/userType';
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 import { getArticles } from './api';
@@ -40,5 +40,12 @@ export const boardQueries = {
           ? allPages.length + 1 // nextPage
           : undefined; // nextPage 없음
       },
+    }),
+
+  article: (id: number) => ['article', id],
+  articleOptions: (id: number) =>
+    queryOptions({
+      queryKey: boardQueries.article(id),
+      queryFn: async () => getArticle(id),
     }),
 };

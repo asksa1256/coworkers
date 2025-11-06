@@ -1,10 +1,7 @@
+import { boardQueries } from '@/api/queries';
 import CommentIcon from '@/assets/icons/CommentIcon.svg?react';
 import HeartIcon from '@/assets/icons/HeartIcon.svg?react';
-import axiosInstance from '@/lib/axios';
-import type {
-  ArticleDetailResponse,
-  ArticleResponse,
-} from '@/types/boardTypes';
+import type { ArticleResponse } from '@/types/boardTypes';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 
@@ -18,13 +15,7 @@ export default function ArticleCard({ article }: ArticleCardProps) {
     article;
 
   // 각 카드마다 상세 데이터 fetch
-  const { data: detail, isPending } = useQuery({
-    queryKey: ['article', article.id],
-    queryFn: async () => {
-      const res = await axiosInstance(`/articles/${article.id}`);
-      return res.data as ArticleDetailResponse;
-    },
-  });
+  const { data: detail, isPending } = useQuery(boardQueries.articleOptions(id));
 
   return (
     <Link
