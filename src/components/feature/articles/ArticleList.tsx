@@ -34,7 +34,9 @@ export default function ArticleList() {
     status,
     isPending,
     error,
-  } = useInfiniteQuery(boardQueries.articlesOptions(sort, searchValue));
+  } = useInfiniteQuery(
+    boardQueries.articlesOptions(sort, searchValue, searchRange),
+  );
 
   const allData = data?.pages.flatMap(page => page.list);
 

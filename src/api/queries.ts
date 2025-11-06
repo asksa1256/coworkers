@@ -27,14 +27,15 @@ export const groupQueries = {
 };
 
 export const boardQueries = {
-  articles: (sort: string, searchValue: string) => [
+  articles: (sort: string, searchValue: string, searchRange: string) => [
     'articles',
     sort,
     searchValue,
+    searchRange,
   ],
-  articlesOptions: (sort: string, searchValue: string) =>
+  articlesOptions: (sort: string, searchValue: string, searchRange: string) =>
     infiniteQueryOptions<ArticleListResponse>({
-      queryKey: boardQueries.articles(sort, searchValue),
+      queryKey: boardQueries.articles(sort, searchValue, searchRange),
       queryFn: async ({ pageParam = 1 }) =>
         getArticles({ pageParam: pageParam as number, sort, searchValue }),
       initialPageParam: 1,
