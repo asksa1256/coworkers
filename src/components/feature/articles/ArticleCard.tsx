@@ -34,7 +34,9 @@ export default function ArticleCard({ article }: ArticleCardProps) {
             {highlightSearchValue(title, searchValue)}
           </h6>
           <p className='text-text-default md:text-md pre-line line-clamp-2 text-sm break-keep'>
-            {isPending ? '내용 불러오는 중...' : detail?.content}
+            {isPending
+              ? '내용 불러오는 중...'
+              : highlightSearchValue(detail?.content, searchValue)}
           </p>
         </div>
 
