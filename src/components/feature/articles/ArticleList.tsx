@@ -15,10 +15,15 @@ export default function ArticleList() {
   const [searchParams, setSearchParams] = useSearchParams();
   const sort = searchParams.get('sort') || ARTICLE_SORT_LIST[0].value;
   const searchValue = searchParams.get('q') || '';
+  const searchRange = searchParams.get('search_range') || '';
   const scrollRef = useRef(null);
 
   const handleChangeSort = (value: string) => {
-    setSearchParams({ sort: value, q: searchValue }); // 정렬 + 검색어 필터 동시 적용
+    setSearchParams(prevParams => ({
+      ...Object.fromEntries(prevParams),
+      sort: value,
+      q: searchValue,
+    })); // 정렬 + 검색어 필터 동시 적용
   };
 
   const {
@@ -33,9 +38,17 @@ export default function ArticleList() {
 
   const allData = data?.pages.flatMap(page => page.list);
 
-  const filteredData = allData?.filter(data =>
-    data.title.includes(searchValue),
-  );
+  const filteredData = allData?.filter(data => {
+    if (!searchValue) {
+      return true; // 검색어 없음: 전체 데이터 리턴
+    }
+
+    if (searchRange === 'title') {
+      return data.title.includes(searchValue); // 검색 범위가 '제목'일 경우, 제목에만 검색어가 포함된 게시글 리턴
+    }
+
+    return true; // 검색어가 있고, 검색 범위가 '제목'이 아닐 경우, 제목이나 내용에 검색어가 포함된 게시글 리턴
+  });
 
   useIntersectionObserver({
     target: scrollRef,
@@ -56,7 +69,7 @@ export default function ArticleList() {
     return <p>불러오는 중...</p>;
   }
 
-  const isEmpty = data.pages[0].totalCount === 0;
+  const isEmpty = filteredData?.length === 0;
   const isSearching = searchValue !== '';
 
   if (isEmpty) {
@@ -75,8 +88,11 @@ export default function ArticleList() {
             size='lg'
             className='w-auto'
             onClick={() => {
-              searchParams.delete('q');
-              setSearchParams(searchParams);
+              setSearchParams(prevParams => {
+                const newParams = new URLSearchParams(prevParams.toString());
+                newParams.delete('q');
+                return newParams;
+              });
             }}
           >
             돌아가기
