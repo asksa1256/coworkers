@@ -3,8 +3,9 @@ import CommentIcon from '@/assets/icons/CommentIcon.svg?react';
 import HeartIcon from '@/assets/icons/HeartIcon.svg?react';
 import type { ArticleResponse } from '@/types/boardTypes';
 import { formatRelativeTime } from '@/utils/formatters';
+import highlightSearchValue from '@/utils/highlightSearchValue';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 interface ArticleCardProps {
   article: ArticleResponse;
@@ -18,6 +19,10 @@ export default function ArticleCard({ article }: ArticleCardProps) {
   // 각 카드마다 상세 데이터 fetch
   const { data: detail, isPending } = useQuery(boardQueries.articleOptions(id));
 
+  // 검색어 강조
+  const [searchParams] = useSearchParams();
+  const searchValue = searchParams.get('q') || '';
+
   return (
     <Link
       to={`/board/${id}`}
@@ -25,7 +30,9 @@ export default function ArticleCard({ article }: ArticleCardProps) {
     >
       <div className='flex items-center justify-between md:gap-6'>
         <div className='w-[60%]'>
-          <h6 className='md:text-2lg mb-2 text-base font-bold'>{title}</h6>
+          <h6 className='md:text-2lg mb-2 text-base font-bold'>
+            {highlightSearchValue(title, searchValue)}
+          </h6>
           <p className='text-text-default md:text-md pre-line line-clamp-2 text-sm break-keep'>
             {isPending ? '내용 불러오는 중...' : detail?.content}
           </p>

@@ -31,6 +31,12 @@ export default function ArticleList() {
     error,
   } = useInfiniteQuery(boardQueries.articlesOptions(sort, searchValue));
 
+  const allData = data?.pages.flatMap(page => page.list);
+
+  const filteredData = allData?.filter(data =>
+    data.title.includes(searchValue),
+  );
+
   useIntersectionObserver({
     target: scrollRef,
     onIntersect: fetchNextPage,
@@ -94,11 +100,9 @@ export default function ArticleList() {
       </div>
 
       <ol className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
-        {data.pages.flatMap(page =>
-          page.list.map(article => (
-            <ArticleCard key={article.id} article={article} />
-          )),
-        )}
+        {filteredData?.map(article => (
+          <ArticleCard key={article.id} article={article} />
+        ))}
       </ol>
 
       <InfiniteScrollObserver
