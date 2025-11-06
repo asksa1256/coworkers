@@ -10,6 +10,7 @@ import TeamPage from '@/pages/TeamPage';
 import SignInPage from '@/pages/auth/SignInPage';
 import BoardPage from '@/pages/board/BoardPage';
 import type { ReactNode } from 'react';
+import BoardLayout from './components/layout/BoardLayout';
 import KakaoRedirectPage from './pages/auth/KakaoRedirectPage';
 import KakaoSignUpPage from './pages/auth/KakaoSignUpPage';
 import ResetPasswordPage from './pages/auth/ResetPasswordPage';
@@ -30,7 +31,6 @@ const routes = [
     element: <Layout />,
     errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <LandingPage /> },
       { path: '/', element: <LandingPage /> },
       {
         path: '/create-team',
@@ -42,56 +42,52 @@ const routes = [
       },
       {
         path: '/:groupId',
-        element: withPrivate(<TeamPage />),
-      },
-      {
-        path: '/:groupId/details',
-        element: withPrivate(<ListPage />),
+        children: [
+          {
+            index: true,
+            element: withPrivate(<TeamPage />),
+          },
+          {
+            path: 'details',
+            element: withPrivate(<ListPage />),
+          },
+        ],
       },
       {
         path: 'reset-password',
         element: <ResetPasswordPage />,
       },
-    ],
-  },
-
-  // auth pages
-  {
-    path: '/auth',
-    element: <Layout />,
-    errorElement: <ErrorPage />,
-    children: [
       {
-        path: 'signin',
-        element: withAuth(<SignInPage />),
+        path: '/auth',
+        children: [
+          {
+            path: 'signin',
+            element: withAuth(<SignInPage />),
+          },
+          {
+            path: 'signup',
+            element: withAuth(<SignUpPage />),
+          },
+        ],
       },
       {
-        path: 'signup',
-        element: withAuth(<SignUpPage />),
-      },
-    ],
-  },
-  {
-    path: '/oauth',
-    element: <Layout />,
-    errorElement: <ErrorPage />,
-    children: [
-      {
-        path: 'kakao',
-        element: withAuth(<KakaoRedirectPage />),
-      },
-      {
-        path: 'signup/kakao',
-        element: withAuth(<KakaoSignUpPage />),
+        path: '/oauth',
+        children: [
+          {
+            path: 'kakao',
+            element: withAuth(<KakaoRedirectPage />),
+          },
+          {
+            path: 'signup/kakao',
+            element: withAuth(<KakaoSignUpPage />),
+          },
+        ],
       },
     ],
   },
-
-  // board pages
   {
     path: '/board',
-    element: <Layout />,
-    errorElement: <ErrorPage />,
+    element: <BoardLayout />,
     children: [
       {
         index: true,
@@ -100,19 +96,6 @@ const routes = [
       {
         path: ':postId',
         element: withPrivate(<PostDetailPage />),
-      },
-    ],
-  },
-
-  // user pages
-  {
-    path: '/user',
-    element: <Layout />,
-    errorElement: <ErrorPage />,
-    children: [
-      {
-        path: 'reset-password',
-        element: withPrivate(<ResetPasswordPage />),
       },
     ],
   },
