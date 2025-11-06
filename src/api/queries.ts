@@ -31,10 +31,8 @@ export const boardQueries = {
   articlesOptions: (sort: string) =>
     infiniteQueryOptions<ArticleListResponse>({
       queryKey: boardQueries.articles(sort),
-      queryFn: async ({ pageParam = 1 }) => {
-        const data = await getArticles(pageParam as number, sort);
-        return data;
-      },
+      queryFn: async ({ pageParam = 1 }) =>
+        getArticles(pageParam as number, sort),
       initialPageParam: 1,
       getNextPageParam: (lastPage, allPages) => {
         const loadedCount = allPages.flatMap(p => p.list).length;
