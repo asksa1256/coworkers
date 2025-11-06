@@ -18,8 +18,8 @@ export default function BoardPage() {
 
   return (
     <div className='w-full max-w-280 pt-6 pb-10 md:pt-[77px] lg:mx-auto lg:pt-[87px]'>
-      <div className='mb-5 flex flex-col gap-5 md:mb-[30px] lg:flex-row lg:items-center lg:justify-between'>
-        <h2 className='text-xl font-bold md:text-2xl'>자유게시판</h2>
+      <div className='mb-5 flex flex-col gap-5 md:mb-[30px] md:flex-row md:items-center md:justify-between'>
+        <h2 className='shrink-0 text-xl font-bold md:text-2xl'>자유게시판</h2>
 
         <div className='flex items-center gap-2 md:gap-4'>
           <Dropdown
@@ -28,7 +28,7 @@ export default function BoardPage() {
             value={searchRange}
             onSelect={handleSelectSearchRange}
           />
-          <SearchField className='w-full' />
+          <SearchField className='w-full shrink' />
         </div>
       </div>
 
