@@ -4,7 +4,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/Dropdown/DropdownElements';
-import { useState } from 'react';
 
 export interface MenuItem {
   label: string;
@@ -24,8 +23,8 @@ interface DropdownBaseProps {
 // 셀렉트 형태 드롭다운 타입
 export interface SelectDropdownProps extends DropdownBaseProps {
   type: 'select';
+  value: string;
   menuItems: SelectMenuItem[];
-  defaultValue?: string;
   suffix?: React.ReactNode;
   onSelect: (value: string) => void;
 }
@@ -50,22 +49,21 @@ export default function Dropdown(props: DropdownProps) {
   return <IconDropdown {...props} align={align} className={className} />;
 }
 
-// 셀렉트 드롭다운 별도 컴포넌트
+// 셀렉트 드롭다운
 function SelectDropdown({
   menuItems,
-  defaultValue = menuItems[0]?.value,
+  value,
   suffix,
   align = 'start',
   className,
   onSelect,
 }: SelectDropdownProps & { align?: 'start' | 'center' | 'end' }) {
-  const [selectedValue, setSelectedValue] = useState(defaultValue);
+  const selectedValue = value;
 
   const selectedLabel =
-    menuItems.find(item => item.value === selectedValue)?.label || defaultValue;
+    menuItems.find(item => item.value === selectedValue)?.label || value;
 
   const handleItemClick = (value: string) => {
-    setSelectedValue(value);
     onSelect(value);
   };
 
@@ -88,7 +86,7 @@ function SelectDropdown({
   );
 }
 
-// 아이콘 드롭다운 별도 컴포넌트
+// 아이콘 드롭다운
 function IconDropdown({
   triggerChildren,
   menuItems,

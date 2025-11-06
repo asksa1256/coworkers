@@ -21,7 +21,7 @@ const meta = {
       control: false,
       description: '드롭다운 트리거 내용',
     },
-    defaultValue: {
+    value: {
       control: 'text',
       description: '셀렉트 드롭다운의 기본 선택값',
     },
@@ -46,14 +46,14 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 function SelectDropdownStory(args: SelectDropdownProps) {
-  const [selected, setSelected] = useState(args.defaultValue ?? 'recent');
+  const [selected, setSelected] = useState(args.value ?? 'recent');
 
   const handleSelect = (value: string) => {
     setSelected(value); // 내부 상태 갱신
     args.onSelect?.(value); // 외부 콜백 실행 (console.log)
   };
 
-  return <Dropdown {...args} defaultValue={selected} onSelect={handleSelect} />;
+  return <Dropdown {...args} value={selected} onSelect={handleSelect} />;
 }
 
 export const DropdownSelect: Story = {
@@ -70,7 +70,7 @@ export const DropdownSelect: Story = {
       { label: '최신순', value: 'recent' },
       { label: '좋아요순', value: 'like' },
     ],
-    defaultValue: 'recent',
+    value: 'recent',
     suffix: <TriangleDownIcon className='h-5 w-5' />,
     align: 'start',
     onSelect: value => console.log('선택됨:', value),
