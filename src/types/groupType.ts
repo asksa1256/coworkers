@@ -3,7 +3,7 @@ import type { GroupType, MembershipsType } from './userType';
 
 export interface GroupDetailResponse extends GroupType {
   members: Omit<MembershipsType, 'group'>[];
-  taskLists: TaskListsResponse;
+  taskLists: TaskListsResponse[];
 }
 
 export interface CreateGroupResponse {

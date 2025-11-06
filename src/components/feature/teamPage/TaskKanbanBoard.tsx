@@ -1,17 +1,17 @@
-import { updateTaskListOrder } from '@/api/api';
-import type { GroupDetailResponse } from '@/types/groupType';
+import { taskListMutations } from '@/api/mutations';
+import useModal from '@/hooks/useModal';
 import type { TaskListsResponse } from '@/types/taskType';
 import { calcMouseLocation } from '@/utils/calculations';
 import changeListOrder from '@/utils/changeListOrder';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { toast } from 'sonner';
+import { useParams } from 'react-router-dom';
+import AddTaskListForm from './AddTaskListForm';
 import KanbanCardList from './KanbanCardList';
 import KanbanTab from './KanbanTab';
 
 interface Props {
-  taskLists: TaskListsResponse;
+  taskLists: TaskListsResponse[];
 }
 
 /**
@@ -22,58 +22,24 @@ interface Props {
  * doneTaskLists - 모두 완료되었으면 done에 저장
  */
 export default function TaskKanbanBoard({ taskLists }: Props) {
-  const [dragOverCopy, setDragOverCopy] = useState<TaskListsResponse | null>(
+  const { openModal } = useModal();
+  const [dragOverCopy, setDragOverCopy] = useState<TaskListsResponse[] | null>(
     null,
   );
   const draggingIndex = useRef<number | null>(null);
   const confirmedTargetIndex = useRef<number | null>(null);
-  const todoTaskLists: TaskListsResponse = [];
-  const doneTaskLists: TaskListsResponse = [];
+  const todoTaskLists: TaskListsResponse[] = [];
+  const doneTaskLists: TaskListsResponse[] = [];
   const queryClient = useQueryClient();
-  const { pathname } = useLocation();
-  const groupId = Number(pathname.slice(1));
-  const taskListsOrderMutation = useMutation({
-    mutationKey: ['taskListOrder'],
-    mutationFn: (args: Parameters<typeof updateTaskListOrder>) =>
-      updateTaskListOrder(...args),
-    onMutate: async () => {
-      await queryClient.cancelQueries({
-        queryKey: ['group', groupId],
-      });
-
-      const prevSnapshot = queryClient.getQueryData(['group', groupId]);
-
-      queryClient.setQueryData(
-        ['group', groupId],
-        (prev: GroupDetailResponse) => {
-          if (!dragOverCopy) return prev;
-
-          const updatedLists = dragOverCopy.map((taskList, i) => {
-            return {
-              ...taskList,
-              displayIndex: i,
-            };
-          });
-
-          return {
-            ...prev,
-            taskLists: updatedLists,
-          };
-        },
-      );
-
-      return { prevSnapshot };
-    },
-    onError: (error, variables, context) => {
-      toast.error('순서 변경에 실패했습니다.');
-      queryClient.setQueryData(['group', groupId], context?.prevSnapshot);
-    },
-    onSettled: () => {
-      if (queryClient.isMutating({ mutationKey: ['taskListOrder'] }) === 1) {
-        queryClient.invalidateQueries({ queryKey: ['group', groupId] });
-      }
-    },
-  });
+  const params = useParams();
+  const groupId = Number(params.groupId);
+  const taskListsOrderMutation = useMutation(
+    taskListMutations.updateTaskListOrderOptions(
+      groupId,
+      queryClient,
+      dragOverCopy,
+    ),
+  );
 
   // 할 일/완료 탭 카드 분배, dragOver중일 때는 실제 taskLists가 아닌 임시로 보여줄 ui인 dragOverCopy를 보여줌
   (dragOverCopy || taskLists).map(taskList => {
@@ -156,10 +122,17 @@ export default function TaskKanbanBoard({ taskLists }: Props) {
     setDragOverCopy(null);
   };
 
+  const handleOpenAddTaskListModal = () => {
+    openModal({
+      children: <AddTaskListForm groupId={groupId} />,
+      closeIconButton: true,
+    });
+  };
+
   return (
     <section className='relative flex w-full flex-col gap-8 lg:max-w-[846px] lg:flex-row lg:gap-4'>
       <div className='w-full'>
-        <KanbanTab title='할 일' />
+        <KanbanTab title='할 일' onClick={handleOpenAddTaskListModal} />
         <KanbanCardList
           taskLists={todoTaskLists}
           draggingRef={draggingIndex}

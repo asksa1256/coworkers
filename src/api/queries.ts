@@ -9,7 +9,7 @@ export const groupQueries = {
   group: (groupId: number) => ['group', groupId],
   groupOptions: (groupId: number) =>
     queryOptions({
-      queryKey: ['group', groupId],
+      queryKey: [...groupQueries.group(groupId)],
       queryFn: () => getGroup(groupId),
     }),
 

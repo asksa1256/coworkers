@@ -1,16 +1,16 @@
-import { getGroup, getGroupMembership } from '@/api/api';
+import { getGroupMembership } from '@/api/api';
+import { groupQueries } from '@/api/queries';
 import ConfigIcon from '@/assets/icons/ConfigIcon.svg?react';
 import MemberCard from '@/components/feature/teamPage/MemberListCard';
 import ReportCard from '@/components/feature/teamPage/ReportCard';
 import TaskKanbanBoard from '@/components/feature/teamPage/TaskKanbanBoard';
 import GroupTitleBar from '@/components/ui/GroupTitleBar';
-import type { GroupDetailResponse } from '@/types/groupType';
 import { calcTodayDone, calcTodayTodos } from '@/utils/calculations';
 import { useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
 //Todo - api 연결 이후 삭제
@@ -74,39 +74,36 @@ const MOCK_DATA = {
 
 export default function TeamPage() {
   const navigate = useNavigate();
-  const { pathname } = useLocation();
-  const groupId = Number(pathname.slice(1));
+  const params = useParams();
+  const groupId = Number(params.groupId);
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
 
-  const { data: groupData } = useQuery<GroupDetailResponse>({
-    queryKey: ['group', groupId],
-    queryFn: () => getGroup(groupId),
-  });
-
-  const getUserRole = async () => {
-    const user = localStorage.getItem('user');
-
-    if (!user) return;
-
-    try {
-      const data = await getGroupMembership(groupId, JSON.parse(user).id);
-      setIsAdmin(data.role === 'ADMIN');
-    } catch (e) {
-      console.log('유저 권한 가져오기 실패: ', e);
-      if (isAxiosError(e) && e.response?.status === 404) {
-        // 그룹 멤버 아닐 시 홈으로 이동
-        navigate('/', { replace: true });
-      } else {
-        toast.error('사용자 권한을 가져올 수 없습니다. 다시 시도해주세요.');
-      }
-      throw e;
-    }
-  };
+  const { data: groupData } = useQuery(groupQueries.groupOptions(groupId));
 
   useEffect(() => {
+    const getUserRole = async () => {
+      const user = localStorage.getItem('user');
+
+      if (!user) return;
+
+      try {
+        const data = await getGroupMembership(groupId, JSON.parse(user).id);
+        setIsAdmin(data.role === 'ADMIN');
+      } catch (e) {
+        console.log('유저 권한 가져오기 실패: ', e);
+        if (isAxiosError(e) && e.response?.status === 404) {
+          // 그룹 멤버 아닐 시 홈으로 이동
+          navigate('/', { replace: true });
+        } else {
+          toast.error('사용자 권한을 가져올 수 없습니다. 다시 시도해주세요.');
+        }
+        throw e;
+      }
+    };
+
     setIsAdmin(null);
     getUserRole();
-  }, [pathname]);
+  }, [navigate, groupId]);
 
   if (isAdmin === null || !groupData) return;
 

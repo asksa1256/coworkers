@@ -6,7 +6,7 @@ export const calcPercentage = (numerator: number, denominator: number) => {
   return Math.floor((numerator / denominator) * 100);
 };
 
-export const calcTodayTodos = (taskLists: TaskListsResponse) => {
+export const calcTodayTodos = (taskLists: TaskListsResponse[]) => {
   let count = 0;
 
   for (let i = 0; i < taskLists.length; i++) {
@@ -28,7 +28,7 @@ export const countDone = (tasks: TasksResponse) => {
   return count;
 };
 
-export const calcTodayDone = (taskLists: TaskListsResponse) => {
+export const calcTodayDone = (taskLists: TaskListsResponse[]) => {
   let count = 0;
 
   for (let i = 0; i < taskLists.length; i++) {
