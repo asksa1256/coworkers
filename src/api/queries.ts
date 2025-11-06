@@ -27,12 +27,16 @@ export const groupQueries = {
 };
 
 export const boardQueries = {
-  articles: (sort: string) => ['articles', sort],
-  articlesOptions: (sort: string) =>
+  articles: (sort: string, searchValue: string) => [
+    'articles',
+    sort,
+    searchValue,
+  ],
+  articlesOptions: (sort: string, searchValue: string) =>
     infiniteQueryOptions<ArticleListResponse>({
-      queryKey: boardQueries.articles(sort),
+      queryKey: boardQueries.articles(sort, searchValue),
       queryFn: async ({ pageParam = 1 }) =>
-        getArticles(pageParam as number, sort),
+        getArticles({ pageParam: pageParam as number, sort, searchValue }),
       initialPageParam: 1,
       getNextPageParam: (lastPage, allPages) => {
         const loadedCount = allPages.flatMap(p => p.list).length;

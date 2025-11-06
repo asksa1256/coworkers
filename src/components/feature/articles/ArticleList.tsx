@@ -29,7 +29,7 @@ export default function ArticleList() {
     status,
     isPending,
     error,
-  } = useInfiniteQuery(boardQueries.articlesOptions(sort));
+  } = useInfiniteQuery(boardQueries.articlesOptions(sort, searchValue));
 
   useIntersectionObserver({
     target: scrollRef,
