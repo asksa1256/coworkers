@@ -2,10 +2,7 @@ import { getGroupMembership } from '@/api/api';
 import { groupQueries } from '@/api/queries';
 import ConfigIcon from '@/assets/icons/ConfigIcon.svg?react';
 import AvatarGroup from '@/components/feature/teamPage/AvatarGroup';
-import {
-  default as MemberCard,
-  default as MemberListCard,
-} from '@/components/feature/teamPage/MemberListCard';
+import MemberListCard from '@/components/feature/teamPage/MemberListCard';
 import ReportCard from '@/components/feature/teamPage/ReportCard';
 import TaskKanbanBoard from '@/components/feature/teamPage/TaskKanbanBoard';
 import GroupTitleBar from '@/components/ui/GroupTitleBar';
@@ -52,8 +49,6 @@ export default function TeamPage() {
   }, [navigate, groupId]);
 
   if (isAdmin === null || !groupData) return;
-
-  console.log(groupData);
 
   const handleOpenMembersModal = () => {
     openModal({
@@ -105,7 +100,7 @@ export default function TeamPage() {
 
       <div className='flex lg:gap-7'>
         <TaskKanbanBoard taskLists={groupData.taskLists} />
-        <MemberCard members={groupData.members} />
+        <MemberListCard members={groupData.members} />
       </div>
     </div>
   );

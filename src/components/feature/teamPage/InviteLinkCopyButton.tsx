@@ -1,13 +1,17 @@
 import { createInviteToken } from '@/api/api';
 import Button from '@/components/ui/Button';
+import useModal from '@/hooks/useModal';
 import { copyToClipboard } from '@/utils/copyToClipboard';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
-import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
-export default function InviteLinkCopyButton() {
-  const { groupId } = useParams();
+interface Props {
+  groupId: string;
+}
+
+export default function InviteLinkCopyButton({ groupId }: Props) {
+  const { closeModal } = useModal();
   const { mutate, isPending } = useMutation({
     mutationFn: async (id: string) => {
       const token = await createInviteToken(id);
@@ -21,6 +25,7 @@ export default function InviteLinkCopyButton() {
     },
     onSuccess: () => {
       toast.success('초대 링크가 복사되었습니다!');
+      closeModal();
     },
     onError: error => {
       if (isAxiosError(error)) {

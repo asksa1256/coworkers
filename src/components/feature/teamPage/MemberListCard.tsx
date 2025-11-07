@@ -1,6 +1,8 @@
 import Button from '@/components/ui/Button';
+import useModal from '@/hooks/useModal';
 import { cn } from '@/lib/utils';
 import type { MemberType } from '@/types/userType';
+import InviteLinkCopyModal from './InviteLinkCopyModal';
 import MemberItem from './MemberItem';
 
 interface Props {
@@ -12,6 +14,17 @@ export default function MemberListCard({
   members,
   isModalDisplay = false,
 }: Props) {
+  const { openModal } = useModal();
+  const groupId = String(members[0].groupId);
+
+  const handleOpenInviteModal = () => {
+    if (!groupId) return;
+    openModal({
+      children: <InviteLinkCopyModal groupId={groupId} />,
+      closeIconButton: true,
+    });
+  };
+
   return (
     <section
       className={cn(
@@ -28,6 +41,7 @@ export default function MemberListCard({
           className='w-auto px-0 py-0 font-semibold'
           variant='link'
           size='sm'
+          onClick={handleOpenInviteModal}
         >
           초대하기 +
         </Button>
