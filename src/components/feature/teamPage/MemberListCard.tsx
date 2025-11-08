@@ -1,20 +1,37 @@
 import Button from '@/components/ui/Button';
+import useModal from '@/hooks/useModal';
+import { cn } from '@/lib/utils';
+import type { MemberType } from '@/types/userType';
+import InviteLinkCopyModal from './InviteLinkCopyModal';
 import MemberItem from './MemberItem';
 
 interface Props {
-  members: {
-    role: string;
-    userImage: string;
-    userEmail: string;
-    userName: string;
-    groupId: number;
-    userId: number;
-  }[];
+  members: MemberType[];
+  isModalDisplay?: boolean;
 }
 
-export default function MemberListCard({ members }: Props) {
+export default function MemberListCard({
+  members,
+  isModalDisplay = false,
+}: Props) {
+  const { openModal } = useModal();
+  const groupId = String(members[0].groupId);
+
+  const handleOpenInviteModal = () => {
+    if (!groupId) return;
+    openModal({
+      children: <InviteLinkCopyModal groupId={groupId} />,
+      closeIconButton: true,
+    });
+  };
+
   return (
-    <section className='card-common hidden h-[275px] w-full max-w-60 px-5 py-6 lg:block'>
+    <section
+      className={cn(
+        'card-common hidden h-auto w-full max-w-60 px-5 py-6 lg:block',
+        isModalDisplay && 'block h-58 max-w-none border-none p-0',
+      )}
+    >
       <div className='mb-6 flex items-center justify-between'>
         <h2 className='font-medium'>
           멤버
@@ -24,11 +41,17 @@ export default function MemberListCard({ members }: Props) {
           className='w-auto px-0 py-0 font-semibold'
           variant='link'
           size='sm'
+          onClick={handleOpenInviteModal}
         >
           초대하기 +
         </Button>
       </div>
-      <div className='flex flex-col gap-4'>
+      <div
+        className={cn(
+          'hide-scrollbar flex flex-col gap-4',
+          isModalDisplay && 'h-44 overflow-y-scroll',
+        )}
+      >
         {members.map(member => (
           <MemberItem key={member.userId} member={member} />
         ))}

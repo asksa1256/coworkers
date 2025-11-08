@@ -203,6 +203,15 @@
     @apply bg-bg-primary border-border-primary rounded-xl border;
   }
 
+  .hide-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+
   /* 커스텀 스크롤바 */
   ::-webkit-scrollbar {
     /* 스크롤바 전체 영역 */
