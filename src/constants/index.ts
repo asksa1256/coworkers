@@ -14,3 +14,8 @@ export const SEARCH_RANGE_MAP = [
   { label: '제목+내용', value: 'title_content' },
   { label: '제목', value: 'title' },
 ];
+
+export const ARTICLE_DROPDOWN_MAP = [
+  { label: '수정하기', onClick: () => console.log('수정하기') },
+  { label: '삭제하기', onClick: () => console.log('삭제하기') },
+];

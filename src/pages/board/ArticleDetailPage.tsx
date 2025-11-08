@@ -5,7 +5,9 @@ import LikeButton from '@/components/feature/like/LikeButton';
 import LikeFloatingButton from '@/components/feature/like/LikeFloatingButton';
 import Avatar from '@/components/ui/Avatar';
 import Button from '@/components/ui/Button';
+import Dropdown from '@/components/ui/Dropdown';
 import { Spinner } from '@/components/ui/spinner';
+import { ARTICLE_DROPDOWN_MAP } from '@/constants';
 import { formatRelativeTime } from '@/utils/formatters';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -45,15 +47,13 @@ export default function ArticleDetailPage() {
         <div className='border-border-primary flex flex-col gap-4 border-b pb-3'>
           <div className='flex items-center justify-between'>
             <h4 className='text-2lg font-bold md:text-xl'>{data.title}</h4>
-            <Button
-              type='button'
-              size='icon-md'
-              variant='ghost'
-              round='sm'
-              className='[&_svg]:!size-6'
-            >
-              <KebabIcon />
-            </Button>
+            <Dropdown
+              type='icon'
+              menuItems={ARTICLE_DROPDOWN_MAP}
+              triggerChildren={<KebabIcon />}
+              align='end'
+              className='text-center'
+            />
           </div>
 
           <div className='md:text-md flex items-center gap-2 text-xs'>
