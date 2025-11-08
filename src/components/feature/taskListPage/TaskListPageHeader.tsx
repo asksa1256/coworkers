@@ -6,7 +6,11 @@ import GroupTitleBar from '@/components/ui/GroupTitleBar';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useParams } from 'react-router-dom';
 
-export default function TaskListPageHeader() {
+interface Props {
+  date: Date;
+}
+
+export default function TaskListPageHeader({ date }: Props) {
   const { groupId } = useParams();
 
   const { data: groupData } = useQuery(
@@ -34,7 +38,7 @@ export default function TaskListPageHeader() {
           할 일
         </h3>
         <div className='flex items-center justify-between lg:block'>
-          <TaskGroupList taskGroups={groupData.taskLists} />
+          <TaskGroupList taskGroups={groupData.taskLists} date={date} />
           <CreateTaskGroupListButton />
         </div>
       </div>

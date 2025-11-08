@@ -59,7 +59,7 @@ export const taskListQueries = {
   ],
   singleTaskListOptions: (groupId?: string, taskListId?: string, date?: Date) =>
     queryOptions({
-      queryKey: [...taskListQueries.singleTaskList(groupId, taskListId)],
+      queryKey: [...taskListQueries.singleTaskList(groupId, taskListId, date)],
       queryFn: () => getSingleTaskList(groupId!, taskListId!, date!),
       enabled: !!groupId && !!taskListId,
     }),

@@ -6,12 +6,17 @@ import TaskSectionWeek from '@/components/feature/taskListPage/TaskSectionWeek';
 import CalendarPopover from '@/components/ui/CalendarPopover';
 import { Spinner } from '@/components/ui/spinner';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import type { Dispatch } from 'react';
 import { useParams } from 'react-router-dom';
 
-export default function TaskListPageBody() {
+interface Props {
+  date: Date;
+  setDate: Dispatch<React.SetStateAction<Date>>;
+}
+
+export default function TaskListPageBody({ date, setDate }: Props) {
   const { groupId, taskListId } = useParams();
-  const [date, setDate] = useState<Date>(new Date());
+  // const [date, setDate] = useState<Date>(new Date());
   const { data: singleTaskListData, isLoading: isTaskListLoading } = useQuery(
     taskListQueries.singleTaskListOptions(groupId, taskListId, date),
   );
