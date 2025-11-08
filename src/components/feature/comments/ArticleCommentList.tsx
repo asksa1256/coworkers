@@ -54,13 +54,13 @@ export default function ArticleCommentList({ articleId }: Props) {
   if (!allData) return;
 
   return (
-    <div>
+    <div className='mt-4 md:mt-[28px] lg:mt-10'>
       <h5 className='md:text-2lg text-md mb-3 font-bold md:mb-4'>
         댓글 <span className='text-primary'>{allData.length}</span>
       </h5>
 
-      <div className='mb-[28px] flex items-center gap-3 md:mb-9 md:gap-4'>
-        <Avatar size='md' imgSrc={user!.image} />
+      <div className='mb-[28px] flex gap-3 md:mb-9 md:gap-4'>
+        <Avatar size='md' imgSrc={user!.image} className='mt-3 md:mt-2' />
         <InputReply />
       </div>
 
