@@ -1,15 +1,11 @@
 import { cn } from '@/lib/utils';
 import { getWeekDates } from '@/utils/dateUtils';
+import { padZero } from '@/utils/formatters';
 
 interface Props {
   date: Date;
   onChangeDate: (date: Date) => void;
 }
-
-// 상달님 PR 머지시 formatters.ts 파일로 분리 예정
-const padZero = (num: number | string) => {
-  return String(num).padStart(2, '0');
-};
 
 export default function TaskSectionWeek({ date, onChangeDate }: Props) {
   const currentWeekDates = getWeekDates(date);
