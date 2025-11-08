@@ -51,15 +51,6 @@ export default function ArticleCommentList({ articleId }: Props) {
 
   const isEmpty = allData?.length === 0;
 
-  if (isEmpty)
-    return (
-      <EmptyContent>
-        <p className='text-text-default text-md font-medium lg:text-base'>
-          등록된 댓글이 없습니다.
-        </p>
-      </EmptyContent>
-    );
-
   if (!allData) return;
 
   return (
@@ -73,17 +64,27 @@ export default function ArticleCommentList({ articleId }: Props) {
         <InputReply />
       </div>
 
-      <ol>
-        {allData?.map(comment => (
-          <CommentCard key={comment.id} comment={comment} />
-        ))}
-      </ol>
+      {isEmpty ? (
+        <EmptyContent className='[&_img]:w-[200px]'>
+          <p className='text-text-default text-md font-medium lg:text-base'>
+            등록된 댓글이 없습니다.
+          </p>
+        </EmptyContent>
+      ) : (
+        <>
+          <ol>
+            {allData?.map(comment => (
+              <CommentCard key={comment.id} comment={comment} />
+            ))}
+          </ol>
 
-      <InfiniteScrollObserver
-        ref={scrollRef}
-        isLoading={isFetchingNextPage}
-        hasNextPage={hasNextPage}
-      />
+          <InfiniteScrollObserver
+            ref={scrollRef}
+            isLoading={isFetchingNextPage}
+            hasNextPage={hasNextPage}
+          />
+        </>
+      )}
     </div>
   );
 }
