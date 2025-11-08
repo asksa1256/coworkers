@@ -25,7 +25,11 @@ export default function MemberMailCopyModal({ member }: Props) {
 
   return (
     <div className='text-center'>
-      <Avatar size='lg' imgSrc={member.userImage} className='mb-4' />
+      <Avatar
+        size='lg'
+        imgSrc={member.userImage}
+        className='mb-4 h-10 w-10 md:h-10 md:w-10'
+      />
       <div className='text-md mb-1 font-semibold'>{member.userName}</div>
       <div className='mb-6 text-xs'>{member.userEmail}</div>
       <Button onClick={handleCopyMail}>이메일 복사하기</Button>
