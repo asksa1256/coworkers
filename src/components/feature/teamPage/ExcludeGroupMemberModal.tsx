@@ -29,15 +29,15 @@ export default function ExcludeGroupMemberModal({ member }: Props) {
   return (
     <div className='text-center'>
       <AlertIcon className='mb-4 inline' />
-      <div className='mb-2 font-semibold whitespace-pre-line'>
-        {`${member.userName}님을\n팀에서 제외하시겠습니까?`}
+      <div className='mb-2 font-medium whitespace-pre-line'>
+        {`${member.userName}님을\n정말 팀에서 제외하시겠어요?`}
       </div>
-      <div className='text-danger text-md mb-6'>
+      <div className='text-text-secondary text-md mb-6 font-medium'>
         이 작업은 되돌릴 수 없습니다.
       </div>
       <div className='flex gap-2'>
         <Button
-          className='border-border-primary text-text-default hover:border-unset hover:bg-secondary/30 hover:text-unset focus:border-unset focus:bg-unset focus:text-unset shrink-1'
+          className='text-text-default hover:text-unset focus:text-unset bg-bg-primary hover:border-unset hover:bg-unset focus:border-unset border-icon-secondary shrink-1 hover:brightness-95 focus:brightness-90'
           variant='outline'
           onClick={() => {
             closeModal();
