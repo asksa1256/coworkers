@@ -67,7 +67,7 @@ export default function ArticleCommentList({ articleId }: Props) {
       {isEmpty ? (
         <EmptyContent className='[&_img]:w-[200px]'>
           <p className='text-text-default text-md font-medium lg:text-base'>
-            등록된 댓글이 없습니다.
+            아직 작성된 댓글이 없습니다.
           </p>
         </EmptyContent>
       ) : (

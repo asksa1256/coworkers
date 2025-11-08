@@ -16,7 +16,7 @@ export default function EmptyContent({ children, className }: Props) {
       )}
     >
       <div className='w-[184px] pt-8 md:w-[324px] lg:w-auto'>
-        <img src={EmptyContentImg} alt='' className='h-auto w-full' />
+        <img src={EmptyContentImg} alt='' className='mx-auto h-auto w-full' />
       </div>
 
       {children}
