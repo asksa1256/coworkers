@@ -39,7 +39,7 @@ export default function TaskListPageHeader({ date }: Props) {
         </h3>
         <div className='flex items-center justify-between lg:block'>
           <TaskGroupList taskGroups={groupData.taskLists} date={date} />
-          <CreateTaskGroupListButton />
+          <CreateTaskGroupListButton groupId={groupId} />
         </div>
       </div>
     </>
