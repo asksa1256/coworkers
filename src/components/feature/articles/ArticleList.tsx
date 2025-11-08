@@ -40,13 +40,6 @@ export default function ArticleList() {
 
   const allData = data?.pages.flatMap(page => page.list);
 
-  const filteredData = allData?.filter(
-    data =>
-      searchRange === 'title'
-        ? data.title.includes(searchValue) // '제목'에만 검색어 포함된 글 리턴
-        : true, // '제목+내용'에 검색어 포함된 글 리턴 (서버 기본값)
-  );
-
   useIntersectionObserver({
     target: scrollRef,
     onIntersect: fetchNextPage,
@@ -66,7 +59,7 @@ export default function ArticleList() {
     return <p>불러오는 중...</p>;
   }
 
-  const isEmpty = filteredData?.length === 0;
+  const isEmpty = allData?.length === 0;
   const isSearching = searchValue !== '';
 
   if (isEmpty) {
@@ -113,7 +106,7 @@ export default function ArticleList() {
       </div>
 
       <ol className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
-        {filteredData?.map(article => (
+        {allData?.map(article => (
           <ArticleCard key={article.id} article={article} />
         ))}
       </ol>
