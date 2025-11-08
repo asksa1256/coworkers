@@ -1,4 +1,5 @@
 import SearchIcon from '@/assets/icons/SearchIcon.svg?react';
+import XIcon from '@/assets/icons/XIcon.svg?react';
 import { cn } from '@/lib/utils';
 import {
   useEffect,
@@ -52,6 +53,17 @@ export default function SearchField({
         onKeyDown={handleSearch}
         className='border-primary w-full rounded-full border-2 py-3 pl-12 text-base md:w-auto md:px-4 md:pl-[60px] lg:w-[420px]'
       />
+
+      <button
+        type='button'
+        className={cn(
+          'absolute top-1/2 right-4 z-[1] -translate-y-1/2 p-2',
+          inputValue.length > 0 ? 'block' : 'hidden',
+        )}
+        onClick={() => setInputValue('')}
+      >
+        <XIcon className='h-4 w-4' />
+      </button>
     </div>
   );
 }

@@ -235,6 +235,13 @@
     justify-content: center;
     width: 100% !important;
   }
+
+  /* input[type='search'] 커스텀 스타일 */
+  input[type='search']::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+    display: none;
+  }
 }
 
 @layer utilities {
