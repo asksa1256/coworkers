@@ -1,8 +1,8 @@
 import { taskListQueries } from '@/api/queries';
-import WeekArrowIcon from '@/assets/icons/WeekArrowIcon.svg?react';
 import CreateTaskButton from '@/components/feature/taskListPage/CreateTaskButton';
 import TaskSectionListArea from '@/components/feature/taskListPage/TaskSectionListArea';
 import TaskSectionWeek from '@/components/feature/taskListPage/TaskSectionWeek';
+import TaskSectionWeekButton from '@/components/feature/taskListPage/TaskSectionWeekButton';
 import CalendarPopover from '@/components/ui/CalendarPopover';
 import { Spinner } from '@/components/ui/spinner';
 import { useQuery } from '@tanstack/react-query';
@@ -51,18 +51,11 @@ export default function TaskListPageBody({ date, setDate }: Props) {
           {/* 현재 날짜 기준 년도와 월 표시 */}
           <span className='mr-1 block text-sm font-medium'>{`${date.getFullYear()}년 ${date.getMonth() + 1}월`}</span>
           {/* 주간 버튼 */}
-          <button
-            className='flex size-4 items-center justify-center rounded-full border border-slate-200 shadow-[0px_15px_50px_-12px_rgba(0,0,0,0.05)]'
-            onClick={handlePrevWeek}
-          >
-            <WeekArrowIcon />
-          </button>
-          <button
-            className='flex size-4 items-center justify-center rounded-full border border-slate-200 shadow-[0px_15px_50px_-12px_rgba(0,0,0,0.05)]'
+          <TaskSectionWeekButton onClick={handlePrevWeek} />
+          <TaskSectionWeekButton
             onClick={handleNextWeek}
-          >
-            <WeekArrowIcon className='rotate-180' />
-          </button>
+            className='rotate-180'
+          />
           {/* 달력 */}
           <div className='ml-1'>
             <CalendarPopover date={date} onChangeDate={setDate} />
