@@ -1,8 +1,12 @@
 import { boardQueries } from '@/api/queries';
 import Avatar from '@/components/ui/Avatar';
+import EmptyContent from '@/components/ui/EmptyContent';
+import InfiniteScrollObserver from '@/components/ui/InfiniteScrollObserver';
+import useIntersectionObserver from '@/hooks/useIntersectionObserver';
 import { userAtom } from '@/store/authAtom';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
+import { useRef } from 'react';
 import CommentCard from './CommentCard';
 import InputReply from './InputReply';
 
@@ -12,6 +16,7 @@ interface Props {
 
 export default function ArticleCommentList({ articleId }: Props) {
   const user = useAtomValue(userAtom);
+  const scrollRef = useRef(null);
 
   const {
     data,
@@ -24,6 +29,36 @@ export default function ArticleCommentList({ articleId }: Props) {
   } = useInfiniteQuery(boardQueries.commentsOptions(articleId));
 
   const allData = data?.pages.flatMap(page => page.list);
+
+  useIntersectionObserver({
+    target: scrollRef,
+    onIntersect: fetchNextPage,
+    enabled: hasNextPage,
+  });
+
+  if (status === 'error')
+    return (
+      <EmptyContent>
+        <p className='text-text-default text-md font-medium lg:text-base'>
+          {error.message}
+        </p>
+      </EmptyContent>
+    );
+
+  if (isPending) {
+    return <p>불러오는 중...</p>;
+  }
+
+  const isEmpty = allData?.length === 0;
+
+  if (isEmpty)
+    return (
+      <EmptyContent>
+        <p className='text-text-default text-md font-medium lg:text-base'>
+          등록된 댓글이 없습니다.
+        </p>
+      </EmptyContent>
+    );
 
   if (!allData) return;
 
@@ -43,6 +78,12 @@ export default function ArticleCommentList({ articleId }: Props) {
           <CommentCard key={comment.id} comment={comment} />
         ))}
       </ol>
+
+      <InfiniteScrollObserver
+        ref={scrollRef}
+        isLoading={isFetchingNextPage}
+        hasNextPage={hasNextPage}
+      />
     </div>
   );
 }

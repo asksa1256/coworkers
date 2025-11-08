@@ -139,10 +139,13 @@ export const getArticle = async (id: number) => {
 };
 
 // 게시글 댓글 목록 불러오기
-export const getArticleComments = async (articleId: number) => {
+export const getArticleComments = async (
+  articleId: number,
+  cursor?: number | null,
+) => {
   try {
     const response = await axiosInstance(
-      `/articles/${articleId}/comments?limit=5`,
+      `/articles/${articleId}/comments?limit=5${cursor ? `&cursor=${cursor}` : ''}`,
     );
     return response.data;
   } catch (e) {

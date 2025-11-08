@@ -62,12 +62,17 @@ export const boardQueries = {
       queryFn: async () => getArticle(id),
     }),
 
-  comments: (articleId: number) => ['comments', articleId],
-  commentsOptions: (articleId: number) =>
+  comments: (articleId: number, cursor?: number) => [
+    'comments',
+    articleId,
+    cursor,
+  ],
+  commentsOptions: (articleId: number, cursor?: number) =>
     infiniteQueryOptions<ArticleCommentsResponse>({
-      queryKey: boardQueries.comments(articleId),
-      queryFn: async ({ pageParam = 1 }) => getArticleComments(articleId),
-      initialPageParam: 1,
+      queryKey: boardQueries.comments(articleId, cursor),
+      queryFn: async ({ pageParam = null }) =>
+        getArticleComments(articleId, pageParam as number | null),
+      initialPageParam: null, // 첫 요청 시 커서 없음
       getNextPageParam: lastPage => {
         return lastPage.nextCursor ?? undefined;
       },
