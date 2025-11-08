@@ -1,5 +1,6 @@
 import { boardQueries } from '@/api/queries';
 import KebabIcon from '@/assets/icons/KebabIcon.svg?react';
+import LeftArrowIcon from '@/assets/icons/LeftArrowIcon.svg?react';
 import LikeButton from '@/components/feature/like/LikeButton';
 import LikeFloatingButton from '@/components/feature/like/LikeFloatingButton';
 import Avatar from '@/components/ui/Avatar';
@@ -7,10 +8,12 @@ import Button from '@/components/ui/Button';
 import { Spinner } from '@/components/ui/spinner';
 import { formatRelativeTime } from '@/utils/formatters';
 import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export default function ArticleDetailPage() {
   const { articleId } = useParams();
+  const navigate = useNavigate();
+
   const { data, isPending } = useQuery(
     boardQueries.articleOptions(Number(articleId)),
   );
@@ -28,6 +31,17 @@ export default function ArticleDetailPage() {
   return (
     <article className='lg:mx-auto lg:flex lg:gap-[26px]'>
       <div className='bg-bg-primary relative mt-4 w-full max-w-280 rounded-[20px] px-[22px] py-10 shadow-sm md:mt-[68px] md:px-10 md:pt-[54px] md:pb-[120px] lg:px-[60px] lg:py-[88px]'>
+        <Button
+          type='button'
+          variant='ghost'
+          round='sm'
+          className='group bg-bg-primary text-text-default hover:text-text-primary hover:bg-bg-secondary mb-8 flex w-auto items-center transition-colors'
+          onClick={() => navigate('/board')}
+        >
+          <LeftArrowIcon className='group-hover:text-text-primary' />
+          돌아가기
+        </Button>
+
         <div className='border-border-primary flex flex-col gap-4 border-b pb-3'>
           <div className='flex items-center justify-between'>
             <h4 className='text-2lg font-bold md:text-xl'>{data.title}</h4>
