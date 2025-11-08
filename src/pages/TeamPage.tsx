@@ -98,7 +98,7 @@ export default function TeamPage() {
         <span className='text-text-default font-normal'>{` (${groupData.taskLists.length}개)`}</span>
       </h2>
 
-      <div className='flex lg:gap-7'>
+      <div className='flex items-start lg:gap-7'>
         <TaskKanbanBoard taskLists={groupData.taskLists} />
         <MemberListCard members={groupData.members} />
       </div>
