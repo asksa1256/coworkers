@@ -40,17 +40,12 @@ export default function ArticleList() {
 
   const allData = data?.pages.flatMap(page => page.list);
 
-  const filteredData = allData?.filter(data => {
-    if (!searchValue) {
-      return true; // 검색어 없음: 전체 데이터 리턴
-    }
-
-    if (searchRange === 'title') {
-      return data.title.includes(searchValue); // 검색 범위가 '제목'일 경우, 제목에만 검색어가 포함된 게시글 리턴
-    }
-
-    return true; // 검색어가 있고, 검색 범위가 '제목'이 아닐 경우, 제목이나 내용에 검색어가 포함된 게시글 리턴
-  });
+  const filteredData = allData?.filter(
+    data =>
+      searchRange === 'title'
+        ? data.title.includes(searchValue) // '제목'에만 검색어 포함된 글 리턴
+        : true, // '제목+내용'에 검색어 포함된 글 리턴 (서버 기본값)
+  );
 
   useIntersectionObserver({
     target: scrollRef,
