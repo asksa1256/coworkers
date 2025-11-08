@@ -13,9 +13,9 @@ export default function LikeFloatingButton({ likeCount }: LikeFloatingButton) {
         size='icon-xl'
         variant='ghost'
         round='full'
-        className='bg-bg-primary shadow-sm [&_svg]:!size-6'
+        className='bg-bg-primary shadow-sm'
       >
-        <HeartIcon />
+        <HeartIcon className='text-text-default' />
       </Button>
       <span className='text-text-default'>
         {likeCount > 99 ? '99+' : likeCount}

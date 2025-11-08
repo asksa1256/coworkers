@@ -32,7 +32,7 @@ export default function ArticleDetailPage() {
 
   return (
     <article className='lg:mx-auto lg:flex lg:gap-[26px]'>
-      <div className='bg-bg-primary relative mt-4 w-full max-w-280 rounded-[20px] px-[22px] py-10 shadow-sm md:mt-[68px] md:px-10 md:pt-[54px] md:pb-[120px] lg:px-[60px] lg:py-[88px]'>
+      <div className='bg-bg-primary relative mt-4 w-full rounded-[20px] px-[22px] py-10 shadow-sm md:mt-[68px] md:px-10 md:pt-[54px] md:pb-[120px] lg:max-w-280 lg:px-[60px] lg:py-[88px]'>
         <Button
           type='button'
           variant='ghost'
@@ -74,7 +74,9 @@ export default function ArticleDetailPage() {
           )}
 
           {/* 좋아요 버튼 (mobile ~ tablet: 컨텐츠 내부) */}
-          <LikeButton likeCount={data.likeCount} />
+          <div className='mt-4 md:mt-[28px]'>
+            <LikeButton likeCount={data.likeCount} />
+          </div>
         </div>
       </div>
 
