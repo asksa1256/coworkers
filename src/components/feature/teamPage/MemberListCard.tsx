@@ -7,11 +7,13 @@ import MemberItem from './MemberItem';
 
 interface Props {
   members: MemberType[];
+  isAdmin: boolean;
   isModalDisplay?: boolean;
 }
 
 export default function MemberListCard({
   members,
+  isAdmin,
   isModalDisplay = false,
 }: Props) {
   const { openModal } = useModal();
@@ -53,7 +55,7 @@ export default function MemberListCard({
         )}
       >
         {members.map(member => (
-          <MemberItem key={member.userId} member={member} />
+          <MemberItem key={member.userId} member={member} isAdmin={isAdmin} />
         ))}
       </div>
     </section>
