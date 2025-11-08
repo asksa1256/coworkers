@@ -15,7 +15,7 @@ export const SEARCH_RANGE_MAP = [
   { label: '제목', value: 'title' },
 ];
 
-export const WEEK_DAYS = ['일', '월', '화', '수', '목', '금', '토'];
+export const WEEK_DAYS = ['월', '화', '수', '목', '금', '토', '일'];
 
 export const FREQUENCY_TO_TEXT = {
   ONCE: '한 번만',
