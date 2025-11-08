@@ -1,12 +1,17 @@
-import { getArticle, getGroup } from '@/api/api';
+import {
+  getArticle,
+  getArticleComments,
+  getArticles,
+  getGroup,
+} from '@/api/api';
 import axiosInstance from '@/lib/axios';
 import type {
+  ArticleCommentsResponse,
   ArticleDetailResponse,
   ArticleListResponse,
 } from '@/types/boardTypes';
 import type { GroupType, UserType } from '@/types/userType';
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
-import { getArticles } from './api';
 
 export const groupQueries = {
   group: (groupId: number) => ['group', groupId],
@@ -55,5 +60,16 @@ export const boardQueries = {
     queryOptions<ArticleDetailResponse>({
       queryKey: boardQueries.article(id),
       queryFn: async () => getArticle(id),
+    }),
+
+  comments: (articleId: number) => ['comments', articleId],
+  commentsOptions: (articleId: number) =>
+    infiniteQueryOptions<ArticleCommentsResponse>({
+      queryKey: boardQueries.comments(articleId),
+      queryFn: async ({ pageParam = 1 }) => getArticleComments(articleId),
+      initialPageParam: 1,
+      getNextPageParam: lastPage => {
+        return lastPage.nextCursor ?? undefined;
+      },
     }),
 };

@@ -137,3 +137,16 @@ export const getArticle = async (id: number) => {
     throw e;
   }
 };
+
+// 게시글 댓글 목록 불러오기
+export const getArticleComments = async (articleId: number) => {
+  try {
+    const response = await axiosInstance(
+      `/articles/${articleId}/comments?limit=5`,
+    );
+    return response.data;
+  } catch (e) {
+    console.log('게시글 불러오기 에러: ', e);
+    throw e;
+  }
+};

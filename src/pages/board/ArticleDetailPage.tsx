@@ -1,13 +1,14 @@
 import { boardQueries } from '@/api/queries';
 import KebabIcon from '@/assets/icons/KebabIcon.svg?react';
 import LeftArrowIcon from '@/assets/icons/LeftArrowIcon.svg?react';
+import ArticleCommentList from '@/components/feature/comments/ArticleCommentList';
 import LikeButton from '@/components/feature/like/LikeButton';
 import LikeFloatingButton from '@/components/feature/like/LikeFloatingButton';
 import Avatar from '@/components/ui/Avatar';
 import Button from '@/components/ui/Button';
 import Dropdown from '@/components/ui/Dropdown';
 import { Spinner } from '@/components/ui/spinner';
-import { ARTICLE_DROPDOWN_MAP } from '@/constants';
+import { MODIFY_DELETE_DROPDOWN_MAP } from '@/constants';
 import { formatRelativeTime } from '@/utils/formatters';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -49,7 +50,7 @@ export default function ArticleDetailPage() {
             <h4 className='text-2lg font-bold md:text-xl'>{data.title}</h4>
             <Dropdown
               type='icon'
-              menuItems={ARTICLE_DROPDOWN_MAP}
+              menuItems={MODIFY_DELETE_DROPDOWN_MAP}
               triggerChildren={<KebabIcon />}
               align='end'
               className='text-center'
@@ -78,6 +79,9 @@ export default function ArticleDetailPage() {
             <LikeButton likeCount={data.likeCount} />
           </div>
         </div>
+
+        {/* 댓글 */}
+        <ArticleCommentList articleId={data.id} />
       </div>
 
       {/* 좋아요 버튼 (desktop: floating) */}
