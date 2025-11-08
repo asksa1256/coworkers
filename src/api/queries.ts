@@ -1,6 +1,9 @@
 import { getArticle, getGroup } from '@/api/api';
 import axiosInstance from '@/lib/axios';
-import type { ArticleListResponse } from '@/types/boardTypes';
+import type {
+  ArticleDetailResponse,
+  ArticleListResponse,
+} from '@/types/boardTypes';
 import type { GroupType, UserType } from '@/types/userType';
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 import { getArticles } from './api';
@@ -49,7 +52,7 @@ export const boardQueries = {
 
   article: (id: number) => ['article', id],
   articleOptions: (id: number) =>
-    queryOptions({
+    queryOptions<ArticleDetailResponse>({
       queryKey: boardQueries.article(id),
       queryFn: async () => getArticle(id),
     }),
