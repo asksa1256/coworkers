@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/Dropdown/DropdownElements';
 import useCurrentView from '@/hooks/useCurrentView';
+import { cn } from '@/lib/utils';
 import type { TaskListsResponse } from '@/types/taskType';
 import { useQueries } from '@tanstack/react-query';
 import { Link, useParams } from 'react-router-dom';
@@ -24,15 +25,20 @@ export default function TaskGroupList({ taskGroups, date }: Props) {
   const currentView = useCurrentView();
   const isWeb = currentView === 'WEB';
 
+  // group의 taskLists를 기반으로 taskList id와 매칭하여 병렬 쿼리 처리
   const dateTaskListQuery = useQueries({
     queries: taskGroups.map(task =>
       taskListQueries.singleTaskListOptions(groupId, String(task.id), date),
     ),
   });
+  // 병렬로 진행되는 쿼리중 하나라도 로딩중인지 확인
   const isDateTaskListLoading = dateTaskListQuery.some(
     taskList => taskList.isLoading,
   );
+  // 쿼리의 data만 뽑아서 새로운 배열 생성
   const dateTaskListData = dateTaskListQuery.map(taskList => taskList.data);
+
+  // 현재 taskList
   const currentTaskGroup = taskGroups.find(
     group => group.id === Number(taskListId),
   );
@@ -53,7 +59,10 @@ export default function TaskGroupList({ taskGroups, date }: Props) {
                 >
                   <Link
                     to={`/${groupId}/details/${group.id}`}
-                    className='flex grow-1 items-center justify-between gap-2 py-[14.5px]'
+                    className={cn(
+                      'flex grow-1 items-center justify-between gap-2 py-[14.5px]',
+                      { 'text-primary': group.id === currentTaskGroup.id },
+                    )}
                   >
                     <TaskGroupSummary group={group} />
                   </Link>
@@ -80,7 +89,10 @@ export default function TaskGroupList({ taskGroups, date }: Props) {
                   >
                     <Link
                       to={`/${groupId}/details/${group.id}`}
-                      className='flex grow-1 items-center justify-between gap-2'
+                      className={cn(
+                        'flex grow-1 items-center justify-between gap-2',
+                        { 'text-primary': group.id === currentTaskGroup.id },
+                      )}
                     >
                       <TaskGroupSummary group={group} />
                     </Link>
