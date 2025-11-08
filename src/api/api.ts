@@ -110,10 +110,19 @@ export const createInviteToken = async (groupId: string): Promise<string> => {
 };
 
 // 게시글 목록 불러오기
-export const getArticles = async (pageParam: number, sort: string) => {
+interface getArticlesProps {
+  pageParam: number;
+  sort: string;
+  searchValue: string;
+}
+export const getArticles = async ({
+  pageParam,
+  sort,
+  searchValue,
+}: getArticlesProps) => {
   try {
     const response = await axiosInstance(
-      `/articles?page=${pageParam}&orderBy=${sort}`,
+      `/articles?page=${pageParam}&orderBy=${sort}&keyword=${searchValue}`,
     );
     return response.data;
   } catch (e) {

@@ -10,6 +10,11 @@ export const ARTICLE_SORT_LIST = [
   { label: '좋아요순', value: 'like' },
 ];
 
+export const SEARCH_RANGE_MAP = [
+  { label: '제목+내용', value: 'title_content' },
+  { label: '제목', value: 'title' },
+];
+
 export const WEEK_DAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
 export const FREQUENCY_TO_TEXT = {

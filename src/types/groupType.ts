@@ -1,8 +1,8 @@
 import type { TaskListsResponse } from './taskType';
-import type { GroupType, MembershipsType } from './userType';
+import type { GroupType, MemberType } from './userType';
 
 export interface GroupDetailResponse extends GroupType {
-  members: Omit<MembershipsType, 'group'>[];
+  members: MemberType[];
   taskLists: TaskListsResponse[];
 }
 
