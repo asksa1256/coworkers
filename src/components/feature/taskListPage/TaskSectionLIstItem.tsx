@@ -7,15 +7,14 @@ import Dropdown from '@/components/ui/Dropdown';
 import { FREQUENCY_TO_TEXT } from '@/constants';
 import type { TaskDetailResponse } from '@/types/taskType';
 import { formatDate } from '@/utils/dateUtils';
-import { useState } from 'react';
 
 interface Props {
   task: TaskDetailResponse;
+  onChangeDone: (task: TaskDetailResponse) => void;
 }
 
-export default function TaskSectionLIstItem({ task }: Props) {
+export default function TaskSectionLIstItem({ task, onChangeDone }: Props) {
   const { id, name, doneAt, commentCount, updatedAt, frequency } = task;
-  const [checked, setChecked] = useState(!!doneAt);
   const isRepeat = frequency !== 'ONCE';
 
   return (
@@ -26,10 +25,8 @@ export default function TaskSectionLIstItem({ task }: Props) {
             <input
               type='checkbox'
               className='peer hidden appearance-none'
-              checked={checked}
-              onChange={() => {
-                setChecked(prev => !prev);
-              }}
+              checked={!!doneAt}
+              onChange={() => onChangeDone(task)}
             />
             <VCheckIcon className='hidden w-[6px] peer-checked:block md:w-2' />
           </label>
