@@ -1,4 +1,4 @@
-import { getArticle, getGroup } from '@/api/api';
+import { getArticle, getGroup, getSingleTaskList, getTasks } from '@/api/api';
 import axiosInstance from '@/lib/axios';
 import type { ArticleListResponse } from '@/types/boardTypes';
 import type { GroupType, UserType } from '@/types/userType';
@@ -14,7 +14,7 @@ export const groupQueries = {
     }),
 
   // 그룹 리스트
-  groups: (user: UserType | null) => ['userGroups', user?.id],
+  groups: (user: UserType | null) => ['groups', user?.id],
   groupsOptions: (user: UserType | null) =>
     queryOptions({
       queryKey: [...groupQueries.groups(user)],
@@ -47,5 +47,35 @@ export const boardQueries = {
     queryOptions({
       queryKey: boardQueries.article(id),
       queryFn: async () => getArticle(id),
+    }),
+};
+
+export const taskListQueries = {
+  singleTaskList: (groupId?: string, taskListId?: string, date?: Date) => [
+    'singleTaskList',
+    groupId,
+    taskListId,
+    date?.toDateString(),
+  ],
+  singleTaskListOptions: (groupId?: string, taskListId?: string, date?: Date) =>
+    queryOptions({
+      queryKey: [...taskListQueries.singleTaskList(groupId, taskListId)],
+      queryFn: () => getSingleTaskList(groupId!, taskListId!, date!),
+      enabled: !!groupId && !!taskListId,
+    }),
+};
+
+export const taskQueries = {
+  tasks: (groupId?: string, taskListId?: string, date?: Date) => [
+    'tasks',
+    groupId,
+    taskListId,
+    date?.toDateString(),
+  ],
+  tasksOptions: (groupId?: string, taskListId?: string, date?: Date) =>
+    queryOptions({
+      queryKey: [...taskQueries.tasks(groupId, taskListId, date)],
+      queryFn: () => getTasks(groupId!, taskListId!, date!),
+      enabled: !!groupId && !!taskListId,
     }),
 };

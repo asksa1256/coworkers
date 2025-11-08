@@ -11,3 +11,10 @@ export const ARTICLE_SORT_LIST = [
 ];
 
 export const WEEK_DAYS = ['일', '월', '화', '수', '목', '금', '토'];
+
+export const FREQUENCY_TO_TEXT = {
+  ONCE: '한 번만',
+  DAILY: '매일 반복',
+  WEEKLY: '매주 반복',
+  MONTHLY: '매월 반복',
+};
