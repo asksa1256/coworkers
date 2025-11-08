@@ -128,3 +128,12 @@ export const getArticle = async (id: number) => {
     throw e;
   }
 };
+
+export const deleteGroupMember = async (groupId: number, userId: number) => {
+  try {
+    await axiosInstance.delete(`/groups/${groupId}/member/${userId}`);
+  } catch (e) {
+    console.log('그룹에서 멤버 제외 에러: ', e);
+    throw e;
+  }
+};

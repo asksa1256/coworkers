@@ -169,7 +169,7 @@ export default function TaskKanbanBoard({ taskLists }: Props) {
       </div>
 
       {!taskLists.length && (
-        <div className='text-text-default text-md absolute top-[55%] hidden w-full text-center lg:block'>
+        <div className='text-text-default text-md absolute top-[55%] hidden h-60 w-full items-center justify-center text-center lg:flex'>
           아직 할 일 목록이 없어요.
         </div>
       )}

@@ -30,7 +30,7 @@ export default function MemberListCard({
   return (
     <section
       className={cn(
-        'card-common hidden h-auto w-full max-w-60 px-5 py-6 lg:block',
+        'card-common hidden min-h-[275px] w-full max-w-60 px-5 py-6 lg:block',
         isModalDisplay && 'block h-58 max-w-none border-none p-0',
       )}
     >

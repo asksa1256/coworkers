@@ -4,6 +4,7 @@ import type { MenuItem } from '@/components/ui/Dropdown';
 import Dropdown from '@/components/ui/Dropdown';
 import useModal from '@/hooks/useModal';
 import type { MemberType } from '@/types/userType';
+import ExcludeGroupMemberModal from './ExcludeGroupMemberModal';
 import MemberMailCopyModal from './MemberMailCopyModal';
 
 interface Props {
@@ -24,8 +25,10 @@ export default function MemberItem({ member, isAdmin }: Props) {
   const adminMemberItemDropDownMenu: MenuItem[] = [
     ...memberItemDropDownMenu,
     {
-      label: '그룹에서 제외',
-      onClick: () => {},
+      label: '팀에서 제외',
+      onClick: () => {
+        handleOpenExcludeGroupMemberModal();
+      },
     },
   ];
   const menuItemDropdownTrigger = (
@@ -36,6 +39,12 @@ export default function MemberItem({ member, isAdmin }: Props) {
     openModal({
       children: <MemberMailCopyModal member={member} />,
       closeIconButton: true,
+    });
+  };
+
+  const handleOpenExcludeGroupMemberModal = () => {
+    openModal({
+      children: <ExcludeGroupMemberModal member={member} />,
     });
   };
 
@@ -53,7 +62,10 @@ export default function MemberItem({ member, isAdmin }: Props) {
           type='icon'
           align='end'
           menuItems={
-            isAdmin ? adminMemberItemDropDownMenu : memberItemDropDownMenu
+            // 선택 대상(member)이 ADMIN이면 본인을 제외하는 것이기 때문에 대상이 MEMBER일 때만 팀 제외 항목 보여줌
+            isAdmin && member.role === 'MEMBER'
+              ? adminMemberItemDropDownMenu
+              : memberItemDropDownMenu
           }
           triggerChildren={menuItemDropdownTrigger}
         />

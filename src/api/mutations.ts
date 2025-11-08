@@ -5,7 +5,12 @@ import { mutationOptions, QueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import type { UseFormReset, UseFormSetError } from 'react-hook-form';
 import { toast } from 'sonner';
-import { addTaskList, updateTask, updateTaskListOrder } from './api';
+import {
+  addTaskList,
+  deleteGroupMember,
+  updateTask,
+  updateTaskListOrder,
+} from './api';
 import { groupQueries } from './queries';
 
 export const taskListMutations = {
@@ -28,16 +33,16 @@ export const taskListMutations = {
           queryKey: groupQueries.group(groupId),
         });
       },
-      onError: e => {
-        if (isAxiosError(e) && e.response?.status === 409) {
+      onError: error => {
+        if (isAxiosError(error) && error.response?.status === 409) {
           formSetError('name', {
             type: 'duplicate',
-            message: e.response.data.message,
+            message: error.response.data.message,
           });
         } else {
           toast.error('목록 생성 실패. 다시 시도해주세요.');
         }
-        throw e;
+        throw error;
       },
     }),
 
@@ -116,7 +121,8 @@ export const taskMutations = {
   ) =>
     mutationOptions({
       mutationKey: taskMutations.updateTaskDoneMutation(groupId),
-      mutationFn: (args: Parameters<typeof updateTask>) => updateTask(...args),
+      mutationFn: (variables: Parameters<typeof updateTask>) =>
+        updateTask(...variables),
       onMutate: async variables => {
         await queryClient.cancelQueries({
           queryKey: groupQueries.group(groupId),
@@ -172,6 +178,42 @@ export const taskMutations = {
             queryKey: groupQueries.group(groupId),
           });
         }
+      },
+    }),
+};
+
+export const groupMutations = {
+  // 그룹에서 멤버 제외
+  excludeGroupMemberMutation: (groupId: number, userId: number) => [
+    'excludeGroupMember',
+    groupId,
+    userId,
+  ],
+  excludeGroupMemberOptions: (
+    groupId: number,
+    userId: number,
+    userName: string,
+    queryClient: QueryClient,
+    closeModal?: () => void,
+  ) =>
+    mutationOptions({
+      mutationKey: groupMutations.excludeGroupMemberMutation(groupId, userId),
+      mutationFn: (variables: Parameters<typeof deleteGroupMember>) =>
+        deleteGroupMember(...variables),
+      onSuccess: () => {
+        toast.success(`${userName}님을 팀에서 제외했습니다.`);
+        queryClient.invalidateQueries({
+          queryKey: groupQueries.group(groupId),
+        });
+        if (closeModal) closeModal();
+      },
+      onError: error => {
+        if (isAxiosError(error) && error.response?.status === 400) {
+          toast.error('마지막 구성원은 제외할 수 없습니다. 팀을 삭제해주세요.');
+        } else {
+          toast.error('멤버 제외 실패. 다시 시도해주세요.');
+        }
+        throw error;
       },
     }),
 };
