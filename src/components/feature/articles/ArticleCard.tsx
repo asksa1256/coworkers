@@ -17,7 +17,7 @@ export default function ArticleCard({ article }: ArticleCardProps) {
     article;
 
   // 각 카드마다 상세 데이터 fetch
-  const { data: detail, isPending } = useQuery(boardQueries.articleOptions(id));
+  const { data, isPending } = useQuery(boardQueries.articleOptions(id));
 
   // 검색어 강조
   const [searchParams] = useSearchParams();
@@ -36,7 +36,7 @@ export default function ArticleCard({ article }: ArticleCardProps) {
           <p className='text-text-default md:text-md pre-line line-clamp-2 text-sm break-keep'>
             {isPending
               ? '내용 불러오는 중...'
-              : highlightSearchValue(detail?.content, searchValue)}
+              : highlightSearchValue(data?.content ?? '', searchValue)}
           </p>
         </div>
 

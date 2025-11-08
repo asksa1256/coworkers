@@ -15,7 +15,7 @@ import KakaoRedirectPage from './pages/auth/KakaoRedirectPage';
 import KakaoSignUpPage from './pages/auth/KakaoSignUpPage';
 import ResetPasswordPage from './pages/auth/ResetPasswordPage';
 import SignUpPage from './pages/auth/SignUpPage';
-import PostDetailPage from './pages/board/PostDetailPage';
+import ArticleDetailPage from './pages/board/ArticleDetailPage';
 
 const withPrivate = (element: ReactNode) => {
   return <PrivateRoute>{element}</PrivateRoute>;
@@ -94,8 +94,8 @@ const routes = [
         element: <BoardPage />,
       },
       {
-        path: ':postId',
-        element: withPrivate(<PostDetailPage />),
+        path: ':articleId',
+        element: withPrivate(<ArticleDetailPage />),
       },
     ],
   },
