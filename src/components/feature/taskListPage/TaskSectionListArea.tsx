@@ -2,6 +2,7 @@ import { updateTask } from '@/api/api';
 import { taskMutations } from '@/api/mutations';
 import { groupQueries, taskListQueries, taskQueries } from '@/api/queries';
 import TaskSectionLIstItem from '@/components/feature/taskListPage/TaskSectionLIstItem';
+import EmptyContent from '@/components/ui/EmptyContent';
 import { Spinner } from '@/components/ui/spinner';
 import type { GroupDetailResponse } from '@/types/groupType';
 import type {
@@ -160,6 +161,14 @@ export default function TaskSectionListArea({ date }: Props) {
         <Spinner />
       </div>
     );
+
+  if (!tasksData.length) {
+    return (
+      <div className='py-10'>
+        <EmptyContent>할 일이 없습니다.</EmptyContent>
+      </div>
+    );
+  }
 
   return (
     <ul className='mt-[31px] md:mt-10 lg:mt-[34px]'>
