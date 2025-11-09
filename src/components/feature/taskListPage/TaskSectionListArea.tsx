@@ -4,7 +4,6 @@ import { groupQueries, taskListQueries, taskQueries } from '@/api/queries';
 import TaskSectionLIstItem from '@/components/feature/taskListPage/TaskSectionLIstItem';
 import EmptyContent from '@/components/ui/EmptyContent';
 import { Spinner } from '@/components/ui/spinner';
-import type { GroupDetailResponse } from '@/types/groupType';
 import type {
   TaskDetailResponse,
   TaskListsResponse,
@@ -42,9 +41,6 @@ export default function TaskSectionListArea({ date }: Props) {
     onMutate: async ({ groupId, taskListId, taskId, date, payload }) => {
       // 기존 쿼리들 취소
       await queryClient.cancelQueries({
-        queryKey: groupQueries.group(Number(groupId)),
-      });
-      await queryClient.cancelQueries({
         queryKey: taskListQueries.singleTaskList(groupId, taskListId, date),
       });
       await queryClient.cancelQueries({
@@ -52,30 +48,11 @@ export default function TaskSectionListArea({ date }: Props) {
       });
 
       // 이전 상태 백업
-      const prevGroups = queryClient.getQueryData(
-        groupQueries.group(Number(groupId)),
-      );
       const prevTaskLists = queryClient.getQueryData(
         taskListQueries.singleTaskList(groupId, taskListId, date),
       );
       const prevTasks = queryClient.getQueryData(
         taskQueries.tasks(groupId, taskListId, date),
-      );
-
-      // group setQueryData
-      queryClient.setQueryData(
-        groupQueries.group(Number(groupId)),
-        (prev: GroupDetailResponse) => {
-          return produce(prev, draft => {
-            const targetList = draft.taskLists.find(
-              taskList => String(taskList.id) === taskListId,
-            );
-            const updateTask = targetList?.tasks.find(
-              task => task.id === taskId,
-            );
-            if (updateTask) toggleDoneAt(updateTask);
-          });
-        },
       );
 
       // taskList setQueryData
@@ -102,13 +79,9 @@ export default function TaskSectionListArea({ date }: Props) {
         },
       );
 
-      return { prevGroups, prevTaskLists, prevTasks };
+      return { prevTaskLists, prevTasks };
     },
     onError: (err, variables, context) => {
-      queryClient.setQueryData(
-        groupQueries.group(Number(groupId)),
-        context?.prevGroups,
-      );
       queryClient.setQueryData(
         taskListQueries.singleTaskList(groupId, taskListId, date),
         context?.prevTaskLists,
@@ -119,6 +92,8 @@ export default function TaskSectionListArea({ date }: Props) {
       );
     },
     onSettled: () => {
+      // 뮤테이션 동시성 제어용
+      // 뮤테이션키에 해당하는 뮤테이션이 하나만 실행중일 때 캐싱 무효화 진행
       if (
         queryClient.isMutating({
           mutationKey: taskMutations.updateTaskDoneMutation(Number(groupId)),
