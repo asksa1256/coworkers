@@ -30,7 +30,8 @@ export default function DeleteTaskListModal({
     <div className='text-center'>
       <AlertIcon className='mb-4 inline' />
       <p className='mb-6 font-medium whitespace-pre-line'>
-        {`${taskListName}을(를)\n정말 삭제하시겠어요?`}
+        <strong>{taskListName}</strong>
+        {`을(를)\n정말 삭제하시겠어요?`}
       </p>
       <div className='flex gap-2'>
         <Button

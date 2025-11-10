@@ -25,7 +25,8 @@ export default function ExcludeGroupMemberModal({ member }: Props) {
     <div className='text-center'>
       <AlertIcon className='mb-4 inline' />
       <p className='mb-2 font-medium whitespace-pre-line'>
-        {`${member.userName}님을\n정말 팀에서 제외하시겠어요?`}
+        <strong>{member.userName}</strong>
+        {`님을\n정말 팀에서 제외하시겠어요?`}
       </p>
       <p className='text-text-secondary text-md mb-6 font-medium'>
         이 작업은 되돌릴 수 없습니다.
