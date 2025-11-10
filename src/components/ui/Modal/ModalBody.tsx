@@ -8,6 +8,8 @@ interface Props {
 
 export default function ModalBody({ children, className }: Props) {
   return (
-    <div className={cn('grow-1 overflow-auto', className)}>{children}</div>
+    <div className={cn('grow-1 overflow-x-hidden overflow-y-auto', className)}>
+      {children}
+    </div>
   );
 }
