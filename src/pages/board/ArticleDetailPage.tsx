@@ -7,6 +7,7 @@ import LikeFloatingButton from '@/components/feature/like/LikeFloatingButton';
 import Avatar from '@/components/ui/Avatar';
 import Button from '@/components/ui/Button';
 import Dropdown from '@/components/ui/Dropdown';
+import EmptyContent from '@/components/ui/EmptyContent';
 import { Spinner } from '@/components/ui/spinner';
 import { MODIFY_DELETE_DROPDOWN_MAP } from '@/constants';
 import { formatRelativeTime } from '@/utils/formatters';
@@ -17,11 +18,9 @@ export default function ArticleDetailPage() {
   const { articleId } = useParams();
   const navigate = useNavigate();
 
-  const { data, isPending } = useQuery(
+  const { data, isPending, isError } = useQuery(
     boardQueries.articleOptions(Number(articleId)),
   );
-
-  if (!data) return;
 
   if (isPending)
     return (
@@ -29,6 +28,24 @@ export default function ArticleDetailPage() {
         <Spinner />
         불러오는 중...
       </div>
+    );
+
+  if (isError)
+    return (
+      <div className='flex flex-col items-center justify-center gap-2'>
+        <p className='text-text-default text-md font-medium lg:text-base'>
+          게시글 불러오기에 실패했습니다.
+        </p>
+      </div>
+    );
+
+  if (!data)
+    return (
+      <EmptyContent>
+        <p className='text-text-default text-md font-medium lg:text-base'>
+          게시글이 삭제되었거나 존재하지 않습니다.
+        </p>
+      </EmptyContent>
     );
 
   return (
