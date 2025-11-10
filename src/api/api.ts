@@ -6,7 +6,10 @@ import type {
   JoinGroupPayload,
   JoinGroupResponse,
 } from '@/types/groupType';
-import type { TaskUpdateRequestBody } from '@/types/taskType';
+import type {
+  TaskListOrderRequestBody,
+  TaskUpdateRequestBody,
+} from '@/types/taskType';
 import type { MembershipsType } from '@/types/userType';
 
 export const getGroup = async (
@@ -39,9 +42,7 @@ export const getGroupMembership = async <T = Omit<MembershipsType, 'group'>>(
 export const updateTaskListOrder = async (
   groupId: number,
   taskListId: number,
-  payload: {
-    displayIndex: number;
-  },
+  payload: TaskListOrderRequestBody,
 ) => {
   try {
     await axiosInstance.patch(

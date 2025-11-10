@@ -108,11 +108,11 @@ export default function TaskKanbanBoard({ taskLists }: Props) {
     if (confirmedTargetIndex.current === null) return;
 
     const draggingTaskListId = Number(e.dataTransfer.getData(tab));
-    taskListsOrderMutation.mutate([
+    taskListsOrderMutation.mutate({
       groupId,
-      draggingTaskListId,
-      { displayIndex: confirmedTargetIndex.current },
-    ]);
+      taskListId: draggingTaskListId,
+      payload: { displayIndex: confirmedTargetIndex.current },
+    });
   };
 
   // drag이벤트가 실행중일 때 설정된 모든 상태 초기화

@@ -1,6 +1,10 @@
 import type { AddTaskListSchema } from '@/types/addTaskListSchema';
 import type { GroupDetailResponse } from '@/types/groupType';
-import type { TaskListsResponse } from '@/types/taskType';
+import type {
+  TaskListOrderRequestBody,
+  TaskListsResponse,
+  TaskUpdateRequestBody,
+} from '@/types/taskType';
 import { mutationOptions, QueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import type { UseFormReset, UseFormSetError } from 'react-hook-form';
@@ -15,7 +19,6 @@ import { groupQueries } from './queries';
 
 export const taskListMutations = {
   //할 일 목록 추가
-  addTaskListMutation: (groupId: number) => ['addTaskList', groupId],
   addTaskListOptions: (
     groupId: number,
     queryClient: QueryClient,
@@ -23,9 +26,10 @@ export const taskListMutations = {
     formSetError: UseFormSetError<AddTaskListSchema>,
   ) =>
     mutationOptions({
-      mutationKey: taskListMutations.addTaskListMutation(groupId),
-      mutationFn: (variables: Parameters<typeof addTaskList>) =>
-        addTaskList(...variables),
+      mutationFn: (variables: {
+        groupId: number;
+        payload: AddTaskListSchema;
+      }) => addTaskList(variables.groupId, variables.payload),
       onSuccess: () => {
         formReset();
         toast.success('새 할 일 목록이 추가되었습니다.');
@@ -58,8 +62,16 @@ export const taskListMutations = {
   ) =>
     mutationOptions({
       mutationKey: taskListMutations.updateTaskListOrderMutation(groupId),
-      mutationFn: (variables: Parameters<typeof updateTaskListOrder>) =>
-        updateTaskListOrder(...variables),
+      mutationFn: (variables: {
+        groupId: number;
+        taskListId: number;
+        payload: TaskListOrderRequestBody;
+      }) =>
+        updateTaskListOrder(
+          variables.groupId,
+          variables.taskListId,
+          variables.payload,
+        ),
       onMutate: async () => {
         await queryClient.cancelQueries({
           queryKey: groupQueries.group(groupId),
@@ -121,8 +133,10 @@ export const taskMutations = {
   ) =>
     mutationOptions({
       mutationKey: taskMutations.updateTaskDoneMutation(groupId),
-      mutationFn: (variables: Parameters<typeof updateTask>) =>
-        updateTask(...variables),
+      mutationFn: (variables: {
+        taskId: number;
+        payload: TaskUpdateRequestBody;
+      }) => updateTask(variables.taskId, variables.payload),
       onMutate: async variables => {
         await queryClient.cancelQueries({
           queryKey: groupQueries.group(groupId),
@@ -135,8 +149,8 @@ export const taskMutations = {
         queryClient.setQueryData(
           groupQueries.group(groupId),
           (prev: GroupDetailResponse) => {
-            const taskId = variables[0];
-            const done = variables[1].done;
+            const taskId = variables.taskId;
+            const done = variables.payload.done;
 
             const updatedTasks = taskList.tasks.map(task => {
               return task.id === taskId
@@ -184,11 +198,6 @@ export const taskMutations = {
 
 export const groupMutations = {
   // 그룹에서 멤버 제외
-  excludeGroupMemberMutation: (groupId: number, userId: number) => [
-    'excludeGroupMember',
-    groupId,
-    userId,
-  ],
   excludeGroupMemberOptions: (
     groupId: number,
     userId: number,
@@ -197,9 +206,8 @@ export const groupMutations = {
     closeModal?: () => void,
   ) =>
     mutationOptions({
-      mutationKey: groupMutations.excludeGroupMemberMutation(groupId, userId),
-      mutationFn: (variables: Parameters<typeof deleteGroupMember>) =>
-        deleteGroupMember(...variables),
+      mutationFn: (variables: { groupId: number; userId: number }) =>
+        deleteGroupMember(variables.groupId, variables.userId),
       onSuccess: () => {
         toast.success(`${userName}님을 팀에서 제외했습니다.`);
         queryClient.invalidateQueries({
