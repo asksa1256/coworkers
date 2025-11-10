@@ -5,11 +5,6 @@ import {
   getGroup,
 } from '@/api/api';
 import axiosInstance from '@/lib/axios';
-import type {
-  ArticleCommentsResponse,
-  ArticleDetailResponse,
-  ArticleListResponse,
-} from '@/types/boardTypes';
 import type { GroupType, UserType } from '@/types/userType';
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 
@@ -42,7 +37,7 @@ export const boardQueries = {
     searchRange,
   ],
   articlesOptions: (sort: string, searchValue: string, searchRange: string) =>
-    infiniteQueryOptions<ArticleListResponse>({
+    infiniteQueryOptions({
       queryKey: boardQueries.articles(sort, searchValue, searchRange),
       queryFn: async ({ pageParam = 1 }) =>
         getArticles({ pageParam: pageParam as number, sort, searchValue }),
@@ -57,7 +52,7 @@ export const boardQueries = {
 
   article: (id: number) => ['article', id],
   articleOptions: (id: number) =>
-    queryOptions<ArticleDetailResponse>({
+    queryOptions({
       queryKey: boardQueries.article(id),
       queryFn: async () => getArticle(id),
     }),
@@ -68,11 +63,11 @@ export const boardQueries = {
     cursor,
   ],
   commentsOptions: (articleId: number, cursor?: number) =>
-    infiniteQueryOptions<ArticleCommentsResponse>({
+    infiniteQueryOptions({
       queryKey: boardQueries.comments(articleId, cursor),
       queryFn: async ({ pageParam = null }) =>
         getArticleComments(articleId, pageParam as number | null),
-      initialPageParam: null, // 첫 요청 시 커서 없음
+      initialPageParam: null as number | null, // 첫 요청 시 커서 없음 + 커서 있는 경우 number 타입으로 바뀌므로 number | null로 pageParam 타입 단언
       getNextPageParam: lastPage => {
         return lastPage.nextCursor ?? undefined;
       },

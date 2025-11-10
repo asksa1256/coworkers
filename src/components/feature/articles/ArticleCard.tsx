@@ -1,7 +1,7 @@
 import { boardQueries } from '@/api/queries';
 import CommentIcon from '@/assets/icons/CommentIcon.svg?react';
 import HeartIcon from '@/assets/icons/HeartIcon.svg?react';
-import type { ArticleResponse } from '@/types/boardTypes';
+import type { ArticleResponse } from '@/types/boardType';
 import { formatRelativeTime } from '@/utils/formatters';
 import highlightSearchValue from '@/utils/highlightSearchValue';
 import { useQuery } from '@tanstack/react-query';

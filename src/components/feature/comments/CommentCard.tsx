@@ -2,7 +2,7 @@ import KebabIcon from '@/assets/icons/KebabIcon.svg?react';
 import Avatar from '@/components/ui/Avatar';
 import Dropdown from '@/components/ui/Dropdown';
 import { MODIFY_DELETE_DROPDOWN_MAP } from '@/constants';
-import type { CommentResponse } from '@/types/boardTypes';
+import type { CommentResponse } from '@/types/boardType';
 import { formatRelativeTime } from '@/utils/formatters';
 
 interface Props {
