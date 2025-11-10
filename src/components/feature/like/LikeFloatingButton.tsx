@@ -1,11 +1,19 @@
+import HeartFilledIcon from '@/assets/icons/HeartFilledIcon.svg?react';
 import HeartIcon from '@/assets/icons/HeartIcon.svg?react';
 import Button from '@/components/ui/Button';
+import { useState } from 'react';
 
-interface LikeFloatingButton {
+interface Props {
   likeCount: number;
 }
 
-export default function LikeFloatingButton({ likeCount }: LikeFloatingButton) {
+export default function LikeFloatingButton({ likeCount }: Props) {
+  const [isActive, setIsActive] = useState(false);
+
+  const handleLike = () => {
+    setIsActive(prev => !prev);
+  };
+
   return (
     <div className='relative top-[50px] mt-[250px] hidden flex-col items-center gap-2 lg:sticky lg:flex'>
       <Button
@@ -13,9 +21,14 @@ export default function LikeFloatingButton({ likeCount }: LikeFloatingButton) {
         size='icon-xl'
         variant='ghost'
         round='full'
-        className='bg-bg-primary shadow-sm'
+        className='group bg-bg-primary shadow-sm transition-transform hover:-translate-y-0.5'
+        onClick={handleLike}
       >
-        <HeartIcon className='text-text-default' />
+        {isActive ? (
+          <HeartFilledIcon className='text-primary' />
+        ) : (
+          <HeartIcon className='text-text-default group-hover:text-primary transition-colors' />
+        )}
       </Button>
       <span className='text-text-default'>
         {likeCount > 99 ? '99+' : likeCount}
