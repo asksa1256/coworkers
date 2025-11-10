@@ -1,12 +1,15 @@
 import type { AddTaskListSchema } from '@/types/addTaskListSchema';
 import type { GroupDetailResponse } from '@/types/groupType';
 import type {
+  TaskDetailResponse,
   TaskListOrderRequestBody,
   TaskListsResponse,
   TaskUpdateRequestBody,
 } from '@/types/taskType';
+import { toggleDoneAt } from '@/utils/taskUtils';
 import { mutationOptions, QueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
+import { produce } from 'immer';
 import type { UseFormReset, UseFormSetError } from 'react-hook-form';
 import { toast } from 'sonner';
 import {
@@ -15,7 +18,7 @@ import {
   updateTask,
   updateTaskListOrder,
 } from './api';
-import { groupQueries } from './queries';
+import { groupQueries, taskListQueries, taskQueries } from './queries';
 
 export const taskListMutations = {
   //할 일 목록 추가
@@ -194,13 +197,107 @@ export const taskMutations = {
         }
       },
     }),
+  updateTaskListPageTaskDoneOptions: ({
+    groupId,
+    queryClient,
+  }: {
+    groupId: string;
+    queryClient: QueryClient;
+  }) =>
+    mutationOptions({
+      mutationKey: taskMutations.updateTaskDoneMutation(Number(groupId)),
+      mutationFn: ({
+        taskListId,
+        taskId,
+        date,
+        payload,
+      }: {
+        taskListId: string;
+        taskId: number;
+        date: Date;
+        payload: TaskUpdateRequestBody;
+      }) => updateTask(taskId, payload),
+      onMutate: async ({ taskListId, taskId, date, payload }) => {
+        // 기존 쿼리들 취소
+        await queryClient.cancelQueries({
+          queryKey: taskListQueries.singleTaskList(groupId, taskListId, date),
+        });
+        await queryClient.cancelQueries({
+          queryKey: taskQueries.tasks(groupId, taskListId, date),
+        });
+
+        // 이전 상태 백업
+        const prevTaskLists = queryClient.getQueryData(
+          taskListQueries.singleTaskList(groupId, taskListId, date),
+        );
+        const prevTasks = queryClient.getQueryData(
+          taskQueries.tasks(groupId, taskListId, date),
+        );
+
+        // taskList setQueryData
+        queryClient.setQueryData(
+          taskListQueries.singleTaskList(groupId, taskListId, date),
+          (prev: TaskListsResponse) => {
+            if (!prev) return prev;
+            return produce(prev, draft => {
+              const targetTask = draft.tasks.find(task => task.id === taskId);
+              if (targetTask) toggleDoneAt(targetTask);
+            });
+          },
+        );
+
+        // tasks setQueryData
+        queryClient.setQueryData(
+          taskQueries.tasks(groupId, taskListId, date),
+          (prev: TaskDetailResponse[]) => {
+            if (!prev) return prev;
+            return prev.map(prevTask =>
+              prevTask.id === taskId
+                ? { ...prevTask, doneAt: toggleDoneAt(prevTask) }
+                : prevTask,
+            );
+          },
+        );
+
+        return { prevTaskLists, prevTasks };
+      },
+      onError: (err, variables, context) => {
+        const { taskListId, date } = variables;
+        queryClient.setQueryData(
+          taskListQueries.singleTaskList(groupId, taskListId, date),
+          context?.prevTaskLists,
+        );
+        queryClient.setQueryData(
+          taskQueries.tasks(groupId, taskListId, date),
+          context?.prevTasks,
+        );
+      },
+      onSettled: (data, error, variables) => {
+        const { taskListId, date } = variables;
+        const isMutatingCount = queryClient.isMutating({
+          mutationKey: taskMutations.updateTaskDoneMutation(Number(groupId)),
+        });
+        // 뮤테이션 동시성 제어용
+        // 뮤테이션키에 해당하는 뮤테이션이 2개 이상 실행중일 때 얼리 리턴
+        if (isMutatingCount >= 2) return;
+
+        queryClient.invalidateQueries({
+          queryKey: groupQueries.group(Number(groupId)),
+        });
+        queryClient.invalidateQueries({
+          queryKey: taskListQueries.singleTaskList(groupId, taskListId, date),
+        });
+        queryClient.invalidateQueries({
+          queryKey: taskQueries.tasks(groupId, taskListId, date),
+        });
+      },
+    }),
 };
 
 export const groupMutations = {
   // 그룹에서 멤버 제외
   excludeGroupMemberOptions: (
     groupId: number,
-    userId: number,
     userName: string,
     queryClient: QueryClient,
     closeModal?: () => void,

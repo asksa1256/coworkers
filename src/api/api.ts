@@ -1,13 +1,20 @@
 import type { TeamFormDataType } from '@/components/feature/form/TeamForm';
 import axiosInstance from '@/lib/axios';
 import type {
+  ArticleCommentsResponse,
+  ArticleDetailResponse,
+  ArticleListResponse,
+} from '@/types/boardType';
+import type {
   CreateGroupResponse,
   GroupDetailResponse,
   JoinGroupPayload,
   JoinGroupResponse,
 } from '@/types/groupType';
 import type {
+  TaskDetailResponse,
   TaskListOrderRequestBody,
+  TaskListsResponse,
   TaskUpdateRequestBody,
 } from '@/types/taskType';
 import type { MembershipsType } from '@/types/userType';
@@ -35,6 +42,15 @@ export const getGroupMembership = async <T = Omit<MembershipsType, 'group'>>(
     return response.data;
   } catch (e) {
     console.log('그룹 멤버십 에러: ', e);
+    throw e;
+  }
+};
+
+export const deleteGroupMember = async (groupId: number, userId: number) => {
+  try {
+    await axiosInstance.delete(`/groups/${groupId}/member/${userId}`);
+  } catch (e) {
+    console.log('그룹에서 멤버 제외 에러: ', e);
     throw e;
   }
 };
@@ -107,10 +123,19 @@ export const createInviteToken = async (groupId: string): Promise<string> => {
 };
 
 // 게시글 목록 불러오기
-export const getArticles = async (pageParam: number, sort: string) => {
+interface getArticlesProps {
+  pageParam: number;
+  sort: string;
+  searchValue: string;
+}
+export const getArticles = async ({
+  pageParam,
+  sort,
+  searchValue,
+}: getArticlesProps): Promise<ArticleListResponse> => {
   try {
     const response = await axiosInstance(
-      `/articles?page=${pageParam}&orderBy=${sort}`,
+      `/articles?page=${pageParam}&orderBy=${sort}&keyword=${searchValue}`,
     );
     return response.data;
   } catch (e) {
@@ -120,7 +145,9 @@ export const getArticles = async (pageParam: number, sort: string) => {
 };
 
 // 게시글 불러오기
-export const getArticle = async (id: number) => {
+export const getArticle = async (
+  id: number,
+): Promise<ArticleDetailResponse> => {
   try {
     const response = await axiosInstance(`/articles/${id}`);
     return response.data;
@@ -130,11 +157,42 @@ export const getArticle = async (id: number) => {
   }
 };
 
-export const deleteGroupMember = async (groupId: number, userId: number) => {
+// TaskLists/${id} 불러오기
+export const getSingleTaskList = async (
+  groupId: string,
+  taskListId: string,
+  date: Date,
+): Promise<TaskListsResponse> => {
+  const { data } = await axiosInstance.get(
+    `/groups/${groupId}/task-lists/${taskListId}?date=${date}`,
+  );
+  return data;
+};
+
+// tasks 불러오기
+export const getTasks = async (
+  groupId: string,
+  taskListId: string,
+  date: Date,
+): Promise<TaskDetailResponse[]> => {
+  const { data } = await axiosInstance.get(
+    `/groups/${groupId}/task-lists/${taskListId}/tasks?date=${date}`,
+  );
+  return data;
+};
+
+// 게시글 댓글 목록 불러오기
+export const getArticleComments = async (
+  articleId: number,
+  cursor?: number | null,
+): Promise<ArticleCommentsResponse> => {
   try {
-    await axiosInstance.delete(`/groups/${groupId}/member/${userId}`);
+    const response = await axiosInstance(
+      `/articles/${articleId}/comments?limit=5${cursor ? `&cursor=${cursor}` : ''}`,
+    );
+    return response.data;
   } catch (e) {
-    console.log('그룹에서 멤버 제외 에러: ', e);
+    console.log('게시글 불러오기 에러: ', e);
     throw e;
   }
 };

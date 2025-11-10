@@ -1,9 +1,14 @@
-import { getArticle, getGroup } from '@/api/api';
+import {
+  getArticle,
+  getArticleComments,
+  getArticles,
+  getGroup,
+  getSingleTaskList,
+  getTasks,
+} from '@/api/api';
 import axiosInstance from '@/lib/axios';
-import type { ArticleListResponse } from '@/types/boardTypes';
 import type { GroupType, UserType } from '@/types/userType';
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
-import { getArticles } from './api';
 
 export const groupQueries = {
   group: (groupId: number) => ['group', groupId],
@@ -14,7 +19,7 @@ export const groupQueries = {
     }),
 
   // 그룹 리스트
-  groups: (user: UserType | null) => ['userGroups', user?.id],
+  groups: (user: UserType | null) => ['groups', user?.id],
   groupsOptions: (user: UserType | null) =>
     queryOptions({
       queryKey: [...groupQueries.groups(user)],
@@ -27,12 +32,17 @@ export const groupQueries = {
 };
 
 export const boardQueries = {
-  articles: (sort: string) => ['articles', sort],
-  articlesOptions: (sort: string) =>
-    infiniteQueryOptions<ArticleListResponse>({
-      queryKey: boardQueries.articles(sort),
+  articles: (sort: string, searchValue: string, searchRange: string) => [
+    'articles',
+    sort,
+    searchValue,
+    searchRange,
+  ],
+  articlesOptions: (sort: string, searchValue: string, searchRange: string) =>
+    infiniteQueryOptions({
+      queryKey: boardQueries.articles(sort, searchValue, searchRange),
       queryFn: async ({ pageParam = 1 }) =>
-        getArticles(pageParam as number, sort),
+        getArticles({ pageParam: pageParam as number, sort, searchValue }),
       initialPageParam: 1,
       getNextPageParam: (lastPage, allPages) => {
         const loadedCount = allPages.flatMap(p => p.list).length;
@@ -47,5 +57,51 @@ export const boardQueries = {
     queryOptions({
       queryKey: boardQueries.article(id),
       queryFn: async () => getArticle(id),
+    }),
+
+  comments: (articleId: number, cursor?: number) => [
+    'comments',
+    articleId,
+    cursor,
+  ],
+  commentsOptions: (articleId: number, cursor?: number) =>
+    infiniteQueryOptions({
+      queryKey: boardQueries.comments(articleId, cursor),
+      queryFn: async ({ pageParam = null }) =>
+        getArticleComments(articleId, pageParam as number | null),
+      initialPageParam: null as number | null, // 첫 요청 시 커서 없음 + 커서 있는 경우 number 타입으로 바뀌므로 number | null로 pageParam 타입 단언
+      getNextPageParam: lastPage => {
+        return lastPage.nextCursor ?? undefined;
+      },
+    }),
+};
+
+export const taskListQueries = {
+  singleTaskList: (groupId?: string, taskListId?: string, date?: Date) => [
+    'singleTaskList',
+    groupId,
+    taskListId,
+    date?.toDateString(),
+  ],
+  singleTaskListOptions: (groupId?: string, taskListId?: string, date?: Date) =>
+    queryOptions({
+      queryKey: [...taskListQueries.singleTaskList(groupId, taskListId, date)],
+      queryFn: () => getSingleTaskList(groupId!, taskListId!, date!),
+      enabled: !!groupId && !!taskListId,
+    }),
+};
+
+export const taskQueries = {
+  tasks: (groupId?: string, taskListId?: string, date?: Date) => [
+    'tasks',
+    groupId,
+    taskListId,
+    date?.toDateString(),
+  ],
+  tasksOptions: (groupId?: string, taskListId?: string, date?: Date) =>
+    queryOptions({
+      queryKey: [...taskQueries.tasks(groupId, taskListId, date)],
+      queryFn: () => getTasks(groupId!, taskListId!, date!),
+      enabled: !!groupId && !!taskListId,
     }),
 };

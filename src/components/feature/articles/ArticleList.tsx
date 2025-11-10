@@ -14,10 +14,16 @@ import ArticleCard from './ArticleCard';
 export default function ArticleList() {
   const [searchParams, setSearchParams] = useSearchParams();
   const sort = searchParams.get('sort') || ARTICLE_SORT_LIST[0].value;
+  const searchValue = searchParams.get('q') || '';
+  const searchRange = searchParams.get('search_range') || '';
   const scrollRef = useRef(null);
 
   const handleChangeSort = (value: string) => {
-    setSearchParams({ sort: value });
+    setSearchParams(prevParams => ({
+      ...Object.fromEntries(prevParams),
+      sort: value,
+      q: searchValue,
+    })); // 정렬 + 검색어 필터 동시 적용
   };
 
   const {
@@ -28,7 +34,11 @@ export default function ArticleList() {
     status,
     isPending,
     error,
-  } = useInfiniteQuery(boardQueries.articlesOptions(sort));
+  } = useInfiniteQuery(
+    boardQueries.articlesOptions(sort, searchValue, searchRange),
+  );
+
+  const allData = data?.pages.flatMap(page => page.list);
 
   useIntersectionObserver({
     target: scrollRef,
@@ -49,17 +59,38 @@ export default function ArticleList() {
     return <p>불러오는 중...</p>;
   }
 
-  if (data.pages[0].totalCount === 0)
+  const isEmpty = allData?.length === 0;
+  const isSearching = searchValue !== '';
+
+  if (isEmpty) {
     return (
       <EmptyContent>
         <p className='text-text-default text-md font-medium lg:text-base'>
-          아직 작성된 글이 없습니다.
+          {isSearching ? '검색 결과가 없습니다.' : '아직 작성된 글이 없습니다.'}
         </p>
-        <Button size='lg' className='w-auto'>
-          글 작성하기
-        </Button>
+
+        {!isSearching ? (
+          <Button size='lg' className='w-auto'>
+            글 작성하기
+          </Button>
+        ) : (
+          <Button
+            size='lg'
+            className='w-auto'
+            onClick={() => {
+              setSearchParams(prevParams => {
+                const newParams = new URLSearchParams(prevParams.toString());
+                newParams.delete('q');
+                return newParams;
+              });
+            }}
+          >
+            돌아가기
+          </Button>
+        )}
       </EmptyContent>
     );
+  }
 
   return (
     <>
@@ -75,11 +106,11 @@ export default function ArticleList() {
       </div>
 
       <ol className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
-        {data.pages.flatMap(page =>
-          page.list.map(article => (
-            <ArticleCard key={article.id} article={article} />
-          )),
-        )}
+        {allData?.map(article => (
+          <li key={article.id}>
+            <ArticleCard article={article} />
+          </li>
+        ))}
       </ol>
 
       <InfiniteScrollObserver

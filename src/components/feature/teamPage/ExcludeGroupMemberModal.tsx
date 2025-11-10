@@ -15,7 +15,6 @@ export default function ExcludeGroupMemberModal({ member }: Props) {
   const excludeGroupMemberMutation = useMutation(
     groupMutations.excludeGroupMemberOptions(
       member.groupId,
-      member.userId,
       member.userName,
       queryClient,
       closeModal,

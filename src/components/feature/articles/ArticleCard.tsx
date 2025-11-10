@@ -1,9 +1,11 @@
 import { boardQueries } from '@/api/queries';
 import CommentIcon from '@/assets/icons/CommentIcon.svg?react';
 import HeartIcon from '@/assets/icons/HeartIcon.svg?react';
-import type { ArticleResponse } from '@/types/boardTypes';
+import type { ArticleResponse } from '@/types/boardType';
+import { formatRelativeTime } from '@/utils/formatters';
+import highlightSearchValue from '@/utils/highlightSearchValue';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 interface ArticleCardProps {
   article: ArticleResponse;
@@ -15,7 +17,11 @@ export default function ArticleCard({ article }: ArticleCardProps) {
     article;
 
   // 각 카드마다 상세 데이터 fetch
-  const { data: detail, isPending } = useQuery(boardQueries.articleOptions(id));
+  const { data, isPending } = useQuery(boardQueries.articleOptions(id));
+
+  // 검색어 강조
+  const [searchParams] = useSearchParams();
+  const searchValue = searchParams.get('q') || '';
 
   return (
     <Link
@@ -24,9 +30,13 @@ export default function ArticleCard({ article }: ArticleCardProps) {
     >
       <div className='flex items-center justify-between md:gap-6'>
         <div className='w-[60%]'>
-          <h6 className='md:text-2lg mb-2 text-base font-bold'>{title}</h6>
+          <h6 className='md:text-2lg mb-2 text-base font-bold'>
+            {highlightSearchValue(title, searchValue)}
+          </h6>
           <p className='text-text-default md:text-md pre-line line-clamp-2 text-sm break-keep'>
-            {isPending ? '내용 불러오는 중...' : detail?.content}
+            {isPending
+              ? '내용 불러오는 중...'
+              : highlightSearchValue(data?.content ?? '', searchValue)}
           </p>
         </div>
 
@@ -43,17 +53,19 @@ export default function ArticleCard({ article }: ArticleCardProps) {
         <div className='flex gap-1 text-sm'>
           <b className='text-text-primary font-medium'>{writer.nickname}</b>
           <span className='text-text-secondary'>|</span>
-          <span className='text-text-default'>{createdAt}</span>
+          <span className='text-text-default'>
+            {formatRelativeTime(createdAt)}
+          </span>
         </div>
 
         <div className='text-text-default flex gap-2 text-sm'>
           <span className='flex items-center gap-1'>
             <HeartIcon className='text-text-default h-4 w-4' />
-            {likeCount}
+            {likeCount > 99 ? '99+' : likeCount}
           </span>
           <span className='flex items-center gap-1'>
             <CommentIcon className='text-text-default h-4 w-4' />
-            {commentCount}
+            {commentCount > 99 ? '99+' : commentCount}
           </span>
         </div>
       </div>
