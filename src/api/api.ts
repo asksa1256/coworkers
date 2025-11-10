@@ -13,6 +13,7 @@ import type {
 } from '@/types/groupType';
 import type {
   TaskDetailResponse,
+  TaskListOrderRequestBody,
   TaskListsResponse,
   TaskUpdateRequestBody,
 } from '@/types/taskType';
@@ -45,12 +46,19 @@ export const getGroupMembership = async <T = Omit<MembershipsType, 'group'>>(
   }
 };
 
+export const deleteGroupMember = async (groupId: number, userId: number) => {
+  try {
+    await axiosInstance.delete(`/groups/${groupId}/member/${userId}`);
+  } catch (e) {
+    console.log('그룹에서 멤버 제외 에러: ', e);
+    throw e;
+  }
+};
+
 export const updateTaskListOrder = async (
   groupId: number,
   taskListId: number,
-  payload: {
-    displayIndex: number;
-  },
+  payload: TaskListOrderRequestBody,
 ) => {
   try {
     await axiosInstance.patch(

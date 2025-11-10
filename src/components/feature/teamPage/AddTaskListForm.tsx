@@ -27,7 +27,7 @@ export default function AddTaskListForm({ groupId }: { groupId: number }) {
   );
 
   const onSubmit: SubmitHandler<AddTaskListSchema> = data => {
-    addTaskListMutation.mutate([groupId, data]);
+    addTaskListMutation.mutate({ groupId, payload: data });
   };
 
   return (

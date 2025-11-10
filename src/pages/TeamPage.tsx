@@ -53,7 +53,11 @@ export default function TeamPage() {
   const handleOpenMembersModal = () => {
     openModal({
       children: (
-        <MemberListCard members={groupData.members} isModalDisplay={true} />
+        <MemberListCard
+          members={groupData.members}
+          isAdmin={isAdmin}
+          isModalDisplay={true}
+        />
       ),
       closeIconButton: true,
       className: 'md:py-12',
@@ -100,7 +104,7 @@ export default function TeamPage() {
 
       <div className='flex items-start lg:gap-7'>
         <TaskKanbanBoard taskLists={groupData.taskLists} />
-        <MemberListCard members={groupData.members} />
+        <MemberListCard members={groupData.members} isAdmin={isAdmin} />
       </div>
     </div>
   );

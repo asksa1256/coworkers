@@ -56,3 +56,7 @@ export interface TaskUpdateRequestBody {
   description: string | null;
   done: boolean;
 }
+
+export interface TaskListOrderRequestBody {
+  displayIndex: number;
+}
