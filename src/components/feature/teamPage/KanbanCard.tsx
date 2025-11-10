@@ -1,4 +1,3 @@
-import { updateTask } from '@/api/api';
 import { taskMutations } from '@/api/mutations';
 import KebabIcon from '@/assets/icons/KebabIcon.svg?react';
 import CircularProgressbar from '@/components/ui/CircularProgressbar';
@@ -34,10 +33,6 @@ export default function KanbanCard({ taskList, tab, onDragStart }: Props) {
     e.dataTransfer.setData(tab, String(taskList.id));
     onDragStart(taskList.displayIndex);
     setIsDragging(true);
-  };
-
-  const onChangeTaskDone = (taskUpdateArgs: Parameters<typeof updateTask>) => {
-    taskDoneMutation.mutate(taskUpdateArgs);
   };
 
   return (
@@ -77,14 +72,14 @@ export default function KanbanCard({ taskList, tab, onDragStart }: Props) {
               taskId={task.id}
               isDone={!!task.doneAt}
               onChange={() => {
-                onChangeTaskDone([
-                  task.id,
-                  {
+                taskDoneMutation.mutate({
+                  taskId: task.id,
+                  payload: {
                     name: task.name,
                     description: task.description,
                     done: !task.doneAt,
                   },
-                ]);
+                });
               }}
             >
               {task.name}
