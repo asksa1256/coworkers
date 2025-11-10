@@ -11,10 +11,7 @@ interface Props {
 
 export default function CommentCard({ comment }: Props) {
   return (
-    <li
-      key={comment.id}
-      className='border-border-primary flex items-start gap-2 border-t py-3 md:gap-4 md:py-5'
-    >
+    <li className='border-border-primary flex items-start gap-2 border-t py-3 md:gap-4 md:py-5'>
       <Avatar size='md' imgSrc={comment.writer.image!} />
 
       <div className='md:text-md w-full text-xs'>
