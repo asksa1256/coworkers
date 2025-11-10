@@ -1,6 +1,11 @@
 import type { TeamFormDataType } from '@/components/feature/form/TeamForm';
 import axiosInstance from '@/lib/axios';
 import type {
+  ArticleCommentsResponse,
+  ArticleDetailResponse,
+  ArticleListResponse,
+} from '@/types/boardType';
+import type {
   CreateGroupResponse,
   GroupDetailResponse,
   JoinGroupPayload,
@@ -119,7 +124,7 @@ export const getArticles = async ({
   pageParam,
   sort,
   searchValue,
-}: getArticlesProps) => {
+}: getArticlesProps): Promise<ArticleListResponse> => {
   try {
     const response = await axiosInstance(
       `/articles?page=${pageParam}&orderBy=${sort}&keyword=${searchValue}`,
@@ -132,7 +137,9 @@ export const getArticles = async ({
 };
 
 // 게시글 불러오기
-export const getArticle = async (id: number) => {
+export const getArticle = async (
+  id: number,
+): Promise<ArticleDetailResponse> => {
   try {
     const response = await axiosInstance(`/articles/${id}`);
     return response.data;
@@ -164,4 +171,20 @@ export const getTasks = async (
     `/groups/${groupId}/task-lists/${taskListId}/tasks?date=${date}`,
   );
   return data;
+};
+
+// 게시글 댓글 목록 불러오기
+export const getArticleComments = async (
+  articleId: number,
+  cursor?: number | null,
+): Promise<ArticleCommentsResponse> => {
+  try {
+    const response = await axiosInstance(
+      `/articles/${articleId}/comments?limit=5${cursor ? `&cursor=${cursor}` : ''}`,
+    );
+    return response.data;
+  } catch (e) {
+    console.log('게시글 불러오기 에러: ', e);
+    throw e;
+  }
 };

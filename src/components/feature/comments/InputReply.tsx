@@ -2,7 +2,7 @@ import ArrowUpIcon from '@/assets/icons/ArrowUpIcon.svg';
 import Button from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
 import { type FieldError } from '@/types';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 interface InputReplyProps extends React.ComponentProps<'textarea'> {
   error?: FieldError | null;
@@ -10,11 +10,15 @@ interface InputReplyProps extends React.ComponentProps<'textarea'> {
 
 export default function InputReply({ error, ...props }: InputReplyProps) {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const [isEmpty, setIsEmpty] = useState(true);
 
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const el = e.target;
     el.style.height = 'auto';
     el.style.height = `${el.scrollHeight}px`;
+
+    setIsEmpty(e.target.value.trim().length === 0);
+    props.onInput?.(e);
   };
 
   return (
@@ -35,7 +39,11 @@ export default function InputReply({ error, ...props }: InputReplyProps) {
           className='md:text-md w-full resize-none pt-1 text-xs md:pt-0.5'
           rows={1}
         ></textarea>
-        <Button size='icon-md' round='full' disabled={props.disabled}>
+        <Button
+          size='icon-md'
+          round='full'
+          disabled={props.disabled || isEmpty}
+        >
           <img src={ArrowUpIcon} alt='댓글 달기' />
         </Button>
       </div>
