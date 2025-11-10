@@ -98,7 +98,10 @@ export default function ArticleDetailPage() {
         </div>
 
         {/* 댓글 */}
-        <ArticleCommentList articleId={data.id} />
+        <ArticleCommentList
+          articleId={data.id}
+          commentCount={data.commentCount}
+        />
       </div>
 
       {/* 좋아요 버튼 (desktop: floating) */}

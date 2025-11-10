@@ -12,9 +12,10 @@ import InputReply from './InputReply';
 
 interface Props {
   articleId: number;
+  commentCount: number;
 }
 
-export default function ArticleCommentList({ articleId }: Props) {
+export default function ArticleCommentList({ articleId, commentCount }: Props) {
   const user = useAtomValue(userAtom);
   const scrollRef = useRef(null);
 
@@ -56,7 +57,7 @@ export default function ArticleCommentList({ articleId }: Props) {
   return (
     <div className='mt-4 md:mt-[28px] lg:mt-10'>
       <h5 className='md:text-2lg text-md mb-3 font-bold md:mb-4'>
-        댓글 <span className='text-primary'>{allData.length}</span>
+        댓글 <span className='text-primary'>{commentCount}</span>
       </h5>
 
       <div className='mb-[28px] flex gap-3 md:mb-9 md:gap-4'>
