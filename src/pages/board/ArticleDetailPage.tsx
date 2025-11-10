@@ -39,7 +39,7 @@ export default function ArticleDetailPage() {
           variant='ghost'
           round='sm'
           className='group bg-bg-primary text-text-default hover:text-text-primary hover:bg-bg-secondary mb-8 flex w-auto items-center transition-colors'
-          onClick={() => navigate('/board')}
+          onClick={() => navigate(-1)}
         >
           <LeftArrowIcon className='group-hover:text-text-primary' />
           돌아가기
