@@ -1,16 +1,16 @@
 import AuthRoute from '@/components/feature/auth/AuthRoute';
 import PrivateRoute from '@/components/feature/auth/PrivateRoute';
+import BoardLayout from '@/components/layout/BoardLayout';
 import Layout from '@/components/layout/Layout';
 import CreateTeamPage from '@/pages/CreateTeamPage';
 import ErrorPage from '@/pages/ErrorPage';
 import JoinTeamPage from '@/pages/JoinTeamPage';
 import LandingPage from '@/pages/LandingPage';
-import ListPage from '@/pages/ListPage';
+import TaskListPage from '@/pages/TaskListPage';
 import TeamPage from '@/pages/TeamPage';
 import SignInPage from '@/pages/auth/SignInPage';
 import BoardPage from '@/pages/board/BoardPage';
 import type { ReactNode } from 'react';
-import BoardLayout from './components/layout/BoardLayout';
 import KakaoRedirectPage from './pages/auth/KakaoRedirectPage';
 import KakaoSignUpPage from './pages/auth/KakaoSignUpPage';
 import ResetPasswordPage from './pages/auth/ResetPasswordPage';
@@ -48,8 +48,8 @@ const routes = [
             element: withPrivate(<TeamPage />),
           },
           {
-            path: 'details',
-            element: withPrivate(<ListPage />),
+            path: 'details/:taskListId',
+            element: withPrivate(<TaskListPage />),
           },
         ],
       },

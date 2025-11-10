@@ -6,7 +6,11 @@ import type {
   JoinGroupPayload,
   JoinGroupResponse,
 } from '@/types/groupType';
-import type { TaskUpdateRequestBody } from '@/types/taskType';
+import type {
+  TaskDetailResponse,
+  TaskListsResponse,
+  TaskUpdateRequestBody,
+} from '@/types/taskType';
 import type { MembershipsType } from '@/types/userType';
 
 export const getGroup = async (
@@ -136,4 +140,28 @@ export const getArticle = async (id: number) => {
     console.log('게시글 불러오기 에러: ', e);
     throw e;
   }
+};
+
+// TaskLists/${id} 불러오기
+export const getSingleTaskList = async (
+  groupId: string,
+  taskListId: string,
+  date: Date,
+): Promise<TaskListsResponse> => {
+  const { data } = await axiosInstance.get(
+    `/groups/${groupId}/task-lists/${taskListId}?date=${date}`,
+  );
+  return data;
+};
+
+// tasks 불러오기
+export const getTasks = async (
+  groupId: string,
+  taskListId: string,
+  date: Date,
+): Promise<TaskDetailResponse[]> => {
+  const { data } = await axiosInstance.get(
+    `/groups/${groupId}/task-lists/${taskListId}/tasks?date=${date}`,
+  );
+  return data;
 };

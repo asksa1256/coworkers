@@ -42,7 +42,7 @@ export function DropdownMenuTrigger({
     <DropdownMenuPrimitive.Trigger
       data-slot='dropdown-menu-trigger'
       className={cn(
-        'group',
+        'group block',
         isSelectTrigger &&
           'text-text-default border-border-primary md:text-md flex h-10 min-w-[94px] shrink-0 items-center justify-between gap-2 rounded-lg border bg-white p-2 text-xs md:h-11 md:min-w-[120px] md:rounded-xl md:px-3.5 md:py-2.5',
         className,
