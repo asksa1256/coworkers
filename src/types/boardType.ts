@@ -1,7 +1,7 @@
 interface Writer {
   id: number;
   nickname: string;
-  image?: string;
+  image: string | null;
 }
 
 export interface ArticleResponse {
