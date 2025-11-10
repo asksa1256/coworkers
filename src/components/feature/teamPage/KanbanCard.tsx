@@ -1,5 +1,4 @@
 import { taskMutations } from '@/api/mutations';
-import KebabIcon from '@/assets/icons/KebabIcon.svg?react';
 import CircularProgressbar from '@/components/ui/CircularProgressbar';
 import TaskCheckbox from '@/components/ui/TaskCheckbox';
 import { cn } from '@/lib/utils';
@@ -9,6 +8,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import TaskListDropdown from './taskListDropdown';
 
 interface Props {
   taskList: TaskListsResponse;
@@ -42,51 +42,56 @@ export default function KanbanCard({ taskList, tab, onDragStart }: Props) {
       data-display-index={taskList.displayIndex}
       onDragStart={handleDragStart}
       onDragEnd={() => setIsDragging(false)}
+      className={cn(
+        'card-common relative block cursor-grab px-4 py-5',
+        isDragging && 'border-primary opacity-50',
+      )}
     >
-      <Link
-        className={cn(
-          'card-common relative block px-4 py-5',
-          isDragging && 'border-primary opacity-50',
-        )}
-        to={`/${groupId}/details/${taskList.id}`}
+      <div
+        className={clsx('flex items-center justify-between', {
+          'mb-4': taskList.tasks.length,
+        })}
       >
-        <div
-          className={clsx('flex items-center justify-between', {
-            'mb-4': taskList.tasks.length,
-          })}
+        <Link
+          to={`/${groupId}/details/${taskList.id}`}
+          className='text-md grow-1 font-semibold'
         >
-          <h4 className='text-md font-semibold'>{taskList.name}</h4>
-          <div className='flex items-center'>
-            <CircularProgressbar
-              className='px-2'
-              todosCount={taskList.tasks.length}
-              doneCount={countDone(taskList.tasks)}
-            />
-            <KebabIcon className='hover:text-icon-primary text-icon-secondary h-6 w-6' />
-          </div>
+          {taskList.name}
+        </Link>
+        <div className='flex items-center'>
+          <CircularProgressbar
+            className='px-2'
+            todosCount={taskList.tasks.length}
+            doneCount={countDone(taskList.tasks)}
+          />
+          <TaskListDropdown
+            groupId={groupId}
+            taskListId={taskList.id}
+            taskListName={taskList.name}
+          />
         </div>
-        <div className='flex flex-col gap-2'>
-          {taskList.tasks.map(task => (
-            <TaskCheckbox
-              key={task.id}
-              taskId={task.id}
-              isDone={!!task.doneAt}
-              onChange={() => {
-                taskDoneMutation.mutate({
-                  taskId: task.id,
-                  payload: {
-                    name: task.name,
-                    description: task.description,
-                    done: !task.doneAt,
-                  },
-                });
-              }}
-            >
-              {task.name}
-            </TaskCheckbox>
-          ))}
-        </div>
-      </Link>
+      </div>
+      <div className='flex flex-col gap-2'>
+        {taskList.tasks.map(task => (
+          <TaskCheckbox
+            key={task.id}
+            taskId={task.id}
+            isDone={!!task.doneAt}
+            onChange={() => {
+              taskDoneMutation.mutate({
+                taskId: task.id,
+                payload: {
+                  name: task.name,
+                  description: task.description,
+                  done: !task.doneAt,
+                },
+              });
+            }}
+          >
+            {task.name}
+          </TaskCheckbox>
+        ))}
+      </div>
     </li>
   );
 }
