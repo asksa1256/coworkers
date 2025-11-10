@@ -3,6 +3,8 @@ import {
   getArticleComments,
   getArticles,
   getGroup,
+  getSingleTaskList,
+  getTasks,
 } from '@/api/api';
 import axiosInstance from '@/lib/axios';
 import type { GroupType, UserType } from '@/types/userType';
@@ -17,7 +19,7 @@ export const groupQueries = {
     }),
 
   // 그룹 리스트
-  groups: (user: UserType | null) => ['userGroups', user?.id],
+  groups: (user: UserType | null) => ['groups', user?.id],
   groupsOptions: (user: UserType | null) =>
     queryOptions({
       queryKey: [...groupQueries.groups(user)],
@@ -71,5 +73,65 @@ export const boardQueries = {
       getNextPageParam: lastPage => {
         return lastPage.nextCursor ?? undefined;
       },
+    }),
+};
+
+export const taskListQueries = {
+  singleTaskList: (groupId?: string, taskListId?: string, date?: Date) => [
+    'singleTaskList',
+    groupId,
+    taskListId,
+    date?.toDateString(),
+  ],
+  singleTaskListOptions: (groupId?: string, taskListId?: string, date?: Date) =>
+    queryOptions({
+      queryKey: [...taskListQueries.singleTaskList(groupId, taskListId, date)],
+      queryFn: () => getSingleTaskList(groupId!, taskListId!, date!),
+      enabled: !!groupId && !!taskListId,
+    }),
+};
+
+export const taskQueries = {
+  tasks: (groupId?: string, taskListId?: string, date?: Date) => [
+    'tasks',
+    groupId,
+    taskListId,
+    date?.toDateString(),
+  ],
+  tasksOptions: (groupId?: string, taskListId?: string, date?: Date) =>
+    queryOptions({
+      queryKey: [...taskQueries.tasks(groupId, taskListId, date)],
+      queryFn: () => getTasks(groupId!, taskListId!, date!),
+      enabled: !!groupId && !!taskListId,
+    }),
+};
+
+export const taskListQueries = {
+  singleTaskList: (groupId?: string, taskListId?: string, date?: Date) => [
+    'singleTaskList',
+    groupId,
+    taskListId,
+    date?.toDateString(),
+  ],
+  singleTaskListOptions: (groupId?: string, taskListId?: string, date?: Date) =>
+    queryOptions({
+      queryKey: [...taskListQueries.singleTaskList(groupId, taskListId, date)],
+      queryFn: () => getSingleTaskList(groupId!, taskListId!, date!),
+      enabled: !!groupId && !!taskListId,
+    }),
+};
+
+export const taskQueries = {
+  tasks: (groupId?: string, taskListId?: string, date?: Date) => [
+    'tasks',
+    groupId,
+    taskListId,
+    date?.toDateString(),
+  ],
+  tasksOptions: (groupId?: string, taskListId?: string, date?: Date) =>
+    queryOptions({
+      queryKey: [...taskQueries.tasks(groupId, taskListId, date)],
+      queryFn: () => getTasks(groupId!, taskListId!, date!),
+      enabled: !!groupId && !!taskListId,
     }),
 };

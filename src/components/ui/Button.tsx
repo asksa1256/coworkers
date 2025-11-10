@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
-const buttonVariants = cva(
+export const buttonVariants = cva(
   `inline-flex items-center justify-center w-full gap-2 whitespace-nowrap text-sm font-medium transition-all outline-none 
 
   disabled:pointer-events-none disabled:bg-primary-inactive

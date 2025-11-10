@@ -19,3 +19,11 @@ export const MODIFY_DELETE_DROPDOWN_MAP = [
   { label: '수정하기', onClick: () => console.log('수정하기') },
   { label: '삭제하기', onClick: () => console.log('삭제하기') },
 ];
+export const WEEK_DAYS = ['월', '화', '수', '목', '금', '토', '일'];
+
+export const FREQUENCY_TO_TEXT = {
+  ONCE: '한 번만',
+  DAILY: '매일 반복',
+  WEEKLY: '매주 반복',
+  MONTHLY: '매월 반복',
+};

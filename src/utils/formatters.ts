@@ -29,3 +29,7 @@ export const formatRelativeTime = (targetDate: string) => {
   }
   return '방금 전';
 };
+
+export const padZero = (num: number | string) => {
+  return String(num).padStart(2, '0');
+};
