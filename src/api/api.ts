@@ -138,6 +138,18 @@ export const createGroup = async (
   return data;
 };
 
+export const updateGroup = async (
+  groupId: number,
+  payload: TeamFormDataType,
+) => {
+  try {
+    await axiosInstance.patch(`/groups/${groupId}`, payload);
+  } catch (e) {
+    console.log('팀 정보 수정 에러:', e);
+    throw e;
+  }
+};
+
 export const createInviteToken = async (groupId: string): Promise<string> => {
   const { data: token } = await axiosInstance.get(
     `/groups/${groupId}/invitation`,

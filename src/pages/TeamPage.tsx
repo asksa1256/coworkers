@@ -1,7 +1,7 @@
 import { getGroupMembership } from '@/api/api';
 import { groupQueries } from '@/api/queries';
-import ConfigIcon from '@/assets/icons/ConfigIcon.svg?react';
 import AvatarGroup from '@/components/feature/teamPage/AvatarGroup';
+import GroupConfigDropdown from '@/components/feature/teamPage/GroupConfigDropDown';
 import MemberListCard from '@/components/feature/teamPage/MemberListCard';
 import ReportCard from '@/components/feature/teamPage/ReportCard';
 import TaskKanbanBoard from '@/components/feature/teamPage/TaskKanbanBoard';
@@ -77,7 +77,7 @@ export default function TeamPage() {
               />
             </div>
           </div>
-          <ConfigIcon className={clsx('w-5 md:w-6', { hidden: !isAdmin })} />
+          <GroupConfigDropdown groupId={groupId} isAdmin={isAdmin} />
         </GroupTitleBar>
 
         {isAdmin && (

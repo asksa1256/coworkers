@@ -9,6 +9,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
 import type { ChangeEvent } from 'react';
 import { useForm } from 'react-hook-form';
+import { useParams } from 'react-router-dom';
 
 export interface TeamFormDataType {
   image?: string | null;
@@ -35,6 +36,7 @@ export default function TeamForm({ initialData, onSubmit }: Props) {
       name: initialData?.name || '',
     },
   });
+  const { groupId: currentGroupId } = useParams();
   const { handleUploadImage } = useUploadImage();
   const user = useAtomValue(userAtom);
   const { data: userGroups } = useQuery(groupQueries.groupsOptions(user));
@@ -56,9 +58,13 @@ export default function TeamForm({ initialData, onSubmit }: Props) {
   const handleSubmitForm = (formData: TeamFormDataType) => {
     if (imgSrc === null) delete formData.image;
 
-    // 이름 중복 처리
+    // 이름 중복 처리, 수정 모드에서는 현재 그룹의 이름을 중복 검사 대상에서 제외
     const { name } = formData;
-    const hasDuplicateName = userGroups.some(group => group.name === name);
+    const hasDuplicateName = userGroups.some(group => {
+      if (group.id === Number(currentGroupId)) return false;
+
+      return group.name === name;
+    });
     if (hasDuplicateName) {
       setError('name', {
         message: '이미 존재하는 이름입니다.',
