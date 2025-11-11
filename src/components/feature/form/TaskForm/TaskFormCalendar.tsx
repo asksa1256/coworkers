@@ -32,7 +32,7 @@ export default function TaskFormCalendar({
         value={formatDate(value)}
         readOnly
         disabled={disabled}
-        className={cn(isCalendarOpen && '[&_input]:border-primary-hover')}
+        className={cn({ isCalendarOpen: '[&_input]:border-primary-hover' })}
       />
       {isCalendarOpen && (
         <div className='border-primary-hover mt-2 w-full rounded-xl border px-11 py-4'>
