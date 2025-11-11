@@ -1,5 +1,6 @@
 import { Calendar } from '@/components/ui/calendar';
 import InputField from '@/components/ui/Input/InputField';
+import { cn } from '@/lib/utils';
 import { formatDate } from '@/utils/dateUtils';
 import { useState } from 'react';
 
@@ -31,6 +32,7 @@ export default function TaskFormCalendar({
         value={formatDate(value)}
         readOnly
         disabled={disabled}
+        className={cn(isCalendarOpen && '[&_input]:border-primary-hover')}
       />
       {isCalendarOpen && (
         <div className='border-primary-hover mt-2 w-full rounded-xl border px-11 py-4'>
