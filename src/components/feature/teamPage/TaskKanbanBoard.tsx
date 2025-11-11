@@ -6,9 +6,9 @@ import changeListOrder from '@/utils/changeListOrder';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import AddTaskListForm from './AddTaskListForm';
 import KanbanCardList from './KanbanCardList';
 import KanbanTab from './KanbanTab';
+import TaskListForm from './TaskListForm';
 
 interface Props {
   taskLists: TaskListsResponse[];
@@ -108,11 +108,11 @@ export default function TaskKanbanBoard({ taskLists }: Props) {
     if (confirmedTargetIndex.current === null) return;
 
     const draggingTaskListId = Number(e.dataTransfer.getData(tab));
-    taskListsOrderMutation.mutate([
+    taskListsOrderMutation.mutate({
       groupId,
-      draggingTaskListId,
-      { displayIndex: confirmedTargetIndex.current },
-    ]);
+      taskListId: draggingTaskListId,
+      payload: { displayIndex: confirmedTargetIndex.current },
+    });
   };
 
   // drag이벤트가 실행중일 때 설정된 모든 상태 초기화
@@ -124,7 +124,7 @@ export default function TaskKanbanBoard({ taskLists }: Props) {
 
   const handleOpenAddTaskListModal = () => {
     openModal({
-      children: <AddTaskListForm groupId={groupId} />,
+      children: <TaskListForm groupId={groupId} />,
       closeIconButton: true,
     });
   };
@@ -169,7 +169,7 @@ export default function TaskKanbanBoard({ taskLists }: Props) {
       </div>
 
       {!taskLists.length && (
-        <div className='text-text-default text-md absolute top-[55%] hidden w-full text-center lg:block'>
+        <div className='text-text-default text-md absolute top-[55%] hidden h-60 w-full items-center justify-center text-center lg:flex'>
           아직 할 일 목록이 없어요.
         </div>
       )}

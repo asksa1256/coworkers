@@ -14,7 +14,7 @@ interface Props {
 }
 
 export default function TaskSectionLIstItem({ task, onChangeDone }: Props) {
-  const { id, name, doneAt, commentCount, updatedAt, frequency } = task;
+  const { id, name, doneAt, commentCount, date, frequency } = task;
   const isRepeat = frequency !== 'ONCE';
 
   return (
@@ -62,7 +62,7 @@ export default function TaskSectionLIstItem({ task, onChangeDone }: Props) {
         <div className='text-text-default mt-2.5 flex items-center gap-3 text-xs'>
           <span className='inline-flex items-center gap-1.5'>
             <CalendarIcon />
-            {formatDate(new Date(updatedAt))}
+            {formatDate(new Date(date))}
           </span>
 
           {isRepeat && (

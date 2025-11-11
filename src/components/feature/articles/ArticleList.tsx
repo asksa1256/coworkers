@@ -107,7 +107,9 @@ export default function ArticleList() {
 
       <ol className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
         {allData?.map(article => (
-          <ArticleCard key={article.id} article={article} />
+          <li key={article.id}>
+            <ArticleCard article={article} />
+          </li>
         ))}
       </ol>
 

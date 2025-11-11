@@ -1,13 +1,20 @@
 import type { TeamFormDataType } from '@/components/feature/form/TeamForm';
 import axiosInstance from '@/lib/axios';
 import type {
+  ArticleCommentsResponse,
+  ArticleDetailResponse,
+  ArticleListResponse,
+} from '@/types/boardType';
+import type {
   CreateGroupResponse,
   GroupDetailResponse,
   JoinGroupPayload,
   JoinGroupResponse,
 } from '@/types/groupType';
+import type { TaskListSchema } from '@/types/taskListSchema';
 import type {
   TaskDetailResponse,
+  TaskListOrderRequestBody,
   TaskListsResponse,
   TaskUpdateRequestBody,
 } from '@/types/taskType';
@@ -40,12 +47,19 @@ export const getGroupMembership = async <T = Omit<MembershipsType, 'group'>>(
   }
 };
 
+export const deleteGroupMember = async (groupId: number, userId: number) => {
+  try {
+    await axiosInstance.delete(`/groups/${groupId}/member/${userId}`);
+  } catch (e) {
+    console.log('그룹에서 멤버 제외 에러: ', e);
+    throw e;
+  }
+};
+
 export const updateTaskListOrder = async (
   groupId: number,
   taskListId: number,
-  payload: {
-    displayIndex: number;
-  },
+  payload: TaskListOrderRequestBody,
 ) => {
   try {
     await axiosInstance.patch(
@@ -73,14 +87,36 @@ export const updateTask = async (
   }
 };
 
-export const addTaskList = async (
-  groupId: number,
-  payload: { name: string },
-) => {
+export const addTaskList = async (groupId: number, payload: TaskListSchema) => {
   try {
     await axiosInstance.post(`groups/${groupId}/task-lists`, payload);
   } catch (e) {
     console.log('태스크 리스트 추가 실패:', e);
+    throw e;
+  }
+};
+
+export const updateTaskList = async (
+  groupId: number,
+  taskListId: number,
+  payload: TaskListSchema,
+) => {
+  try {
+    await axiosInstance.patch(
+      `groups/${groupId}/task-lists/${taskListId}`,
+      payload,
+    );
+  } catch (e) {
+    console.log('태스크 리스트 변경 실패:', e);
+    throw e;
+  }
+};
+
+export const deleteTaskList = async (taskListId: number) => {
+  try {
+    await axiosInstance.delete(`groups/{groupId}/task-lists/${taskListId}`);
+  } catch (e) {
+    console.log('태스크 리스트 삭제 실패:', e);
     throw e;
   }
 };
@@ -119,7 +155,7 @@ export const getArticles = async ({
   pageParam,
   sort,
   searchValue,
-}: getArticlesProps) => {
+}: getArticlesProps): Promise<ArticleListResponse> => {
   try {
     const response = await axiosInstance(
       `/articles?page=${pageParam}&orderBy=${sort}&keyword=${searchValue}`,
@@ -132,12 +168,58 @@ export const getArticles = async ({
 };
 
 // 게시글 불러오기
-export const getArticle = async (id: number) => {
+export const getArticle = async (
+  id: number,
+): Promise<ArticleDetailResponse> => {
   try {
     const response = await axiosInstance(`/articles/${id}`);
     return response.data;
   } catch (e) {
     console.log('게시글 불러오기 에러: ', e);
+    throw e;
+  }
+};
+
+// 게시글 댓글 목록 불러오기
+export const getArticleComments = async (
+  articleId: number,
+  cursor?: number | null,
+): Promise<ArticleCommentsResponse> => {
+  try {
+    const response = await axiosInstance(
+      `/articles/${articleId}/comments?limit=5${cursor ? `&cursor=${cursor}` : ''}`,
+    );
+    return response.data;
+  } catch (e) {
+    console.log('댓글 불러오기 에러: ', e);
+    throw e;
+  }
+};
+
+// 게시글 좋아요 추가
+export const likeArticle = async (
+  articleId: number,
+): Promise<ArticleDetailResponse> => {
+  try {
+    const response = await axiosInstance.post(`/articles/${articleId}/like`, {
+      articleId,
+    });
+    return response.data;
+  } catch (e) {
+    console.log('좋아요 추가 에러: ', e);
+    throw e;
+  }
+};
+
+// 게시글 좋아요 취소
+export const unlikeArticle = async (
+  articleId: number,
+): Promise<ArticleDetailResponse> => {
+  try {
+    const response = await axiosInstance.delete(`/articles/${articleId}/like`);
+    return response.data;
+  } catch (e) {
+    console.log('좋아요 취소 에러: ', e);
     throw e;
   }
 };

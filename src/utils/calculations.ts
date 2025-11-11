@@ -45,3 +45,7 @@ export const calcMouseLocation = (e: React.DragEvent, ref: Element) => {
   const currentY = e.clientY - rect.top;
   return currentY <= centerY ? 'top' : 'bottom';
 };
+
+export const countLike = (likes: number) => {
+  return likes > 99 ? '99+' : likes;
+};
