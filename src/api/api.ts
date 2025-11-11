@@ -180,6 +180,50 @@ export const getArticle = async (
   }
 };
 
+// 게시글 댓글 목록 불러오기
+export const getArticleComments = async (
+  articleId: number,
+  cursor?: number | null,
+): Promise<ArticleCommentsResponse> => {
+  try {
+    const response = await axiosInstance(
+      `/articles/${articleId}/comments?limit=5${cursor ? `&cursor=${cursor}` : ''}`,
+    );
+    return response.data;
+  } catch (e) {
+    console.log('댓글 불러오기 에러: ', e);
+    throw e;
+  }
+};
+
+// 게시글 좋아요 추가
+export const likeArticle = async (
+  articleId: number,
+): Promise<ArticleDetailResponse> => {
+  try {
+    const response = await axiosInstance.post(`/articles/${articleId}/like`, {
+      articleId,
+    });
+    return response.data;
+  } catch (e) {
+    console.log('좋아요 추가 에러: ', e);
+    throw e;
+  }
+};
+
+// 게시글 좋아요 취소
+export const unlikeArticle = async (
+  articleId: number,
+): Promise<ArticleDetailResponse> => {
+  try {
+    const response = await axiosInstance.delete(`/articles/${articleId}/like`);
+    return response.data;
+  } catch (e) {
+    console.log('좋아요 취소 에러: ', e);
+    throw e;
+  }
+};
+
 // TaskLists/${id} 불러오기
 export const getSingleTaskList = async (
   groupId: string,
@@ -202,20 +246,4 @@ export const getTasks = async (
     `/groups/${groupId}/task-lists/${taskListId}/tasks?date=${date}`,
   );
   return data;
-};
-
-// 게시글 댓글 목록 불러오기
-export const getArticleComments = async (
-  articleId: number,
-  cursor?: number | null,
-): Promise<ArticleCommentsResponse> => {
-  try {
-    const response = await axiosInstance(
-      `/articles/${articleId}/comments?limit=5${cursor ? `&cursor=${cursor}` : ''}`,
-    );
-    return response.data;
-  } catch (e) {
-    console.log('게시글 불러오기 에러: ', e);
-    throw e;
-  }
 };
