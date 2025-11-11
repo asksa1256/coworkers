@@ -2,13 +2,17 @@ import GnbPlusIcon from '@/assets/icons/GnbPlusIcon.svg?react';
 import TaskForm from '@/components/feature/form/TaskForm';
 import Button from '@/components/ui/Button';
 import useModal from '@/hooks/useModal';
+import type { TaskFormSchema } from '@/types/taskFormSchema';
 
 export default function CreateTaskButton() {
   const { openModal } = useModal();
 
+  const handleCreateTask = (formData: TaskFormSchema) => {
+    console.log(formData);
+  };
   const handleClickCreateTaskModalOpen = () => {
     openModal({
-      children: () => <TaskForm />,
+      children: () => <TaskForm onSubmit={handleCreateTask} />,
       className: 'px-4 py-9 md:px-6',
     });
   };

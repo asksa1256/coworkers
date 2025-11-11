@@ -1,10 +1,20 @@
-import TaskCalendar from '@/components/feature/form/TaskForm/TaskCalendar';
-import TaskRepeat from '@/components/feature/form/TaskForm/TaskRepeat';
+import TaskFormCalendar from '@/components/feature/form/TaskForm/TaskFormCalendar';
+import TaskFormWeek from '@/components/feature/form/TaskForm/TaskFormWeek';
 import Button from '@/components/ui/Button';
+import Dropdown from '@/components/ui/Dropdown';
 import InputField from '@/components/ui/Input/InputField';
 import { Label } from '@/components/ui/Label';
 import Modal from '@/components/ui/Modal';
 import TextareaField from '@/components/ui/Textarea/TextareaField';
+import {
+  taskFormSchema,
+  type MonthlyTaskFormSchema,
+  type TaskFormSchema,
+  type WeeklyTaskFormSchema,
+} from '@/types/taskFormSchema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 
 const FREQUENCY_DROPDOWN = [
   { label: '한 번', value: 'ONCE' },
@@ -13,11 +23,74 @@ const FREQUENCY_DROPDOWN = [
   { label: '매월 반복', value: 'MONTHLY' },
 ];
 
-export default function TaskForm() {
+interface Props {
+  initialData?: TaskFormSchema;
+  onSubmit: (formData: TaskFormSchema) => void;
+}
+
+export default function TaskForm({ initialData, onSubmit }: Props) {
+  const {
+    register,
+    control,
+    watch,
+    setValue,
+    getValues,
+    handleSubmit,
+    formState: { errors, isSubmitting, isValid, isDirty },
+  } = useForm<TaskFormSchema>({
+    resolver: zodResolver(taskFormSchema),
+    mode: 'onChange',
+    defaultValues: {
+      name: initialData?.name || '',
+      description: initialData?.description || '',
+      startDate: initialData?.startDate || new Date(),
+      frequencyType: initialData?.frequencyType || 'ONCE',
+    },
+  });
+
+  const frequencyType = watch('frequencyType');
+
+  const isWeekly = frequencyType === 'WEEKLY';
+  const isMonthly = frequencyType === 'MONTHLY';
+
+  const handleSubmitTaskForm = (formData: TaskFormSchema) => {
+    onSubmit(formData);
+  };
+
+  const handleFrequencyMonthly = (date?: Date) => {
+    const startDate = date || getValues('startDate') || new Date();
+    setValue('monthDay', startDate.getDate(), {
+      shouldDirty: true,
+    });
+  };
+
+  useEffect(() => {
+    if (isWeekly) {
+      const initialWeeklyData = initialData as WeeklyTaskFormSchema;
+      setValue('weekDays', initialWeeklyData?.weekDays || [], {
+        shouldDirty: false,
+      });
+    }
+
+    if (isMonthly) {
+      const initialMonthlyData = initialData as MonthlyTaskFormSchema;
+      setValue(
+        'monthDay',
+        initialMonthlyData?.monthDay || new Date().getDate(),
+        {
+          shouldDirty: false,
+        },
+      );
+    }
+  }, [frequencyType]);
+
   return (
     <>
-      <Modal.Body>
-        <form>
+      <form
+        onSubmit={handleSubmit(handleSubmitTaskForm)}
+        className='flex grow-1 flex-col overflow-hidden'
+      >
+        <Modal.Body>
           <div className='mb-6 text-center font-medium'>
             <h2 className='mb-4'>할 일 만들기</h2>
             <p className='text-md text-text-default'>
@@ -29,23 +102,71 @@ export default function TaskForm() {
             <Label className='mb-4 font-medium'>할 일 제목</Label>
             <InputField
               type='text'
-              id='name'
               placeholder='할 일 제목을 입력해주세요.'
+              {...register('name')}
+              error={errors.name}
             />
           </div>
 
           <div className='mt-6'>
-            <Label className='mb-4 font-medium'>시작 날짜 및 시간</Label>
-            <TaskCalendar value={new Date()} onChange={() => {}} />
+            <Label className='mb-4 font-medium'>시작 날짜</Label>
+            <Controller
+              name='startDate'
+              control={control}
+              render={({ field: { onChange, value } }) => {
+                const handleChange = (date: Date | undefined) => {
+                  if (isMonthly) handleFrequencyMonthly(date);
+                  onChange(date);
+                };
+                return (
+                  <TaskFormCalendar value={value} onChange={handleChange} />
+                );
+              }}
+            />
           </div>
 
           <div className='mt-6'>
             <Label className='mb-4 font-medium'>반복 설정</Label>
-            <TaskRepeat
-              value={FREQUENCY_DROPDOWN[0].value}
-              onChange={(value: string) => console.log(value)}
-              menuItems={FREQUENCY_DROPDOWN}
+            <Controller
+              name='frequencyType'
+              control={control}
+              render={({ field: { onChange, value } }) => {
+                const handleSelect = (v: string) => {
+                  if (v === 'MONTHLY') handleFrequencyMonthly();
+                  onChange(v);
+                };
+                return (
+                  <Dropdown
+                    type='select'
+                    menuItems={FREQUENCY_DROPDOWN}
+                    value={value}
+                    onSelect={handleSelect}
+                  />
+                );
+              }}
             />
+            {isWeekly && (
+              <div className='mt-4'>
+                <Label className='mb-4 font-medium'>반복 요일</Label>
+                <Controller
+                  control={control}
+                  name='weekDays'
+                  render={({ field: { value = [], onChange } }) => (
+                    <TaskFormWeek
+                      value={value}
+                      onChange={onChange}
+                      errors={errors}
+                    />
+                  )}
+                />
+              </div>
+            )}
+            {isMonthly && (
+              <p className='text-md text-text-default mt-2'>
+                시작 날짜의 일자를 기준으로 반복 됩니다. <br />
+                ex) 11월 11일 → 12월 11일
+              </p>
+            )}
           </div>
 
           <div className='mt-6'>
@@ -54,13 +175,16 @@ export default function TaskForm() {
               id='description'
               placeholder='메모를 입력해주세요.'
               className='[&_textarea]:min-w-auto'
+              {...register('description')}
             />
           </div>
-        </form>
-      </Modal.Body>
-      <Modal.Foot>
-        <Button>만들기</Button>
-      </Modal.Foot>
+        </Modal.Body>
+        <Modal.Foot>
+          <Button disabled={!isValid || isSubmitting || !isDirty}>
+            만들기
+          </Button>
+        </Modal.Foot>
+      </form>
     </>
   );
 }
