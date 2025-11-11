@@ -11,6 +11,7 @@ import type {
   JoinGroupPayload,
   JoinGroupResponse,
 } from '@/types/groupType';
+import type { TaskListSchema } from '@/types/taskListSchema';
 import type {
   TaskDetailResponse,
   TaskListOrderRequestBody,
@@ -86,14 +87,36 @@ export const updateTask = async (
   }
 };
 
-export const addTaskList = async (
-  groupId: number,
-  payload: { name: string },
-) => {
+export const addTaskList = async (groupId: number, payload: TaskListSchema) => {
   try {
     await axiosInstance.post(`groups/${groupId}/task-lists`, payload);
   } catch (e) {
     console.log('태스크 리스트 추가 실패:', e);
+    throw e;
+  }
+};
+
+export const updateTaskList = async (
+  groupId: number,
+  taskListId: number,
+  payload: TaskListSchema,
+) => {
+  try {
+    await axiosInstance.patch(
+      `groups/${groupId}/task-lists/${taskListId}`,
+      payload,
+    );
+  } catch (e) {
+    console.log('태스크 리스트 변경 실패:', e);
+    throw e;
+  }
+};
+
+export const deleteTaskList = async (taskListId: number) => {
+  try {
+    await axiosInstance.delete(`groups/{groupId}/task-lists/${taskListId}`);
+  } catch (e) {
+    console.log('태스크 리스트 삭제 실패:', e);
     throw e;
   }
 };

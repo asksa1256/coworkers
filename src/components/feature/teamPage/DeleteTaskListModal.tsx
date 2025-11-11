@@ -1,21 +1,26 @@
-import { groupMutations } from '@/api/mutations';
+import { taskListMutations } from '@/api/mutations';
 import AlertIcon from '@/assets/icons/AlertIcon.svg?react';
 import Button from '@/components/ui/Button';
 import useModal from '@/hooks/useModal';
-import type { MemberType } from '@/types/userType';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface Props {
-  member: MemberType;
+  groupId: number;
+  taskListId: number;
+  taskListName: string;
 }
 
-export default function ExcludeGroupMemberModal({ member }: Props) {
+export default function DeleteTaskListModal({
+  groupId,
+  taskListId,
+  taskListName,
+}: Props) {
   const { closeModal } = useModal();
   const queryClient = useQueryClient();
-  const excludeGroupMemberMutation = useMutation(
-    groupMutations.excludeGroupMemberOptions(
-      member.groupId,
-      member.userName,
+  const deleteTaskListMutation = useMutation(
+    taskListMutations.deleteTaskListOptions(
+      groupId,
+      taskListId,
       queryClient,
       closeModal,
     ),
@@ -24,12 +29,9 @@ export default function ExcludeGroupMemberModal({ member }: Props) {
   return (
     <div className='text-center'>
       <AlertIcon className='mb-4 inline' />
-      <p className='mb-2 font-medium whitespace-pre-line'>
-        <strong>{member.userName}</strong>
-        {`님을\n정말 팀에서 제외하시겠어요?`}
-      </p>
-      <p className='text-text-secondary text-md mb-6 font-medium'>
-        이 작업은 되돌릴 수 없습니다.
+      <p className='mb-6 font-medium whitespace-pre-line'>
+        <strong>{taskListName}</strong>
+        {`을(를)\n정말 삭제하시겠어요?`}
       </p>
       <div className='flex gap-2'>
         <Button
@@ -44,15 +46,10 @@ export default function ExcludeGroupMemberModal({ member }: Props) {
         <Button
           className='shrink-1'
           variant='danger'
-          onClick={() =>
-            excludeGroupMemberMutation.mutate({
-              groupId: member.groupId,
-              userId: member.userId,
-            })
-          }
-          disabled={excludeGroupMemberMutation.isPending}
+          onClick={() => deleteTaskListMutation.mutate(taskListId)}
+          disabled={deleteTaskListMutation.isPending}
         >
-          {excludeGroupMemberMutation.isPending ? '제외중...' : '멤버 제외'}
+          {deleteTaskListMutation.isPending ? '삭제중...' : '삭제'}
         </Button>
       </div>
     </div>

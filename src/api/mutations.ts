@@ -1,6 +1,6 @@
-import type { AddTaskListSchema } from '@/types/addTaskListSchema';
 import type { ArticleDetailResponse } from '@/types/boardType';
 import type { GroupDetailResponse } from '@/types/groupType';
+import type { TaskListSchema } from '@/types/taskListSchema';
 import type {
   TaskDetailResponse,
   TaskListOrderRequestBody,
@@ -16,9 +16,11 @@ import { toast } from 'sonner';
 import {
   addTaskList,
   deleteGroupMember,
+  deleteTaskList,
   likeArticle,
   unlikeArticle,
   updateTask,
+  updateTaskList,
   updateTaskListOrder,
 } from './api';
 import {
@@ -33,14 +35,12 @@ export const taskListMutations = {
   addTaskListOptions: (
     groupId: number,
     queryClient: QueryClient,
-    formReset: UseFormReset<AddTaskListSchema>,
-    formSetError: UseFormSetError<AddTaskListSchema>,
+    formReset: UseFormReset<TaskListSchema>,
+    formSetError: UseFormSetError<TaskListSchema>,
   ) =>
     mutationOptions({
-      mutationFn: (variables: {
-        groupId: number;
-        payload: AddTaskListSchema;
-      }) => addTaskList(variables.groupId, variables.payload),
+      mutationFn: (variables: { groupId: number; payload: TaskListSchema }) =>
+        addTaskList(variables.groupId, variables.payload),
       onSuccess: () => {
         formReset();
         toast.success('새 할 일 목록이 추가되었습니다.');
@@ -57,6 +57,67 @@ export const taskListMutations = {
         } else {
           toast.error('목록 생성 실패. 다시 시도해주세요.');
         }
+        throw error;
+      },
+    }),
+
+  //할 일 목록 이름 변경
+  updateTaskListOptions: (
+    groupId: number,
+    taskListId: number,
+    queryClient: QueryClient,
+    formSetError: UseFormSetError<TaskListSchema>,
+    closeModal?: () => void,
+  ) =>
+    mutationOptions({
+      mutationFn: (variables: {
+        groupId: number;
+        taskListId: number;
+        payload: TaskListSchema;
+      }) =>
+        updateTaskList(
+          variables.groupId,
+          variables.taskListId,
+          variables.payload,
+        ),
+      onSuccess: () => {
+        toast.success('할 일 목록명을 변경했습니다.');
+        queryClient.invalidateQueries({
+          queryKey: groupQueries.group(groupId),
+        });
+        if (closeModal) closeModal();
+      },
+      onError: error => {
+        if (isAxiosError(error) && error.response?.status === 409) {
+          formSetError('name', {
+            type: 'duplicate',
+            message: error.response.data.message,
+          });
+        } else {
+          toast.error('목록명 수정 실패. 다시 시도해주세요.');
+        }
+        throw error;
+      },
+    }),
+
+  //할 일 목록 삭제
+  deleteTaskListOptions: (
+    groupId: number,
+    taskListId: number,
+    queryClient: QueryClient,
+    closeModal?: () => void,
+  ) =>
+    mutationOptions({
+      mutationFn: (taskListId: number) => deleteTaskList(taskListId),
+      onSuccess: () => {
+        toast.success('할 일 목록을 삭제했습니다.');
+        queryClient.invalidateQueries({
+          queryKey: groupQueries.group(groupId),
+        });
+        if (closeModal) closeModal();
+      },
+      onError: error => {
+        toast.error('목록명 수정 실패. 다시 시도해주세요.');
         throw error;
       },
     }),

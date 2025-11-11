@@ -6,9 +6,9 @@ import changeListOrder from '@/utils/changeListOrder';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import AddTaskListForm from './AddTaskListForm';
 import KanbanCardList from './KanbanCardList';
 import KanbanTab from './KanbanTab';
+import TaskListForm from './TaskListForm';
 
 interface Props {
   taskLists: TaskListsResponse[];
@@ -124,7 +124,7 @@ export default function TaskKanbanBoard({ taskLists }: Props) {
 
   const handleOpenAddTaskListModal = () => {
     openModal({
-      children: <AddTaskListForm groupId={groupId} />,
+      children: <TaskListForm groupId={groupId} />,
       closeIconButton: true,
     });
   };
