@@ -358,14 +358,10 @@ export const likeMutations = {
           old => {
             if (!old) return old;
 
-            const newLikeCount = old.isLiked
-              ? old.likeCount - 1
-              : old.likeCount + 1;
-
             return {
               ...old,
-              likeCount: newLikeCount,
-              isActive: !old.isLiked,
+              likeCount: old.likeCount + 1,
+              isLiked: true,
             };
           },
         );
@@ -434,9 +430,15 @@ export const likeMutations = {
       },
 
       onSettled: () => {
-        queryClient.invalidateQueries({
-          queryKey: boardQueries.article(articleId),
-        });
+        if (
+          queryClient.isMutating({
+            mutationKey: likeMutations.unlikeMutation(articleId),
+          }) === 1
+        ) {
+          queryClient.invalidateQueries({
+            queryKey: boardQueries.article(articleId),
+          });
+        }
       },
     }),
 };
