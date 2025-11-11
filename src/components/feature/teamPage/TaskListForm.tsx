@@ -2,7 +2,7 @@ import { taskListMutations } from '@/api/mutations';
 import Button from '@/components/ui/Button';
 import InputField from '@/components/ui/Input/InputField';
 import useModal from '@/hooks/useModal';
-import { taskListSchema, type TaskListSchema } from '@/types/addTaskListSchema';
+import { taskListSchema, type TaskListSchema } from '@/types/taskListSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm, type SubmitHandler } from 'react-hook-form';

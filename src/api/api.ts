@@ -1,6 +1,5 @@
 import type { TeamFormDataType } from '@/components/feature/form/TeamForm';
 import axiosInstance from '@/lib/axios';
-import type { TaskListSchema } from '@/types/addTaskListSchema';
 import type {
   ArticleCommentsResponse,
   ArticleDetailResponse,
@@ -12,6 +11,7 @@ import type {
   JoinGroupPayload,
   JoinGroupResponse,
 } from '@/types/groupType';
+import type { TaskListSchema } from '@/types/taskListSchema';
 import type {
   TaskDetailResponse,
   TaskListOrderRequestBody,

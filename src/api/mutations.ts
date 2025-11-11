@@ -1,5 +1,5 @@
-import type { TaskListSchema } from '@/types/addTaskListSchema';
 import type { GroupDetailResponse } from '@/types/groupType';
+import type { TaskListSchema } from '@/types/taskListSchema';
 import type {
   TaskDetailResponse,
   TaskListOrderRequestBody,
