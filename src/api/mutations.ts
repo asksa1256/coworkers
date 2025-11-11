@@ -430,15 +430,9 @@ export const likeMutations = {
       },
 
       onSettled: () => {
-        if (
-          queryClient.isMutating({
-            mutationKey: likeMutations.unlikeMutation(articleId),
-          }) === 1
-        ) {
-          queryClient.invalidateQueries({
-            queryKey: boardQueries.article(articleId),
-          });
-        }
+        queryClient.invalidateQueries({
+          queryKey: boardQueries.article(articleId),
+        });
       },
     }),
 };
