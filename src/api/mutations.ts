@@ -1,4 +1,5 @@
 import type { AddTaskListSchema } from '@/types/addTaskListSchema';
+import type { ArticleDetailResponse } from '@/types/boardType';
 import type { GroupDetailResponse } from '@/types/groupType';
 import type {
   TaskDetailResponse,
@@ -15,10 +16,17 @@ import { toast } from 'sonner';
 import {
   addTaskList,
   deleteGroupMember,
+  likeArticle,
+  unlikeArticle,
   updateTask,
   updateTaskListOrder,
 } from './api';
-import { groupQueries, taskListQueries, taskQueries } from './queries';
+import {
+  boardQueries,
+  groupQueries,
+  taskListQueries,
+  taskQueries,
+} from './queries';
 
 export const taskListMutations = {
   //할 일 목록 추가
@@ -319,6 +327,112 @@ export const groupMutations = {
           toast.error('멤버 제외 실패. 다시 시도해주세요.');
         }
         throw error;
+      },
+    }),
+};
+
+// 게시글 좋아요 뮤테이션
+export const likeMutations = {
+  // 좋아요 추가
+  likeMutation: (articleId: number) => ['article', articleId], // 게시글 상세 쿼리 키에 좋아요 데이터가 있으므로 해당 키 사용
+  likeMutationOptions: ({
+    articleId,
+    queryClient,
+  }: {
+    articleId: number;
+    queryClient: QueryClient;
+  }) =>
+    mutationOptions({
+      mutationFn: (articleId: number) => likeArticle(articleId),
+      onMutate: async () => {
+        await queryClient.cancelQueries({
+          queryKey: boardQueries.article(articleId),
+        });
+        const prevData = queryClient.getQueryData(
+          boardQueries.article(articleId),
+        );
+
+        // 캐시 업데이트
+        queryClient.setQueryData<ArticleDetailResponse>(
+          boardQueries.article(articleId),
+          old => {
+            if (!old) return old;
+
+            return {
+              ...old,
+              likeCount: old.likeCount + 1,
+              isLiked: true,
+            };
+          },
+        );
+
+        return { prevData }; // 실패 시 복구되도록 이전 데이터 반환
+      },
+
+      onError: (_err, _variables, context) => {
+        if (context?.prevData) {
+          queryClient.setQueryData(
+            boardQueries.article(articleId),
+            context.prevData,
+          );
+        }
+      },
+
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: boardQueries.article(articleId),
+        });
+      },
+    }),
+
+  // 좋아요 취소
+  unlikeMutation: (articleId: number) => ['article', articleId],
+  unlikeMutationOptions: ({
+    articleId,
+    queryClient,
+  }: {
+    articleId: number;
+    queryClient: QueryClient;
+  }) =>
+    mutationOptions({
+      mutationFn: (articleId: number) => unlikeArticle(articleId),
+      onMutate: async () => {
+        await queryClient.cancelQueries({
+          queryKey: boardQueries.article(articleId),
+        });
+        const prevData = queryClient.getQueryData(
+          boardQueries.article(articleId),
+        );
+
+        queryClient.setQueryData<ArticleDetailResponse>(
+          boardQueries.article(articleId),
+          old => {
+            if (!old) return old;
+
+            return {
+              ...old,
+              likeCount: old.likeCount - 1,
+              isLiked: false,
+            };
+          },
+        );
+
+        return { prevData };
+      },
+
+      onError: (_err, _variables, context) => {
+        if (context?.prevData) {
+          queryClient.setQueryData(
+            boardQueries.article(articleId),
+            context.prevData,
+          );
+        }
+      },
+
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: boardQueries.article(articleId),
+        });
       },
     }),
 };

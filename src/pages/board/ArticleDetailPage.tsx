@@ -93,16 +93,19 @@ export default function ArticleDetailPage() {
 
           {/* 좋아요 버튼 (mobile ~ tablet: 컨텐츠 내부) */}
           <div className='mt-4 md:mt-[28px]'>
-            <LikeButton likeCount={data.likeCount} />
+            <LikeButton likeCount={data.likeCount} isLiked={data.isLiked} />
           </div>
         </div>
 
         {/* 댓글 */}
-        <ArticleCommentList articleId={data.id} />
+        <ArticleCommentList
+          articleId={data.id}
+          commentCount={data.commentCount}
+        />
       </div>
 
       {/* 좋아요 버튼 (desktop: floating) */}
-      <LikeFloatingButton likeCount={data.likeCount} />
+      <LikeFloatingButton likeCount={data.likeCount} isLiked={data.isLiked} />
     </article>
   );
 }

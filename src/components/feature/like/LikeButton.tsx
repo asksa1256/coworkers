@@ -1,23 +1,59 @@
-import HeartIcon from '@/assets/icons/HeartIcon.svg?react';
+import { likeMutations } from '@/api/mutations';
+import HeartFilledIcon from '@/assets/icons/HeartFilledIcon.svg?react';
+import HeartSmallIcon from '@/assets/icons/HeartSmallIcon.svg?react';
 import Button from '@/components/ui/Button';
+import { countLike } from '@/utils/calculations';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useParams } from 'react-router-dom';
 
 interface LikeButtonProps {
   likeCount: number;
+  isLiked: boolean;
 }
 
-export default function LikeButton({ likeCount }: LikeButtonProps) {
+export default function LikeButton({ likeCount, isLiked }: LikeButtonProps) {
+  const queryClient = useQueryClient();
+  const { articleId } = useParams();
+
+  const { mutate: likeMutate } = useMutation(
+    likeMutations.likeMutationOptions({
+      articleId: Number(articleId),
+      queryClient,
+    }),
+  );
+
+  const { mutate: unlikeMutate } = useMutation(
+    likeMutations.unlikeMutationOptions({
+      articleId: Number(articleId),
+      queryClient,
+    }),
+  );
+
+  const handleLike = () => {
+    if (isLiked) {
+      unlikeMutate(Number(articleId));
+    } else {
+      likeMutate(Number(articleId));
+    }
+  };
+
   return (
     <div className='flex items-center justify-end gap-1 md:gap-2 lg:hidden'>
       <Button
         type='button'
         size='icon-sm'
         variant='ghost'
-        className='bg-transparent [&_svg]:!size-4 md:[&_svg]:!size-6'
+        className='group bg-transparent [&_svg]:!size-4 md:[&_svg]:!size-6'
+        onClick={handleLike}
       >
-        <HeartIcon className='text-text-default h-4 w-4 md:h-6 md:w-6' />
+        {isLiked ? (
+          <HeartFilledIcon className='text-primary' />
+        ) : (
+          <HeartSmallIcon className='text-text-default group-hover:text-primary transition-colors' />
+        )}
       </Button>
       <span className='text-text-default text-md md:text-base'>
-        {likeCount > 99 ? '99+' : likeCount}
+        {countLike(likeCount)}
       </span>
     </div>
   );
