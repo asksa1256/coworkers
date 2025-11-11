@@ -1,5 +1,5 @@
 import GnbPlusIcon from '@/assets/icons/GnbPlusIcon.svg?react';
-import AddTaskListForm from '@/components/feature/teamPage/AddTaskListForm';
+import TaskListForm from '@/components/feature/teamPage/TaskListForm';
 import Button from '@/components/ui/Button';
 import useModal from '@/hooks/useModal';
 
@@ -13,7 +13,7 @@ export default function CreateTaskGroupListButton({ groupId }: Props) {
   const handleCreateTaskGroup = () => {
     if (!groupId) return null;
     openModal({
-      children: <AddTaskListForm groupId={Number(groupId)} />,
+      children: <TaskListForm groupId={Number(groupId)} />,
       closeIconButton: true,
     });
   };
