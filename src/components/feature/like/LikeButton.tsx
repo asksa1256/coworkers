@@ -2,6 +2,7 @@ import { likeMutations } from '@/api/mutations';
 import HeartFilledIcon from '@/assets/icons/HeartFilledIcon.svg?react';
 import HeartSmallIcon from '@/assets/icons/HeartSmallIcon.svg?react';
 import Button from '@/components/ui/Button';
+import { countLike } from '@/utils/calculations';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 
@@ -36,8 +37,6 @@ export default function LikeButton({ likeCount, isLiked }: LikeButtonProps) {
     }
   };
 
-  const displayCount = likeCount > 99 ? '99+' : likeCount;
-
   return (
     <div className='flex items-center justify-end gap-1 md:gap-2 lg:hidden'>
       <Button
@@ -54,7 +53,7 @@ export default function LikeButton({ likeCount, isLiked }: LikeButtonProps) {
         )}
       </Button>
       <span className='text-text-default text-md md:text-base'>
-        {displayCount}
+        {countLike(likeCount)}
       </span>
     </div>
   );

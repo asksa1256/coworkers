@@ -2,6 +2,7 @@ import { likeMutations } from '@/api/mutations';
 import HeartFilledIcon from '@/assets/icons/HeartFilledIcon.svg?react';
 import HeartIcon from '@/assets/icons/HeartIcon.svg?react';
 import Button from '@/components/ui/Button';
+import { countLike } from '@/utils/calculations';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 
@@ -36,8 +37,6 @@ export default function LikeFloatingButton({ likeCount, isLiked }: Props) {
     }
   };
 
-  const displayCount = likeCount > 99 ? '99+' : likeCount;
-
   return (
     <div className='relative top-[50px] mt-[250px] hidden flex-col items-center gap-2 lg:sticky lg:flex'>
       <Button
@@ -54,7 +53,7 @@ export default function LikeFloatingButton({ likeCount, isLiked }: Props) {
           <HeartIcon className='text-text-default group-hover:text-primary transition-colors' />
         )}
       </Button>
-      <span className='text-text-default'>{displayCount}</span>
+      <span className='text-text-default'>{countLike(likeCount)}</span>
     </div>
   );
 }
