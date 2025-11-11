@@ -52,6 +52,7 @@ export default function TaskForm({ initialData, onSubmit }: Props) {
 
   const isWeekly = frequencyType === 'WEEKLY';
   const isMonthly = frequencyType === 'MONTHLY';
+  const isEditMode = !!initialData;
 
   const handleSubmitTaskForm = (formData: TaskFormSchema) => {
     onSubmit(formData);
@@ -82,7 +83,7 @@ export default function TaskForm({ initialData, onSubmit }: Props) {
         },
       );
     }
-  }, [frequencyType]);
+  }, [initialData, isWeekly, isMonthly, frequencyType, setValue]);
 
   return (
     <>
@@ -119,13 +120,17 @@ export default function TaskForm({ initialData, onSubmit }: Props) {
                   onChange(date);
                 };
                 return (
-                  <TaskFormCalendar value={value} onChange={handleChange} />
+                  <TaskFormCalendar
+                    value={value}
+                    onChange={handleChange}
+                    disabled={isEditMode}
+                  />
                 );
               }}
             />
           </div>
 
-          <div className='mt-6'>
+          <div className='relative mt-6'>
             <Label className='mb-4 font-medium'>반복 설정</Label>
             <Controller
               name='frequencyType'
@@ -136,12 +141,17 @@ export default function TaskForm({ initialData, onSubmit }: Props) {
                   onChange(v);
                 };
                 return (
-                  <Dropdown
-                    type='select'
-                    menuItems={FREQUENCY_DROPDOWN}
-                    value={value}
-                    onSelect={handleSelect}
-                  />
+                  <>
+                    <Dropdown
+                      type='select'
+                      menuItems={FREQUENCY_DROPDOWN}
+                      value={value}
+                      onSelect={handleSelect}
+                    />
+                    {isEditMode && (
+                      <div className='absolute top-0 right-0 bottom-0 left-0' />
+                    )}
+                  </>
                 );
               }}
             />
