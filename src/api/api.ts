@@ -21,6 +21,7 @@ import type {
   TaskUpdateRequestBody,
 } from '@/types/taskType';
 import type { MembershipsType } from '@/types/userType';
+import type { AxiosResponse } from 'axios';
 
 export const getGroup = async (
   groupId: number,
@@ -276,4 +277,38 @@ export const createTask = async (
   );
 
   return data;
+};
+
+// 태스크 삭제
+export const deleteTask = async ({
+  groupId,
+  taskListId,
+  taskId,
+}: {
+  groupId: string;
+  taskListId: string;
+  taskId: string;
+}): Promise<AxiosResponse<void>> => {
+  // 특정 할 일 삭제
+  return await axiosInstance.delete(
+    `/groups/${groupId}/task-lists/${taskListId}/tasks/${taskId}`,
+  );
+};
+
+// 반복 설정된 태스크의 모든 일정 삭제
+export const deleteTaskRecurring = async ({
+  groupId,
+  taskListId,
+  taskId,
+  recurringId,
+}: {
+  groupId: string;
+  taskListId: string;
+  taskId: string;
+  recurringId: string;
+}): Promise<AxiosResponse<void>> => {
+  // 반복 할 일 삭제
+  return await axiosInstance.delete(
+    `/groups/${groupId}/task-lists/${taskListId}/tasks/${taskId}/recurring/${recurringId}`,
+  );
 };

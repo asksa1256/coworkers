@@ -18,7 +18,9 @@ import {
   addTaskList,
   createTask,
   deleteGroupMember,
+  deleteTask,
   deleteTaskList,
+  deleteTaskRecurring,
   likeArticle,
   unlikeArticle,
   updateTask,
@@ -363,6 +365,7 @@ export const taskMutations = {
         });
       },
     }),
+  // 태스크 생성
   createTaskOptions: ({
     queryClient,
     closeModal,
@@ -394,13 +397,55 @@ export const taskMutations = {
         queryClient.invalidateQueries({
           queryKey: ['tasks', groupId, taskListId],
         });
+
+        closeModal();
       },
       onError: error => {
         console.error(error);
         toast.error('할 일 만들기에 실패하였습니다. 다시 시도해주세요.');
       },
-      onSettled: () => {
+    }),
+  // 태스크 삭제
+  deleteTaskOptions: ({
+    queryClient,
+    closeModal,
+  }: {
+    queryClient: QueryClient;
+    closeModal: () => void;
+  }) =>
+    mutationOptions({
+      mutationFn: ({
+        groupId,
+        taskListId,
+        taskId,
+        recurringId,
+      }: {
+        groupId: string;
+        taskListId: string;
+        taskId: string;
+        recurringId?: string;
+      }) =>
+        recurringId
+          ? deleteTaskRecurring({ groupId, taskListId, taskId, recurringId })
+          : deleteTask({ groupId, taskListId, taskId }),
+      onSuccess: (data, { groupId, taskListId }) => {
+        toast.success('할일 삭제 성공하였습니다.');
+
+        // 할일 목록 캐싱 무효화
+        queryClient.invalidateQueries({
+          queryKey: ['singleTaskList', groupId, taskListId],
+        });
+
+        // 태스크 캐싱 무효화
+        queryClient.invalidateQueries({
+          queryKey: ['tasks', groupId, taskListId],
+        });
+
         closeModal();
+      },
+      onError: error => {
+        console.error(error);
+        toast.error('할일 삭제 실패하였습니다. 다시 시도해주세요.');
       },
     }),
 };

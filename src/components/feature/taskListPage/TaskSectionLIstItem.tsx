@@ -1,9 +1,8 @@
 import CalendarIcon from '@/assets/icons/CalendarIcon.svg?react';
 import CommentIcon from '@/assets/icons/CommentIcon.svg?react';
-import KebabIcon from '@/assets/icons/KebabIcon.svg?react';
 import RepeatIcon from '@/assets/icons/RepeatIcon.svg?react';
 import VCheckIcon from '@/assets/icons/VCheckIcon.svg?react';
-import Dropdown from '@/components/ui/Dropdown';
+import TaskSectionLIstItemMenu from '@/components/feature/taskListPage/TaskSectionLIstItemMenu';
 import { FREQUENCY_TO_TEXT } from '@/constants';
 import type { TaskDetailResponse } from '@/types/taskType';
 import { formatDate } from '@/utils/dateUtils';
@@ -11,9 +10,14 @@ import { formatDate } from '@/utils/dateUtils';
 interface Props {
   task: TaskDetailResponse;
   onChangeDone: (task: TaskDetailResponse) => void;
+  onDeleteModalOpen: (task: TaskDetailResponse) => void;
 }
 
-export default function TaskSectionLIstItem({ task, onChangeDone }: Props) {
+export default function TaskSectionLIstItem({
+  task,
+  onChangeDone,
+  onDeleteModalOpen,
+}: Props) {
   const { id, name, doneAt, commentCount, date, frequency } = task;
   const isRepeat = frequency !== 'ONCE';
 
@@ -39,23 +43,9 @@ export default function TaskSectionLIstItem({ task, onChangeDone }: Props) {
             </span>
           </button>
           <div className='ml-auto'>
-            <Dropdown
-              type='icon'
-              triggerChildren={
-                <KebabIcon className='text-icon-primary size-4' />
-              }
-              align='end'
-              className='block text-center'
-              menuItems={[
-                {
-                  label: '수정하기',
-                  onClick: () => console.log('수정하기'),
-                },
-                {
-                  label: '삭제하기',
-                  onClick: () => console.log('삭제하기'),
-                },
-              ]}
+            <TaskSectionLIstItemMenu
+              task={task}
+              onDeleteModalOpen={onDeleteModalOpen}
             />
           </div>
         </div>

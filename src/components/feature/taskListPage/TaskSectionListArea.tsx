@@ -1,8 +1,10 @@
 import { taskMutations } from '@/api/mutations';
 import { taskQueries } from '@/api/queries';
+import DeleteTaskModal from '@/components/feature/taskListPage/DeleteTaskModal';
 import TaskSectionLIstItem from '@/components/feature/taskListPage/TaskSectionLIstItem';
 import EmptyContent from '@/components/ui/EmptyContent';
 import { Spinner } from '@/components/ui/spinner';
+import useModal from '@/hooks/useModal';
 import type { TaskDetailResponse } from '@/types/taskType';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
@@ -14,6 +16,7 @@ interface Props {
 export default function TaskSectionListArea({ date }: Props) {
   const queryClient = useQueryClient();
   const { groupId, taskListId } = useParams();
+  const { openModal } = useModal();
   const { data: tasksData } = useQuery(
     taskQueries.tasksOptions(groupId, taskListId, date),
   );
@@ -41,6 +44,21 @@ export default function TaskSectionListArea({ date }: Props) {
     });
   };
 
+  const handleDeleteTaskModalOpen = (task: TaskDetailResponse) => {
+    if (!groupId || !taskListId) return null;
+
+    openModal({
+      children: () => (
+        <DeleteTaskModal
+          task={task}
+          groupId={groupId}
+          taskListId={taskListId}
+        />
+      ),
+      className: 'pt-10 md:pt-10 lg:pt-10',
+    });
+  };
+
   if (!tasksData)
     return (
       <div className='flex justify-center py-10'>
@@ -63,6 +81,7 @@ export default function TaskSectionListArea({ date }: Props) {
           key={task.id}
           task={task}
           onChangeDone={handleUpdateDone}
+          onDeleteModalOpen={handleDeleteTaskModalOpen}
         />
       ))}
     </ul>
