@@ -5,6 +5,7 @@ import Dropdown from '@/components/ui/Dropdown';
 import InputField from '@/components/ui/Input/InputField';
 import { Label } from '@/components/ui/Label';
 import Modal from '@/components/ui/Modal';
+import { Spinner } from '@/components/ui/spinner';
 import TextareaField from '@/components/ui/Textarea/TextareaField';
 import {
   taskFormSchema,
@@ -53,10 +54,9 @@ export default function TaskForm({ initialData, onSubmit }: Props) {
   const isWeekly = frequencyType === 'WEEKLY';
   const isMonthly = frequencyType === 'MONTHLY';
   const isEditMode = !!initialData;
+  const submitButtonText = isEditMode ? '수정하기' : '만들기';
 
-  const handleSubmitTaskForm = (formData: TaskFormSchema) => {
-    onSubmit(formData);
-  };
+  const handleSubmitTaskForm = (formData: TaskFormSchema) => onSubmit(formData);
 
   const handleFrequencyMonthly = (date?: Date) => {
     const startDate = date || getValues('startDate') || new Date();
@@ -93,15 +93,14 @@ export default function TaskForm({ initialData, onSubmit }: Props) {
       >
         <Modal.Body>
           <div className='mb-6 text-center font-medium'>
-            <h2 className='mb-4'>할 일 만들기</h2>
-            <p className='text-md text-text-default'>
-              할 일은 실제로 행동 가능한 작업 중심으로 <br />
-              작성해주시면 좋습니다.
-            </p>
+            <h2>{isEditMode ? '할 일 수정하기' : '할 일 만들기'}</h2>
           </div>
           <div>
-            <Label className='mb-4 font-medium'>할 일 제목</Label>
+            <Label className='mb-4 font-medium' htmlFor='name'>
+              할 일 제목
+            </Label>
             <InputField
+              id='name'
               type='text'
               placeholder='할 일 제목을 입력해주세요.'
               {...register('name')}
@@ -110,7 +109,9 @@ export default function TaskForm({ initialData, onSubmit }: Props) {
           </div>
 
           <div className='mt-6'>
-            <Label className='mb-4 font-medium'>시작 날짜</Label>
+            <Label className='mb-4 font-medium' htmlFor='startDate'>
+              시작 날짜
+            </Label>
             <Controller
               name='startDate'
               control={control}
@@ -122,6 +123,7 @@ export default function TaskForm({ initialData, onSubmit }: Props) {
                 return (
                   <TaskFormCalendar
                     value={value}
+                    id='startDate'
                     onChange={handleChange}
                     disabled={isEditMode}
                   />
@@ -180,7 +182,9 @@ export default function TaskForm({ initialData, onSubmit }: Props) {
           </div>
 
           <div className='mt-6'>
-            <Label className='mb-4 font-medium'>할 일 메모 </Label>
+            <Label className='mb-4 font-medium' htmlFor='description'>
+              할 일 메모
+            </Label>
             <TextareaField
               id='description'
               placeholder='메모를 입력해주세요.'
@@ -191,7 +195,7 @@ export default function TaskForm({ initialData, onSubmit }: Props) {
         </Modal.Body>
         <Modal.Foot>
           <Button disabled={!isValid || isSubmitting || !isDirty}>
-            만들기
+            {isSubmitting ? <Spinner /> : submitButtonText}
           </Button>
         </Modal.Foot>
       </form>

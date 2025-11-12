@@ -1,15 +1,28 @@
+import { taskMutations } from '@/api/mutations';
 import GnbPlusIcon from '@/assets/icons/GnbPlusIcon.svg?react';
 import TaskForm from '@/components/feature/form/TaskForm';
 import Button from '@/components/ui/Button';
 import useModal from '@/hooks/useModal';
 import type { TaskFormSchema } from '@/types/taskFormSchema';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-export default function CreateTaskButton() {
-  const { openModal } = useModal();
+interface Props {
+  groupId?: string;
+  taskListId?: string;
+}
 
-  const handleCreateTask = (formData: TaskFormSchema) => {
-    console.log(formData);
+export default function CreateTaskButton({ groupId, taskListId }: Props) {
+  const queryClient = useQueryClient();
+  const { openModal, closeModal } = useModal();
+  const { mutateAsync: taskCreateMutateAsync } = useMutation(
+    taskMutations.createTaskOptions({ queryClient, closeModal }),
+  );
+
+  const handleCreateTask = async (payload: TaskFormSchema) => {
+    if (!groupId || !taskListId) return;
+    return await taskCreateMutateAsync({ groupId, taskListId, payload });
   };
+
   const handleClickCreateTaskModalOpen = () => {
     openModal({
       children: () => <TaskForm onSubmit={handleCreateTask} />,
