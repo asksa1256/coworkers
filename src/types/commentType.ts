@@ -35,7 +35,7 @@ export interface TaskCommentResponse extends CommentBaseResponse {
 export interface CommentAuthor {
   id: number;
   nickname: string;
-  image: string;
+  image: string | null;
 }
 
 export interface ArticleComment {
