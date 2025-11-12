@@ -11,12 +11,14 @@ interface Props {
   task: TaskDetailResponse;
   onChangeDone: (task: TaskDetailResponse) => void;
   onDeleteModalOpen: (task: TaskDetailResponse) => void;
+  onEditModalOpen: (task: TaskDetailResponse) => void;
 }
 
 export default function TaskSectionLIstItem({
   task,
   onChangeDone,
   onDeleteModalOpen,
+  onEditModalOpen,
 }: Props) {
   const { id, name, doneAt, commentCount, date, frequency } = task;
   const isRepeat = frequency !== 'ONCE';
@@ -46,6 +48,7 @@ export default function TaskSectionLIstItem({
             <TaskSectionLIstItemMenu
               task={task}
               onDeleteModalOpen={onDeleteModalOpen}
+              onEditModalOpen={onEditModalOpen}
             />
           </div>
         </div>

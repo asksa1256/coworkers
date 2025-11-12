@@ -5,11 +5,13 @@ import type { TaskDetailResponse } from '@/types/taskType';
 interface Props {
   task: TaskDetailResponse;
   onDeleteModalOpen: (task: TaskDetailResponse) => void;
+  onEditModalOpen: (task: TaskDetailResponse) => void;
 }
 
 export default function TaskSectionLIstItemMenu({
   task,
   onDeleteModalOpen,
+  onEditModalOpen,
 }: Props) {
   return (
     <Dropdown
@@ -20,7 +22,7 @@ export default function TaskSectionLIstItemMenu({
       menuItems={[
         {
           label: '수정하기',
-          onClick: () => console.log('수정하기'),
+          onClick: () => onEditModalOpen(task),
         },
         {
           label: '삭제하기',

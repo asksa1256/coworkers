@@ -59,6 +59,31 @@ export default function TaskSectionListArea({ date }: Props) {
     });
   };
 
+  const handleEditTaskModalOpen = (task: TaskDetailResponse) => {
+    if (!groupId || !taskListId || !task) return null;
+
+    // const {
+    //   name,
+    //   description,
+    //   startDate,
+    //   frequencyType
+    // } = task;
+
+    // console.log(task);
+    // const initialData = {
+    //   name: task.name,
+    //   frequencyType: task.frequency,
+    //   description: task.description,
+    //   startDate: task.date,
+    // };
+
+    // initialData
+    openModal({
+      children: () => <div>할일 삭제하기 폼이 들어갈 예정</div>,
+      className: 'px-4 py-9 md:px-6',
+    });
+  };
+
   if (!tasksData)
     return (
       <div className='flex justify-center py-10'>
@@ -82,6 +107,7 @@ export default function TaskSectionListArea({ date }: Props) {
           task={task}
           onChangeDone={handleUpdateDone}
           onDeleteModalOpen={handleDeleteTaskModalOpen}
+          onEditModalOpen={handleEditTaskModalOpen}
         />
       ))}
     </ul>
