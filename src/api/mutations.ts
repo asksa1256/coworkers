@@ -17,6 +17,7 @@ import type { UseFormReset, UseFormSetError } from 'react-hook-form';
 import { toast } from 'sonner';
 import {
   addTaskList,
+  deleteGroup,
   deleteGroupMember,
   deleteTaskList,
   likeArticle,
@@ -414,6 +415,22 @@ export const groupMutations = {
       },
       onError: error => {
         toast.error('팀 정보 수정 실패. 다시 시도해주세요.');
+        throw error;
+      },
+    }),
+
+  //그룹 삭제
+  deleteGroupOptions: (user: UserType, queryClient: QueryClient) =>
+    mutationOptions({
+      mutationFn: (groupId: number) => deleteGroup(groupId),
+      onSuccess: () => {
+        toast.success('팀이 삭제되었습니다.');
+        queryClient.invalidateQueries({
+          queryKey: groupQueries.groups(user),
+        });
+      },
+      onError: error => {
+        toast.error('팀 삭제 실패. 다시 시도해주세요.');
         throw error;
       },
     }),

@@ -1,7 +1,7 @@
 import { getGroupMembership } from '@/api/api';
 import { groupQueries } from '@/api/queries';
 import AvatarGroup from '@/components/feature/teamPage/AvatarGroup';
-import GroupConfigDropdown from '@/components/feature/teamPage/GroupConfigDropDown';
+import GroupConfigDropdown from '@/components/feature/teamPage/GroupConfigDropdown';
 import MemberListCard from '@/components/feature/teamPage/MemberListCard';
 import ReportCard from '@/components/feature/teamPage/ReportCard';
 import TaskKanbanBoard from '@/components/feature/teamPage/TaskKanbanBoard';
@@ -77,7 +77,11 @@ export default function TeamPage() {
               />
             </div>
           </div>
-          <GroupConfigDropdown groupId={groupId} isAdmin={isAdmin} />
+          <GroupConfigDropdown
+            groupId={groupId}
+            groupName={groupData.name}
+            isAdmin={isAdmin}
+          />
         </GroupTitleBar>
 
         {isAdmin && (
