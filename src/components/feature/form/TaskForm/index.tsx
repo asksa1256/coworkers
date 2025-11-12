@@ -54,9 +54,7 @@ export default function TaskForm({ initialData, onSubmit }: Props) {
   const isMonthly = frequencyType === 'MONTHLY';
   const isEditMode = !!initialData;
 
-  const handleSubmitTaskForm = (formData: TaskFormSchema) => {
-    onSubmit(formData);
-  };
+  const handleSubmitTaskForm = (formData: TaskFormSchema) => onSubmit(formData);
 
   const handleFrequencyMonthly = (date?: Date) => {
     const startDate = date || getValues('startDate') || new Date();

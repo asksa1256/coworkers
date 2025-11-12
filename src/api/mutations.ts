@@ -1,5 +1,6 @@
 import type { ArticleDetailResponse } from '@/types/boardType';
 import type { GroupDetailResponse } from '@/types/groupType';
+import type { TaskFormSchema } from '@/types/taskFormSchema';
 import type { TaskListSchema } from '@/types/taskListSchema';
 import type {
   TaskDetailResponse,
@@ -15,6 +16,7 @@ import type { UseFormReset, UseFormSetError } from 'react-hook-form';
 import { toast } from 'sonner';
 import {
   addTaskList,
+  createTask,
   deleteGroupMember,
   deleteTaskList,
   likeArticle,
@@ -359,6 +361,44 @@ export const taskMutations = {
         queryClient.invalidateQueries({
           queryKey: taskQueries.tasks(groupId, taskListId, date),
         });
+      },
+    }),
+  createTaskOptions: ({
+    queryClient,
+    closeModal,
+  }: {
+    queryClient: QueryClient;
+    closeModal: () => void;
+  }) =>
+    mutationOptions({
+      mutationFn: ({
+        groupId,
+        taskListId,
+        payload,
+      }: {
+        groupId: string;
+        taskListId: string;
+        payload: TaskFormSchema;
+      }) => createTask(groupId, taskListId, payload),
+      onSuccess: (data, { groupId, taskListId }) => {
+        // 서버에서 보내주는 일자와 쿼리키값에 등록한 일자의 매칭 불일치로
+        // 프리픽스 매칭으로 적용함
+
+        // 할일 목록 캐싱 무효화
+        queryClient.invalidateQueries({
+          queryKey: ['singleTaskList', groupId, taskListId],
+        });
+
+        // 태스크 캐싱 무효화
+        queryClient.invalidateQueries({
+          queryKey: ['tasks', groupId, taskListId],
+        });
+      },
+      onError: error => {
+        console.error(error);
+      },
+      onSettled: () => {
+        closeModal();
       },
     }),
 };

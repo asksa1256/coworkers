@@ -11,8 +11,10 @@ import type {
   JoinGroupPayload,
   JoinGroupResponse,
 } from '@/types/groupType';
+import type { TaskFormSchema } from '@/types/taskFormSchema';
 import type { TaskListSchema } from '@/types/taskListSchema';
 import type {
+  RecurringResponse,
   TaskDetailResponse,
   TaskListOrderRequestBody,
   TaskListsResponse,
@@ -245,5 +247,33 @@ export const getTasks = async (
   const { data } = await axiosInstance.get(
     `/groups/${groupId}/task-lists/${taskListId}/tasks?date=${date}`,
   );
+  return data;
+};
+
+// 할일 생성하기
+export const createTask = async (
+  groupId: string,
+  taskListId: string,
+  payload: TaskFormSchema,
+): Promise<RecurringResponse> => {
+  const newStartDate = payload.startDate || new Date();
+
+  // shadcnui의 calendar에서 로컬 일자/시간으로 value를 보내주는데,
+  // 서버에서 한번 더 보정을 하는지 선택한 일자와 실제로 서버에 등록되는 일자에 불일치 발생
+  // 그래서 서버에 보내기전에 shadcnui에서 보정 해준 시간을 utc 기준으로 다시 변환함.
+  const adjustedStartDate = new Date(
+    newStartDate.getTime() - newStartDate.getTimezoneOffset() * 60000,
+  ).toISOString();
+
+  const newPayload = {
+    ...payload,
+    startDate: adjustedStartDate,
+  };
+
+  const { data } = await axiosInstance.post(
+    `/groups/${groupId}/task-lists/${taskListId}/tasks`,
+    newPayload,
+  );
+
   return data;
 };
