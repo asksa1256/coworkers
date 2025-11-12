@@ -381,6 +381,7 @@ export const taskMutations = {
         payload: TaskFormSchema;
       }) => createTask(groupId, taskListId, payload),
       onSuccess: (data, { groupId, taskListId }) => {
+        toast.success('할 일 만들기 성공!');
         // 서버에서 보내주는 일자와 쿼리키값에 등록한 일자의 매칭 불일치로
         // 프리픽스 매칭으로 적용함
 
@@ -396,6 +397,7 @@ export const taskMutations = {
       },
       onError: error => {
         console.error(error);
+        toast.error('할 일 만들기에 실패하였습니다. 다시 시도해주세요.');
       },
       onSettled: () => {
         closeModal();
