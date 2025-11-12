@@ -19,7 +19,7 @@ export default function DeleteTaskModal({ task, groupId, taskListId }: Props) {
   const queryClient = useQueryClient();
   const [checkRecurringAfter, setCheckRecurringAfter] = useState(false);
 
-  const { mutate: deleteTaskMutate } = useMutation(
+  const { mutate: deleteTaskMutate, isPending } = useMutation(
     taskMutations.deleteTaskOptions({ queryClient, closeModal }),
   );
 
@@ -83,8 +83,9 @@ export default function DeleteTaskModal({ task, groupId, taskListId }: Props) {
           variant='danger'
           className='shrink-1 grow-1'
           onClick={handleClickDelete}
+          disabled={isPending}
         >
-          삭제하기
+          {isPending ? '삭제중....' : '삭제하기'}
         </Button>
       </div>
     </div>
