@@ -89,6 +89,9 @@ export const taskListMutations = {
         queryClient.invalidateQueries({
           queryKey: groupQueries.group(groupId),
         });
+        queryClient.invalidateQueries({
+          queryKey: ['singleTaskList'],
+        });
         if (closeModal) closeModal();
       },
       onError: error => {
@@ -110,6 +113,7 @@ export const taskListMutations = {
     taskListId: number,
     queryClient: QueryClient,
     closeModal?: () => void,
+    currentTaskListId?: number,
   ) =>
     mutationOptions({
       mutationFn: (taskListId: number) => deleteTaskList(taskListId),
@@ -118,6 +122,11 @@ export const taskListMutations = {
         queryClient.invalidateQueries({
           queryKey: groupQueries.group(groupId),
         });
+
+        // 태스크 리스트 페이지에서 삭제할 taskListId와 현재 taskListId가 동일하면, 팀페이지로 이동
+        if (currentTaskListId && currentTaskListId === taskListId) {
+          window.location.href = `/${groupId}`;
+        }
         if (closeModal) closeModal();
       },
       onError: error => {
