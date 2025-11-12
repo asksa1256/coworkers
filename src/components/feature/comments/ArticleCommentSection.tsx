@@ -1,6 +1,7 @@
 import { boardQueries } from '@/api/queries';
+import KebabIcon from '@/assets/icons/KebabIcon.svg?react';
 import Comment from '@/components/ui/Comment/CommentSection';
-import { normalizeArticleComment } from '@/utils/normalizeComment';
+import Dropdown from '@/components/ui/Dropdown';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 interface Props {
@@ -22,17 +23,28 @@ export default function ArticleCommentSection({
     error,
   } = useInfiniteQuery(boardQueries.commentsOptions(articleId));
 
-  const allData = data?.pages
-    .flatMap(page => page.list)
-    .map(normalizeArticleComment);
+  const allData = data?.pages.flatMap(page => page.list);
 
   if (!allData) return null;
 
   const isEmpty = allData.length === 0;
 
   const handleSubmit = () => {
-    console.log('test');
+    console.log('댓글 추가');
   };
+
+  const handleEdit = () => {
+    console.log('edit 모드로 전환');
+  };
+
+  const handleDelete = () => {
+    console.log('ArticleDeleteModal 오픈');
+  };
+
+  const COMMENT_DROPDOWN = [
+    { label: '수정하기', onClick: handleEdit },
+    { label: '삭제하기', onClick: handleDelete },
+  ];
 
   return (
     <Comment
@@ -47,7 +59,21 @@ export default function ArticleCommentSection({
       <Comment.Header count={commentCount} />
       <Comment.Form onSubmit={handleSubmit} />
 
-      {isEmpty ? <Comment.Empty /> : <Comment.List />}
+      {isEmpty ? (
+        <Comment.Empty />
+      ) : (
+        <Comment.List
+          itemActions={
+            <Dropdown
+              type='icon'
+              menuItems={COMMENT_DROPDOWN}
+              triggerChildren={<KebabIcon className='h-5 w-5' />}
+              align='end'
+              className='text-center'
+            />
+          }
+        />
+      )}
     </Comment>
   );
 }

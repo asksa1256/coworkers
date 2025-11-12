@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import type { NormalizedComment } from '@/types/commentType';
+import type { CommentData } from '@/types/commentType';
 import { type ReactNode } from 'react';
 import EmptyContent from '../EmptyContent';
 import { CommentContext } from './CommentContext';
@@ -9,7 +9,7 @@ import CommentHeader from './CommentHeader';
 import CommentList from './CommentList';
 
 interface CommentSectionProps {
-  comments: NormalizedComment[];
+  comments: CommentData[];
   isPending: boolean;
   status: string;
   error: Error | null;

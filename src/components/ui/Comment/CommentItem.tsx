@@ -1,24 +1,27 @@
-import KebabIcon from '@/assets/icons/KebabIcon.svg?react';
 import Avatar from '@/components/ui/Avatar';
-import Dropdown from '@/components/ui/Dropdown';
-import { MODIFY_DELETE_DROPDOWN_MAP } from '@/constants';
 import { userAtom } from '@/store/authAtom';
+import type { CommentData } from '@/types/commentType';
 import { formatRelativeTime } from '@/utils/formatters';
 import { useAtomValue } from 'jotai';
+import { type ReactNode } from 'react';
 
 interface CommentItemProps {
-  comment: {
-    id: number;
-    writer?: { id: number; nickname: string; image: string };
-    user?: { id: number; nickname: string; image: string };
-    content: string;
-    createdAt: string;
-  };
+  comment: CommentData;
+  actions?: ReactNode;
 }
 
-export function CommentItem({ comment }: CommentItemProps) {
-  const author = comment.writer ?? comment.user;
+export function CommentItem({ comment, actions }: CommentItemProps) {
+  let author;
+
+  if ('writer' in comment) {
+    author = comment.writer;
+  } else if ('user' in comment) {
+    author = comment.user;
+  }
+
   const user = useAtomValue(userAtom);
+
+  const showActions = author?.id === user?.id;
 
   return (
     <li className='border-border-primary flex items-start gap-2 border-t py-3 md:gap-4 md:py-5'>
@@ -31,15 +34,7 @@ export function CommentItem({ comment }: CommentItemProps) {
         </span>
       </div>
 
-      {author?.id === user?.id && (
-        <Dropdown
-          type='icon'
-          menuItems={MODIFY_DELETE_DROPDOWN_MAP}
-          triggerChildren={<KebabIcon className='h-5 w-5' />}
-          align='end'
-          className='text-center'
-        />
-      )}
+      {showActions && actions}
     </li>
   );
 }

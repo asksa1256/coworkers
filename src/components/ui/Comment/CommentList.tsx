@@ -5,7 +5,11 @@ import { useRef } from 'react';
 import { useCommentContext } from './CommentContext';
 import { CommentItem } from './CommentItem';
 
-export default function CommentList() {
+interface CommentListProps {
+  itemActions?: React.ReactNode;
+}
+
+export default function CommentList({ itemActions }: CommentListProps) {
   const { comments, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useCommentContext();
 
@@ -33,7 +37,11 @@ export default function CommentList() {
     <>
       <ol>
         {comments.map(comment => (
-          <CommentItem key={comment.id} comment={comment} />
+          <CommentItem
+            key={comment.id}
+            comment={comment}
+            actions={itemActions}
+          />
         ))}
       </ol>
 

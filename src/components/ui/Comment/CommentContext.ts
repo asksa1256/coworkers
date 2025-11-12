@@ -1,8 +1,8 @@
-import type { NormalizedComment } from '@/types/commentType';
+import type { CommentData } from '@/types/commentType';
 import { createContext, useContext } from 'react';
 
 interface CommentContextValue {
-  comments: NormalizedComment[];
+  comments: CommentData[]; // ArticleComment[] | TaskComment[]
   isPending: boolean;
   status: string;
   error: Error | null;

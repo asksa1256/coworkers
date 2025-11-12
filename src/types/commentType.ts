@@ -38,14 +38,6 @@ export interface CommentAuthor {
   image: string;
 }
 
-export interface NormalizedComment {
-  id: number;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-  author: CommentAuthor;
-}
-
 export interface ArticleComment {
   id: number;
   content: string;
@@ -63,3 +55,5 @@ export interface TaskComment {
   taskId: number;
   user: CommentAuthor;
 }
+
+export type CommentData = ArticleComment | TaskComment;
