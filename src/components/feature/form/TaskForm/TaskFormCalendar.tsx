@@ -8,12 +8,14 @@ interface Props {
   value: Date | undefined;
   onChange: (date: Date) => void;
   disabled: boolean;
+  id: string;
 }
 
 export default function TaskFormCalendar({
   value = new Date(),
   onChange,
   disabled,
+  id,
 }: Props) {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
@@ -27,6 +29,7 @@ export default function TaskFormCalendar({
     <>
       <InputField
         type='text'
+        id={id}
         placeholder='2024년 7월 29일'
         onClick={() => setIsCalendarOpen(prev => !prev)}
         value={formatDate(value)}

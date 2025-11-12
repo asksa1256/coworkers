@@ -98,8 +98,11 @@ export default function TaskForm({ initialData, onSubmit }: Props) {
             </p>
           </div>
           <div>
-            <Label className='mb-4 font-medium'>할 일 제목</Label>
+            <Label className='mb-4 font-medium' htmlFor='name'>
+              할 일 제목
+            </Label>
             <InputField
+              id='name'
               type='text'
               placeholder='할 일 제목을 입력해주세요.'
               {...register('name')}
@@ -108,7 +111,9 @@ export default function TaskForm({ initialData, onSubmit }: Props) {
           </div>
 
           <div className='mt-6'>
-            <Label className='mb-4 font-medium'>시작 날짜</Label>
+            <Label className='mb-4 font-medium' htmlFor='startDate'>
+              시작 날짜
+            </Label>
             <Controller
               name='startDate'
               control={control}
@@ -120,6 +125,7 @@ export default function TaskForm({ initialData, onSubmit }: Props) {
                 return (
                   <TaskFormCalendar
                     value={value}
+                    id='startDate'
                     onChange={handleChange}
                     disabled={isEditMode}
                   />
@@ -178,7 +184,9 @@ export default function TaskForm({ initialData, onSubmit }: Props) {
           </div>
 
           <div className='mt-6'>
-            <Label className='mb-4 font-medium'>할 일 메모 </Label>
+            <Label className='mb-4 font-medium' htmlFor='description'>
+              할 일 메모{' '}
+            </Label>
             <TextareaField
               id='description'
               placeholder='메모를 입력해주세요.'
