@@ -1,23 +1,14 @@
 import EmptyContent from '@/components/ui/EmptyContent';
 import InfiniteScrollObserver from '@/components/ui/InfiniteScrollObserver';
 import useIntersectionObserver from '@/hooks/useIntersectionObserver';
-import type { NormalizedComment } from '@/types/commentType';
 import { useRef } from 'react';
+import { useCommentContext } from './CommentContext';
 import { CommentItem } from './CommentItem';
 
-interface Props {
-  comments: NormalizedComment[];
-  fetchNextPage?: () => void;
-  hasNextPage?: boolean;
-  isFetchingNextPage?: boolean;
-}
+export default function CommentList() {
+  const { comments, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useCommentContext();
 
-export default function CommentList({
-  comments,
-  fetchNextPage,
-  hasNextPage,
-  isFetchingNextPage,
-}: Props) {
   const scrollRef = useRef(null);
 
   useIntersectionObserver({

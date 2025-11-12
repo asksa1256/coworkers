@@ -1,6 +1,8 @@
 import { cn } from '@/lib/utils';
 import type { NormalizedComment } from '@/types/commentType';
+import { type ReactNode } from 'react';
 import EmptyContent from '../EmptyContent';
+import { CommentContext } from './CommentContext';
 import CommentEmpty from './CommentEmpty';
 import CommentForm from './CommentForm';
 import CommentHeader from './CommentHeader';
@@ -8,7 +10,6 @@ import CommentList from './CommentList';
 
 interface CommentSectionProps {
   comments: NormalizedComment[];
-  commentCount: number;
   isPending: boolean;
   status: string;
   error: Error | null;
@@ -16,10 +17,10 @@ interface CommentSectionProps {
   hasNextPage?: boolean;
   isFetchingNextPage?: boolean;
   className?: string;
+  children: ReactNode;
 }
 
 export default function Comment({
-  commentCount,
   comments,
   isPending,
   status,
@@ -28,36 +29,34 @@ export default function Comment({
   hasNextPage,
   isFetchingNextPage,
   className,
+  children,
 }: CommentSectionProps) {
-  const isEmpty = comments.length === 0;
+  const contextValue = {
+    comments,
+    isPending,
+    status,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  };
 
   return (
-    <div className={cn('mt-4 md:mt-[28px] lg:mt-10', className)}>
-      <CommentHeader count={commentCount} />
+    <CommentContext.Provider value={contextValue}>
+      <div className={cn('mt-4 md:mt-[28px] lg:mt-10', className)}>
+        {isPending && <p>불러오는 중...</p>}
 
-      {/* <CommentForm onSubmit={onSubmit} /> */}
+        {status === 'error' && (
+          <EmptyContent>
+            <p className='text-text-default text-md font-medium lg:text-base'>
+              {error?.message}
+            </p>
+          </EmptyContent>
+        )}
 
-      {isPending && <p>불러오는 중...</p>}
-
-      {status === 'error' && (
-        <EmptyContent>
-          <p className='text-text-default text-md font-medium lg:text-base'>
-            {error?.message}
-          </p>
-        </EmptyContent>
-      )}
-
-      {isEmpty ? (
-        <CommentEmpty />
-      ) : (
-        <CommentList
-          comments={comments}
-          fetchNextPage={fetchNextPage}
-          hasNextPage={hasNextPage}
-          isFetchingNextPage={isFetchingNextPage}
-        />
-      )}
-    </div>
+        {!isPending && status !== 'error' && children}
+      </div>
+    </CommentContext.Provider>
   );
 }
 

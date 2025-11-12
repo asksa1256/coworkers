@@ -28,16 +28,26 @@ export default function ArticleCommentSection({
 
   if (!allData) return null;
 
+  const isEmpty = allData.length === 0;
+
+  const handleSubmit = () => {
+    console.log('test');
+  };
+
   return (
     <Comment
       comments={allData}
-      commentCount={commentCount}
       isPending={isPending}
       status={status}
       error={error}
       fetchNextPage={fetchNextPage}
       hasNextPage={hasNextPage}
       isFetchingNextPage={isFetchingNextPage}
-    />
+    >
+      <Comment.Header count={commentCount} />
+      <Comment.Form onSubmit={handleSubmit} />
+
+      {isEmpty ? <Comment.Empty /> : <Comment.List />}
+    </Comment>
   );
 }
