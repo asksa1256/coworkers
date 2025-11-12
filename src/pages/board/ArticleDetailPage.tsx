@@ -1,7 +1,7 @@
 import { boardQueries } from '@/api/queries';
 import KebabIcon from '@/assets/icons/KebabIcon.svg?react';
 import LeftArrowIcon from '@/assets/icons/LeftArrowIcon.svg?react';
-import ArticleCommentList from '@/components/feature/comments/ArticleCommentList';
+import ArticleCommentSection from '@/components/feature/comments/ArticleCommentSection';
 import LikeButton from '@/components/feature/like/LikeButton';
 import LikeFloatingButton from '@/components/feature/like/LikeFloatingButton';
 import Avatar from '@/components/ui/Avatar';
@@ -98,7 +98,11 @@ export default function ArticleDetailPage() {
         </div>
 
         {/* 댓글 */}
-        <ArticleCommentList
+        {/* <ArticleCommentList
+          articleId={data.id}
+          commentCount={data.commentCount}
+        /> */}
+        <ArticleCommentSection
           articleId={data.id}
           commentCount={data.commentCount}
         />
