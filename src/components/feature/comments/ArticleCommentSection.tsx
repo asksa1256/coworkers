@@ -27,8 +27,6 @@ export default function ArticleCommentSection({
 
   if (!allData) return null;
 
-  const isEmpty = allData.length === 0;
-
   const handleSubmit = () => {
     console.log('댓글 추가');
   };
@@ -57,23 +55,20 @@ export default function ArticleCommentSection({
       isFetchingNextPage={isFetchingNextPage}
     >
       <Comment.Header count={commentCount} />
+
       <Comment.Form onSubmit={handleSubmit} />
 
-      {isEmpty ? (
-        <Comment.Empty />
-      ) : (
-        <Comment.List
-          itemActions={
-            <Dropdown
-              type='icon'
-              menuItems={COMMENT_DROPDOWN}
-              triggerChildren={<KebabIcon className='h-5 w-5' />}
-              align='end'
-              className='text-center'
-            />
-          }
-        />
-      )}
+      <Comment.List
+        itemActions={
+          <Dropdown
+            type='icon'
+            menuItems={COMMENT_DROPDOWN}
+            triggerChildren={<KebabIcon className='h-5 w-5' />}
+            align='end'
+            className='text-center'
+          />
+        }
+      />
     </Comment>
   );
 }
