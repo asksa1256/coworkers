@@ -11,6 +11,8 @@ import LandingPage from '@/pages/LandingPage';
 import TaskListPage from '@/pages/TaskListPage';
 import TeamPage from '@/pages/TeamPage';
 import type { ReactNode } from 'react';
+import { Outlet } from 'react-router-dom';
+import GroupAuthRoute from './components/feature/teamPage/GroupAuthRoute';
 import KakaoRedirectPage from './pages/auth/KakaoRedirectPage';
 import KakaoSignUpPage from './pages/auth/KakaoSignUpPage';
 import ResetPasswordPage from './pages/auth/ResetPasswordPage';
@@ -43,6 +45,11 @@ const routes = [
       },
       {
         path: '/:groupId',
+        element: (
+          <GroupAuthRoute>
+            <Outlet />
+          </GroupAuthRoute>
+        ),
         children: [
           {
             index: true,

@@ -5,28 +5,19 @@ import MemberListCard from '@/components/feature/teamPage/MemberListCard';
 import ReportCard from '@/components/feature/teamPage/ReportCard';
 import TaskKanbanBoard from '@/components/feature/teamPage/TaskKanbanBoard';
 import GroupTitleBar from '@/components/ui/GroupTitleBar';
-import useGroupRole from '@/hooks/useGroupRole';
+import { useGroupAuthContext } from '@/hooks/useGroupAuthContext';
 import useModal from '@/hooks/useModal';
 import { calcTodayDone, calcTodayTodos } from '@/utils/calculations';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 export default function TeamPage() {
   const { openModal } = useModal();
-  const navigate = useNavigate();
   const params = useParams();
   const groupId = Number(params.groupId);
-  const groupRole = useGroupRole(groupId);
-  const isAdmin = groupRole === 'ADMIN';
-  const isGroupMember = !groupRole;
   const { data: groupData } = useQuery(groupQueries.groupOptions(groupId));
-
-  useEffect(() => {
-    // 멤버가 아닌 페이지 접근시에 랜딩페이지로 리다이렉트
-    if (isGroupMember) navigate('/', { replace: true });
-  }, [isGroupMember, navigate]);
+  const isAdmin = useGroupAuthContext();
 
   if (!groupData) return;
 
