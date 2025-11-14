@@ -1,18 +1,15 @@
 import ArrowUpIcon from '@/assets/icons/ArrowUpIcon.svg';
 import Button from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
-import { forwardRef, useState, type FormEvent } from 'react';
-import { type FieldError } from 'react-hook-form';
+import { type FieldError } from '@/types';
+import { useRef, useState } from 'react';
 
 interface InputReplyProps extends React.ComponentProps<'textarea'> {
-  error?: FieldError;
-  onSubmit: (e: FormEvent) => void;
+  error?: FieldError | null;
 }
 
-function InputReply(
-  { error, onSubmit, ...props }: InputReplyProps,
-  ref: React.ForwardedRef<HTMLTextAreaElement>,
-) {
+export default function InputReply({ error, ...props }: InputReplyProps) {
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [isEmpty, setIsEmpty] = useState(true);
 
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -35,8 +32,7 @@ function InputReply(
         )}
       >
         <textarea
-          ref={ref}
-          {...props} // rhf 연동: register('content')
+          ref={textareaRef}
           name={props.name}
           placeholder='댓글을 달아주세요.'
           onInput={handleInput}
@@ -47,7 +43,6 @@ function InputReply(
           size='icon-md'
           round='full'
           disabled={props.disabled || isEmpty}
-          onClick={onSubmit}
         >
           <img src={ArrowUpIcon} alt='댓글 달기' />
         </Button>
@@ -57,7 +52,3 @@ function InputReply(
     </div>
   );
 }
-
-InputReply.displayName = 'InputReply';
-
-export default forwardRef(InputReply);
