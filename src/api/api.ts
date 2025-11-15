@@ -1,10 +1,10 @@
 import type { TeamFormDataType } from '@/components/feature/form/TeamForm';
 import axiosInstance from '@/lib/axios';
 import type {
-  ArticleCommentsResponse,
   ArticleDetailResponse,
   ArticleListResponse,
 } from '@/types/boardType';
+import type { ArticleCommentsResponse } from '@/types/commentType';
 import type {
   CreateGroupResponse,
   GroupDetailResponse,
