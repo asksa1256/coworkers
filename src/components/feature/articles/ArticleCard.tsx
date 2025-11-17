@@ -30,7 +30,7 @@ export default function ArticleCard({
   return (
     <Link
       to={`/board/${id}`}
-      className='bg-bg-primary border-border-primary flex flex-col justify-between rounded-[20px] border p-4 transition-all duration-200 hover:-translate-y-1 hover:shadow-md md:px-6 md:py-5'
+      className='bg-bg-primary border-border-primary flex min-h-[148px] flex-col justify-between rounded-[20px] border p-4 transition-all duration-200 hover:-translate-y-1 hover:shadow-md md:min-h-[164px] md:px-6 md:py-5'
     >
       <div className='flex items-center justify-between md:gap-6'>
         <div className='w-[60%] grow'>
@@ -53,9 +53,13 @@ export default function ArticleCard({
 
         <div className='right'>
           {image && (
-            <figure className='h-20 w-20 overflow-hidden rounded-lg md:h-[88px] md:w-[88px]'>
-              <img src={image} alt='이미지 미리보기' />
-            </figure>
+            <div className='h-18 w-18 overflow-hidden rounded-lg md:h-[76px] md:w-[76px]'>
+              <img
+                src={image}
+                alt='이미지 미리보기'
+                className='h-full w-full object-cover'
+              />
+            </div>
           )}
         </div>
       </div>

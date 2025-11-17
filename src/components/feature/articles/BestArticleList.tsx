@@ -1,25 +1,34 @@
 import { boardQueries } from '@/api/queries';
+import LeftArrowIcon from '@/assets/icons/LeftArrowIcon.svg?react';
+import RightArrowIcon from '@/assets/icons/RightArrowIcon.svg?react';
 import { useQuery } from '@tanstack/react-query';
+import { useRef } from 'react';
 import { A11y, Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
 import ArticleCard from './ArticleCard';
 
 export default function BestArticleList() {
+  const prevRef = useRef(null);
+  const nextRef = useRef(null);
+
   const { data, isPending, error } = useQuery(
     boardQueries.bestArticlesOptions(),
   );
   const allData = data?.list;
 
   return (
-    <section className='bg-bg-secondary mb-[28px] px-[18px] pt-[28px] pb-[28px] md:px-6 md:pt-8 md:pb-6 lg:mb-11 lg:rounded-[20px] lg:pt-10 lg:pb-5'>
+    <section className='bg-bg-secondary relative mb-[28px] px-[18px] pt-[28px] pb-[28px] md:px-6 md:pt-8 md:pb-6 lg:mb-11 lg:rounded-[20px] lg:pt-10 lg:pb-5'>
       <h3 className='text-2lg mb-5 font-bold md:text-xl lg:mb-6'>
         베스트 게시글
       </h3>
 
       <Swiper
         modules={[Navigation, Pagination, A11y]}
-        navigation
+        navigation={{
+          prevEl: prevRef.current,
+          nextEl: nextRef.current,
+        }}
         pagination={{ clickable: true }}
         spaceBetween={12}
         loop={true}
@@ -35,6 +44,23 @@ export default function BestArticleList() {
           </SwiperSlide>
         ))}
       </Swiper>
+
+      <div className='absolute right-6 bottom-8 z-[1] flex gap-1 md:bottom-7 md:gap-2 lg:bottom-6'>
+        <button
+          ref={prevRef}
+          type='button'
+          className='border-border-primary rounded-full border bg-white p-2 transition-colors hover:bg-gray-100'
+        >
+          <LeftArrowIcon className='text-icon-primary h-4 w-4' />
+        </button>
+        <button
+          ref={nextRef}
+          type='button'
+          className='border-border-primary rounded-full border bg-white p-2 transition-colors hover:bg-gray-100'
+        >
+          <RightArrowIcon className='text-icon-primary h-4 w-4' />
+        </button>
+      </div>
     </section>
   );
 }

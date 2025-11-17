@@ -251,6 +251,27 @@
     appearance: none;
     display: none;
   }
+
+  /* swiper 커스텀 */
+  .swiper-pagination {
+    position: relative !important;
+    margin-top: 34px !important;
+  }
+
+  .swiper-pagination-bullet {
+    background: var(--color-gray-300) !important;
+    opacity: 1 !important;
+    transition:
+      transform 0.3s,
+      background 0.3s;
+  }
+  .swiper-pagination-bullet:hover {
+    background: var(--color-gray-400) !important;
+  }
+
+  .swiper-pagination-bullet-active {
+    background: var(--color-gray-400) !important;
+  }
 }
 
 @layer utilities {
