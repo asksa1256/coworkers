@@ -10,6 +10,7 @@ import type {
   GroupDetailResponse,
   JoinGroupPayload,
   JoinGroupResponse,
+  UpdateGroupResponse,
 } from '@/types/groupType';
 import type { TaskFormSchema } from '@/types/taskFormSchema';
 import type { TaskListSchema } from '@/types/taskListSchema';
@@ -139,6 +140,28 @@ export const createGroup = async (
 ): Promise<CreateGroupResponse> => {
   const { data } = await axiosInstance.post('/groups', formData);
   return data;
+};
+
+export const updateGroup = async (
+  groupId: number,
+  payload: TeamFormDataType,
+): Promise<UpdateGroupResponse> => {
+  try {
+    const { data } = await axiosInstance.patch(`/groups/${groupId}`, payload);
+    return data;
+  } catch (e) {
+    console.log('팀 정보 수정 에러:', e);
+    throw e;
+  }
+};
+
+export const deleteGroup = async (groupId: number) => {
+  try {
+    await axiosInstance.delete(`/groups/${groupId}`);
+  } catch (e) {
+    console.log('팀 삭제 에러:', e);
+    throw e;
+  }
 };
 
 export const createInviteToken = async (groupId: string): Promise<string> => {

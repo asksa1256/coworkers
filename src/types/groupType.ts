@@ -14,6 +14,10 @@ export interface CreateGroupResponse {
   updatedAt: string;
 }
 
+export interface UpdateGroupResponse extends CreateGroupResponse {
+  teamId: string;
+}
+
 export interface JoinGroupPayload {
   userEmail: string;
   token: string;

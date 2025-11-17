@@ -31,7 +31,7 @@ export default function MemberListCard({
     <section
       className={cn(
         'card-common hidden min-h-[275px] w-full max-w-60 px-5 py-6 lg:block',
-        isModalDisplay && 'block h-58 max-w-none border-none p-0',
+        isModalDisplay && 'block min-h-58 max-w-none border-none p-0',
       )}
     >
       <div className='mb-6 flex items-center justify-between'>

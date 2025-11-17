@@ -1,3 +1,4 @@
+import type { TeamFormDataType } from '@/components/feature/form/TeamForm';
 import type { ArticleDetailResponse } from '@/types/boardType';
 import type { GroupDetailResponse } from '@/types/groupType';
 import type { TaskFormSchema } from '@/types/taskFormSchema';
@@ -8,6 +9,7 @@ import type {
   TaskListsResponse,
   TaskUpdateRequestBody,
 } from '@/types/taskType';
+import type { UserType } from '@/types/userType';
 import { toggleDoneAt } from '@/utils/taskUtils';
 import { mutationOptions, QueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
@@ -17,12 +19,14 @@ import { toast } from 'sonner';
 import {
   addTaskList,
   createTask,
+  deleteGroup,
   deleteGroupMember,
   deleteTask,
   deleteTaskList,
   deleteTaskRecurring,
   likeArticle,
   unlikeArticle,
+  updateGroup,
   updateTask,
   updateTaskList,
   updateTaskListOrder,
@@ -483,6 +487,46 @@ export const groupMutations = {
         } else {
           toast.error('멤버 제외 실패. 다시 시도해주세요.');
         }
+        throw error;
+      },
+    }),
+
+  // 그룹 정보 수정
+  updateGroupOptions: (
+    groupId: number,
+    user: UserType,
+    queryClient: QueryClient,
+  ) =>
+    mutationOptions({
+      mutationFn: (variables: { groupId: number; payload: TeamFormDataType }) =>
+        updateGroup(variables.groupId, variables.payload),
+      onSuccess: () => {
+        toast.success('팀 정보를 수정했습니다.');
+        queryClient.invalidateQueries({
+          queryKey: groupQueries.group(groupId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: groupQueries.groups(user),
+        });
+      },
+      onError: error => {
+        toast.error('팀 정보 수정 실패. 다시 시도해주세요.');
+        throw error;
+      },
+    }),
+
+  //그룹 삭제
+  deleteGroupOptions: (user: UserType, queryClient: QueryClient) =>
+    mutationOptions({
+      mutationFn: (groupId: number) => deleteGroup(groupId),
+      onSuccess: () => {
+        toast.success('팀이 삭제되었습니다.');
+        queryClient.invalidateQueries({
+          queryKey: groupQueries.groups(user),
+        });
+      },
+      onError: error => {
+        toast.error('팀 삭제 실패. 다시 시도해주세요.');
         throw error;
       },
     }),
