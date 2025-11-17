@@ -190,6 +190,19 @@ export const getArticles = async ({
   }
 };
 
+// 베스트 게시글 목록 불러오기
+export const getBestArticles = async (): Promise<ArticleListResponse> => {
+  try {
+    const response = await axiosInstance(
+      `/articles?page=1&pageSize=15&orderBy=like`,
+    );
+    return response.data;
+  } catch (e) {
+    console.log('베스트 게시글 불러오기 에러: ', e);
+    throw e;
+  }
+};
+
 // 게시글 불러오기
 export const getArticle = async (
   id: number,

@@ -1,4 +1,5 @@
 import ArticleList from '@/components/feature/articles/ArticleList';
+import BestArticleList from '@/components/feature/articles/BestArticleList';
 import SearchField from '@/components/feature/search/SearchField';
 
 export default function BoardPage() {
@@ -11,6 +12,8 @@ export default function BoardPage() {
           <SearchField className='w-full shrink' />
         </div>
       </div>
+
+      <BestArticleList />
 
       <ArticleList />
     </div>
