@@ -4,7 +4,10 @@ import type {
   ArticleDetailResponse,
   ArticleListResponse,
 } from '@/types/boardType';
-import type { ArticleCommentsResponse } from '@/types/commentType';
+import type {
+  ArticleCommentResponse,
+  ArticleCommentsResponse,
+} from '@/types/commentType';
 import type {
   CreateGroupResponse,
   GroupDetailResponse,
@@ -218,6 +221,23 @@ export const getArticleComments = async (
     return response.data;
   } catch (e) {
     console.log('댓글 불러오기 에러: ', e);
+    throw e;
+  }
+};
+
+// 게시글 댓글 추가
+export const createArticleComment = async (
+  articleId: number,
+  content: string,
+): Promise<ArticleCommentResponse> => {
+  try {
+    const response = await axiosInstance.post(
+      `/articles/${articleId}/comments`,
+      { content },
+    );
+    return response.data;
+  } catch (e) {
+    console.log('댓글 추가 에러: ', e);
     throw e;
   }
 };

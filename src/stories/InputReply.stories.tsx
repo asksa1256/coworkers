@@ -30,7 +30,8 @@ export const Default: Story = {
   args: {
     placeholder: '내용을 입력하세요.',
     disabled: false,
-    error: null,
+    error: undefined,
+    onSubmit: () => console.log('폼 제출'),
   },
 };
 
@@ -38,8 +39,10 @@ export const WithError: Story = {
   args: {
     disabled: false,
     error: {
+      type: 'required',
       message: '내용을 입력해주세요.',
     },
+    onSubmit: () => console.log('폼 제출'),
   },
   name: '에러 메시지 표시',
 };

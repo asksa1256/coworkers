@@ -1,4 +1,3 @@
-import type { Writer } from './boardType';
 import type { UserType } from './userType';
 
 // 공통 필드
@@ -9,15 +8,15 @@ export interface CommentBaseResponse {
   updatedAt: string;
 }
 
-// 공통 핸들러
-export interface CommentHandlers {
-  handleEdit: (id: number) => void;
-  handleDelete: (id: number) => void;
-  handleSubmit: (content: string) => void;
+// CommentAuthor(user/writer) 관련 타입: 요청/응답 데이터가 아니라서 접미사를 붙이지 않았습니다.
+export interface CommentAuthor {
+  id: number;
+  nickname: string;
+  image: string | null;
 }
 
-interface ArticleCommentResponse extends CommentBaseResponse {
-  writer: Writer;
+export interface ArticleCommentResponse extends CommentBaseResponse {
+  writer: CommentAuthor;
 }
 
 export interface ArticleCommentsResponse {
@@ -31,21 +30,6 @@ export interface TaskCommentResponse extends CommentBaseResponse {
   user: Pick<UserType, 'id' | 'image' | 'nickname'>;
 }
 
-/* CommentAuthor(user/writer) 관련 타입: 요청/응답 데이터가 아니라서 접미사를 붙이지 않았습니다. */
-export interface CommentAuthor {
-  id: number;
-  nickname: string;
-  image: string | null;
-}
-
-export interface ArticleComment {
-  id: number;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-  writer: CommentAuthor;
-}
-
 export interface TaskComment {
   id: number;
   content: string;
@@ -56,4 +40,4 @@ export interface TaskComment {
   user: CommentAuthor;
 }
 
-export type CommentData = ArticleComment | TaskComment;
+export type CommentData = ArticleCommentResponse | TaskComment;
