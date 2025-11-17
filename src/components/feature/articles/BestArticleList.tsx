@@ -35,7 +35,6 @@ export default function BestArticleList() {
         }}
         pagination={{ clickable: true }}
         spaceBetween={12}
-        loop={true}
         autoplay={{
           delay: 5000,
           disableOnInteraction: false,
