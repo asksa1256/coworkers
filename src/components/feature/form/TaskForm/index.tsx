@@ -5,7 +5,6 @@ import Dropdown from '@/components/ui/Dropdown';
 import InputField from '@/components/ui/Input/InputField';
 import { Label } from '@/components/ui/Label';
 import Modal from '@/components/ui/Modal';
-import { Spinner } from '@/components/ui/spinner';
 import TextareaField from '@/components/ui/Textarea/TextareaField';
 import {
   taskFormSchema,
@@ -54,7 +53,6 @@ export default function TaskForm({ initialData, onSubmit }: Props) {
   const isWeekly = frequencyType === 'WEEKLY';
   const isMonthly = frequencyType === 'MONTHLY';
   const isEditMode = !!initialData;
-  const submitButtonText = isEditMode ? '수정하기' : '만들기';
 
   const handleSubmitTaskForm = (formData: TaskFormSchema) => onSubmit(formData);
 
@@ -195,7 +193,7 @@ export default function TaskForm({ initialData, onSubmit }: Props) {
         </Modal.Body>
         <Modal.Foot>
           <Button disabled={!isValid || isSubmitting || !isDirty}>
-            {isSubmitting ? <Spinner /> : submitButtonText}
+            {isSubmitting ? '생성 중...' : '만들기'}
           </Button>
         </Modal.Foot>
       </form>
