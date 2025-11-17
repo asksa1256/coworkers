@@ -22,7 +22,7 @@ export default function BestArticleList() {
   const allData = data?.list;
 
   return (
-    <section className='bg-bg-secondary relative mb-[28px] px-[18px] pt-[28px] pb-[28px] md:px-6 md:pt-8 md:pb-6 lg:mb-11 lg:rounded-[20px] lg:pt-10 lg:pb-5'>
+    <section className='bg-bg-secondary relative -mx-4 mb-[28px] px-[18px] pt-[28px] pb-[28px] md:-mx-[26px] md:px-6 md:pt-8 md:pb-6 lg:mx-0 lg:mb-11 lg:rounded-[20px] lg:pt-10 lg:pb-5'>
       <h3 className='text-2lg mb-5 font-bold md:text-xl lg:mb-6'>
         베스트 게시글
       </h3>

@@ -1,8 +1,12 @@
 import ArticleList from '@/components/feature/articles/ArticleList';
 import BestArticleList from '@/components/feature/articles/BestArticleList';
 import SearchField from '@/components/feature/search/SearchField';
+import { useSearchParams } from 'react-router-dom';
 
 export default function BoardPage() {
+  const [searchParams] = useSearchParams();
+  const keyword = searchParams.get('q');
+
   return (
     <div className='bg-bg-primary view-white w-full max-w-280 pt-6 pb-10 md:pt-[77px] lg:mx-auto lg:pt-[87px]'>
       <div className='mb-5 flex flex-col gap-5 md:mb-[30px] md:flex-row md:items-center md:justify-between'>
@@ -13,7 +17,8 @@ export default function BoardPage() {
         </div>
       </div>
 
-      <BestArticleList />
+      {/* 베스트 게시글은 검색 결과에서 제외 */}
+      {!keyword && <BestArticleList />}
 
       <ArticleList />
     </div>
