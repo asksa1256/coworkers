@@ -1,9 +1,11 @@
 import { boardQueries } from '@/api/queries';
 import LeftArrowIcon from '@/assets/icons/LeftArrowIcon.svg?react';
 import RightArrowIcon from '@/assets/icons/RightArrowIcon.svg?react';
+import useCurrentView from '@/hooks/useCurrentView';
+import mapCurrentViewToPageSize from '@/utils/currentViewToPageSize';
 import { useQuery } from '@tanstack/react-query';
 import { useRef } from 'react';
-import { A11y, Navigation, Pagination } from 'swiper/modules';
+import { A11y, Autoplay, Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
 import ArticleCard from './ArticleCard';
@@ -11,9 +13,11 @@ import ArticleCard from './ArticleCard';
 export default function BestArticleList() {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
+  const currentView = useCurrentView();
+  const pageSize = mapCurrentViewToPageSize(currentView);
 
   const { data, isPending, error } = useQuery(
-    boardQueries.bestArticlesOptions(),
+    boardQueries.bestArticlesOptions(pageSize),
   );
   const allData = data?.list;
 
@@ -24,7 +28,7 @@ export default function BestArticleList() {
       </h3>
 
       <Swiper
-        modules={[Navigation, Pagination, A11y]}
+        modules={[Navigation, Pagination, Autoplay, A11y]}
         navigation={{
           prevEl: prevRef.current,
           nextEl: nextRef.current,
@@ -32,6 +36,11 @@ export default function BestArticleList() {
         pagination={{ clickable: true }}
         spaceBetween={12}
         loop={true}
+        autoplay={{
+          delay: 5000,
+          disableOnInteraction: false,
+        }}
+        speed={500}
         breakpoints={{
           320: { slidesPerView: 1, slidesPerGroup: 1 },
           640: { slidesPerView: 2, slidesPerGroup: 2 },

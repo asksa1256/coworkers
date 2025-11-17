@@ -191,10 +191,12 @@ export const getArticles = async ({
 };
 
 // 베스트 게시글 목록 불러오기
-export const getBestArticles = async (): Promise<ArticleListResponse> => {
+export const getBestArticles = async (
+  pageSize: number,
+): Promise<ArticleListResponse> => {
   try {
     const response = await axiosInstance(
-      `/articles?page=1&pageSize=15&orderBy=like`,
+      `/articles?page=1&pageSize=${pageSize}&orderBy=like`,
     );
     return response.data;
   } catch (e) {

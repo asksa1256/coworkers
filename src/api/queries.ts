@@ -53,11 +53,11 @@ export const boardQueries = {
       },
     }),
 
-  bestArticles: () => ['bestArticles'],
-  bestArticlesOptions: () =>
+  bestArticles: (pageSize: number) => ['bestArticles', pageSize],
+  bestArticlesOptions: (pageSize: number) =>
     queryOptions({
-      queryKey: boardQueries.bestArticles(),
-      queryFn: async () => getBestArticles(),
+      queryKey: boardQueries.bestArticles(pageSize),
+      queryFn: async () => getBestArticles(pageSize),
     }),
 
   article: (id: number) => ['article', id],
