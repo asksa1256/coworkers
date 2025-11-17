@@ -2,6 +2,7 @@ import KebabIcon from '@/assets/icons/KebabIcon.svg?react';
 import type { MenuItem } from '@/components/ui/Dropdown';
 import Dropdown from '@/components/ui/Dropdown';
 import useModal from '@/hooks/useModal';
+import { useParams } from 'react-router-dom';
 import DeleteTaskListModal from './DeleteTaskListModal';
 import TaskListForm from './TaskListForm';
 
@@ -16,6 +17,7 @@ export default function TaskListDropdown({
   taskListId,
   taskListName,
 }: Props) {
+  const { taskListId: currentTaskListId } = useParams();
   const { openModal } = useModal();
   const taskListDropdownMenu: MenuItem[] = [
     {
@@ -56,6 +58,7 @@ export default function TaskListDropdown({
           groupId={groupId}
           taskListId={taskListId}
           taskListName={taskListName}
+          currentTaskListId={currentTaskListId}
         />
       ),
     });
