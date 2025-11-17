@@ -1,5 +1,7 @@
+import type { TeamFormDataType } from '@/components/feature/form/TeamForm';
 import type { ArticleDetailResponse } from '@/types/boardType';
 import type { GroupDetailResponse } from '@/types/groupType';
+import type { TaskFormSchema } from '@/types/taskFormSchema';
 import type { TaskListSchema } from '@/types/taskListSchema';
 import type {
   TaskDetailResponse,
@@ -7,6 +9,7 @@ import type {
   TaskListsResponse,
   TaskUpdateRequestBody,
 } from '@/types/taskType';
+import type { UserType } from '@/types/userType';
 import { toggleDoneAt } from '@/utils/taskUtils';
 import { mutationOptions, QueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
@@ -15,10 +18,15 @@ import type { UseFormReset, UseFormSetError } from 'react-hook-form';
 import { toast } from 'sonner';
 import {
   addTaskList,
+  createTask,
+  deleteGroup,
   deleteGroupMember,
+  deleteTask,
   deleteTaskList,
+  deleteTaskRecurring,
   likeArticle,
   unlikeArticle,
+  updateGroup,
   updateTask,
   updateTaskList,
   updateTaskListOrder,
@@ -85,6 +93,9 @@ export const taskListMutations = {
         queryClient.invalidateQueries({
           queryKey: groupQueries.group(groupId),
         });
+        queryClient.invalidateQueries({
+          queryKey: ['singleTaskList'],
+        });
         if (closeModal) closeModal();
       },
       onError: error => {
@@ -106,6 +117,7 @@ export const taskListMutations = {
     taskListId: number,
     queryClient: QueryClient,
     closeModal?: () => void,
+    currentTaskListId?: number,
   ) =>
     mutationOptions({
       mutationFn: (taskListId: number) => deleteTaskList(taskListId),
@@ -114,6 +126,11 @@ export const taskListMutations = {
         queryClient.invalidateQueries({
           queryKey: groupQueries.group(groupId),
         });
+
+        // 태스크 리스트 페이지에서 삭제할 taskListId와 현재 taskListId가 동일하면, 팀페이지로 이동
+        if (currentTaskListId && currentTaskListId === taskListId) {
+          window.location.href = `/${groupId}`;
+        }
         if (closeModal) closeModal();
       },
       onError: error => {
@@ -361,6 +378,89 @@ export const taskMutations = {
         });
       },
     }),
+  // 태스크 생성
+  createTaskOptions: ({
+    queryClient,
+    closeModal,
+  }: {
+    queryClient: QueryClient;
+    closeModal: () => void;
+  }) =>
+    mutationOptions({
+      mutationFn: ({
+        groupId,
+        taskListId,
+        payload,
+      }: {
+        groupId: string;
+        taskListId: string;
+        payload: TaskFormSchema;
+      }) => createTask(groupId, taskListId, payload),
+      onSuccess: (data, { groupId, taskListId }) => {
+        toast.success('할 일 만들기 성공!');
+        // 서버에서 보내주는 일자와 쿼리키값에 등록한 일자의 매칭 불일치로
+        // 프리픽스 매칭으로 적용함
+
+        // 할일 목록 캐싱 무효화
+        queryClient.invalidateQueries({
+          queryKey: ['singleTaskList', groupId, taskListId],
+        });
+
+        // 태스크 캐싱 무효화
+        queryClient.invalidateQueries({
+          queryKey: ['tasks', groupId, taskListId],
+        });
+
+        closeModal();
+      },
+      onError: error => {
+        console.error(error);
+        toast.error('할 일 만들기에 실패하였습니다. 다시 시도해주세요.');
+      },
+    }),
+  // 태스크 삭제
+  deleteTaskOptions: ({
+    queryClient,
+    closeModal,
+  }: {
+    queryClient: QueryClient;
+    closeModal: () => void;
+  }) =>
+    mutationOptions({
+      mutationFn: ({
+        groupId,
+        taskListId,
+        taskId,
+        recurringId,
+      }: {
+        groupId: string;
+        taskListId: string;
+        taskId: string;
+        recurringId?: string;
+      }) =>
+        recurringId
+          ? deleteTaskRecurring({ groupId, taskListId, taskId, recurringId })
+          : deleteTask({ groupId, taskListId, taskId }),
+      onSuccess: (data, { groupId, taskListId }) => {
+        toast.success('할일 삭제 성공하였습니다.');
+
+        // 할일 목록 캐싱 무효화
+        queryClient.invalidateQueries({
+          queryKey: ['singleTaskList', groupId, taskListId],
+        });
+
+        // 태스크 캐싱 무효화
+        queryClient.invalidateQueries({
+          queryKey: ['tasks', groupId, taskListId],
+        });
+
+        closeModal();
+      },
+      onError: error => {
+        console.error(error);
+        toast.error('할일 삭제 실패하였습니다. 다시 시도해주세요.');
+      },
+    }),
 };
 
 export const groupMutations = {
@@ -387,6 +487,46 @@ export const groupMutations = {
         } else {
           toast.error('멤버 제외 실패. 다시 시도해주세요.');
         }
+        throw error;
+      },
+    }),
+
+  // 그룹 정보 수정
+  updateGroupOptions: (
+    groupId: number,
+    user: UserType,
+    queryClient: QueryClient,
+  ) =>
+    mutationOptions({
+      mutationFn: (variables: { groupId: number; payload: TeamFormDataType }) =>
+        updateGroup(variables.groupId, variables.payload),
+      onSuccess: () => {
+        toast.success('팀 정보를 수정했습니다.');
+        queryClient.invalidateQueries({
+          queryKey: groupQueries.group(groupId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: groupQueries.groups(user),
+        });
+      },
+      onError: error => {
+        toast.error('팀 정보 수정 실패. 다시 시도해주세요.');
+        throw error;
+      },
+    }),
+
+  //그룹 삭제
+  deleteGroupOptions: (user: UserType, queryClient: QueryClient) =>
+    mutationOptions({
+      mutationFn: (groupId: number) => deleteGroup(groupId),
+      onSuccess: () => {
+        toast.success('팀이 삭제되었습니다.');
+        queryClient.invalidateQueries({
+          queryKey: groupQueries.groups(user),
+        });
+      },
+      onError: error => {
+        toast.error('팀 삭제 실패. 다시 시도해주세요.');
         throw error;
       },
     }),

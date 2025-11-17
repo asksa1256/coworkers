@@ -10,15 +10,19 @@ import type {
   GroupDetailResponse,
   JoinGroupPayload,
   JoinGroupResponse,
+  UpdateGroupResponse,
 } from '@/types/groupType';
+import type { TaskFormSchema } from '@/types/taskFormSchema';
 import type { TaskListSchema } from '@/types/taskListSchema';
 import type {
+  RecurringResponse,
   TaskDetailResponse,
   TaskListOrderRequestBody,
   TaskListsResponse,
   TaskUpdateRequestBody,
 } from '@/types/taskType';
 import type { MembershipsType } from '@/types/userType';
+import type { AxiosResponse } from 'axios';
 
 export const getGroup = async (
   groupId: number,
@@ -138,6 +142,28 @@ export const createGroup = async (
   return data;
 };
 
+export const updateGroup = async (
+  groupId: number,
+  payload: TeamFormDataType,
+): Promise<UpdateGroupResponse> => {
+  try {
+    const { data } = await axiosInstance.patch(`/groups/${groupId}`, payload);
+    return data;
+  } catch (e) {
+    console.log('팀 정보 수정 에러:', e);
+    throw e;
+  }
+};
+
+export const deleteGroup = async (groupId: number) => {
+  try {
+    await axiosInstance.delete(`/groups/${groupId}`);
+  } catch (e) {
+    console.log('팀 삭제 에러:', e);
+    throw e;
+  }
+};
+
 export const createInviteToken = async (groupId: string): Promise<string> => {
   const { data: token } = await axiosInstance.get(
     `/groups/${groupId}/invitation`,
@@ -246,4 +272,66 @@ export const getTasks = async (
     `/groups/${groupId}/task-lists/${taskListId}/tasks?date=${date}`,
   );
   return data;
+};
+
+// 할일 생성하기
+export const createTask = async (
+  groupId: string,
+  taskListId: string,
+  payload: TaskFormSchema,
+): Promise<RecurringResponse> => {
+  const newStartDate = payload.startDate || new Date();
+
+  // shadcnui의 calendar에서 로컬 일자/시간으로 value를 보내주는데,
+  // 서버에서 한번 더 보정을 하는지 선택한 일자와 실제로 서버에 등록되는 일자에 불일치 발생
+  // 그래서 서버에 보내기전에 shadcnui에서 보정 해준 시간을 utc 기준으로 다시 변환함.
+  const adjustedStartDate = new Date(
+    newStartDate.getTime() - newStartDate.getTimezoneOffset() * 60000,
+  ).toISOString();
+
+  const newPayload = {
+    ...payload,
+    startDate: adjustedStartDate,
+  };
+
+  const { data } = await axiosInstance.post(
+    `/groups/${groupId}/task-lists/${taskListId}/tasks`,
+    newPayload,
+  );
+
+  return data;
+};
+
+// 태스크 삭제
+export const deleteTask = async ({
+  groupId,
+  taskListId,
+  taskId,
+}: {
+  groupId: string;
+  taskListId: string;
+  taskId: string;
+}): Promise<AxiosResponse<void>> => {
+  // 특정 할 일 삭제
+  return await axiosInstance.delete(
+    `/groups/${groupId}/task-lists/${taskListId}/tasks/${taskId}`,
+  );
+};
+
+// 반복 설정된 태스크의 모든 일정 삭제
+export const deleteTaskRecurring = async ({
+  groupId,
+  taskListId,
+  taskId,
+  recurringId,
+}: {
+  groupId: string;
+  taskListId: string;
+  taskId: string;
+  recurringId: string;
+}): Promise<AxiosResponse<void>> => {
+  // 반복 할 일 삭제
+  return await axiosInstance.delete(
+    `/groups/${groupId}/task-lists/${taskListId}/tasks/${taskId}/recurring/${recurringId}`,
+  );
 };

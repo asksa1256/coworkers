@@ -16,7 +16,6 @@ interface Props {
 
 export default function TaskListPageBody({ date, setDate }: Props) {
   const { groupId, taskListId } = useParams();
-  // const [date, setDate] = useState<Date>(new Date());
   const { data: singleTaskListData, isLoading: isTaskListLoading } = useQuery(
     taskListQueries.singleTaskListOptions(groupId, taskListId, date),
   );
@@ -69,7 +68,7 @@ export default function TaskListPageBody({ date, setDate }: Props) {
       </div>
 
       <TaskSectionListArea date={date} />
-      <CreateTaskButton />
+      <CreateTaskButton groupId={groupId} taskListId={taskListId} />
     </div>
   );
 }

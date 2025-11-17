@@ -1,7 +1,7 @@
 import { taskListQueries } from '@/api/queries';
 import GnbArrowIcon from '@/assets/icons/GnbArrowIcon.svg?react';
-import TaskGroupActionMenu from '@/components/feature/taskListPage/TaskGroupActionMenu';
 import TaskGroupSummary from '@/components/feature/taskListPage/TaskGroupSummary';
+import TaskListDropdown from '@/components/feature/teamPage/TaskListDropdown';
 
 import {
   DropdownMenu,
@@ -66,7 +66,11 @@ export default function TaskGroupList({ taskGroups, date }: Props) {
                   >
                     <TaskGroupSummary group={group} />
                   </Link>
-                  <TaskGroupActionMenu id={group.id} />
+                  <TaskListDropdown
+                    groupId={Number(group.groupId)}
+                    taskListId={Number(group.id)}
+                    taskListName={group.name}
+                  />
                 </div>
               )
             );

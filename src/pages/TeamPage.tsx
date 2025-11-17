@@ -1,54 +1,25 @@
-import { getGroupMembership } from '@/api/api';
 import { groupQueries } from '@/api/queries';
-import ConfigIcon from '@/assets/icons/ConfigIcon.svg?react';
 import AvatarGroup from '@/components/feature/teamPage/AvatarGroup';
+import GroupConfigDropdown from '@/components/feature/teamPage/GroupConfigDropdown';
 import MemberListCard from '@/components/feature/teamPage/MemberListCard';
 import ReportCard from '@/components/feature/teamPage/ReportCard';
 import TaskKanbanBoard from '@/components/feature/teamPage/TaskKanbanBoard';
 import GroupTitleBar from '@/components/ui/GroupTitleBar';
+import { useGroupAuthContext } from '@/hooks/useGroupAuthContext';
 import useModal from '@/hooks/useModal';
 import { calcTodayDone, calcTodayTodos } from '@/utils/calculations';
 import { useQuery } from '@tanstack/react-query';
-import { isAxiosError } from 'axios';
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'sonner';
+import { useParams } from 'react-router-dom';
 
 export default function TeamPage() {
   const { openModal } = useModal();
-  const navigate = useNavigate();
   const params = useParams();
   const groupId = Number(params.groupId);
-  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const { data: groupData } = useQuery(groupQueries.groupOptions(groupId));
+  const isAdmin = useGroupAuthContext();
 
-  useEffect(() => {
-    const getUserRole = async () => {
-      const user = localStorage.getItem('user');
-
-      if (!user) return;
-
-      try {
-        const data = await getGroupMembership(groupId, JSON.parse(user).id);
-        setIsAdmin(data.role === 'ADMIN');
-      } catch (e) {
-        console.log('유저 권한 가져오기 실패: ', e);
-        if (isAxiosError(e) && e.response?.status === 404) {
-          // 그룹 멤버 아닐 시 홈으로 이동
-          navigate('/', { replace: true });
-        } else {
-          toast.error('사용자 권한을 가져올 수 없습니다. 다시 시도해주세요.');
-        }
-        throw e;
-      }
-    };
-
-    setIsAdmin(null);
-    getUserRole();
-  }, [navigate, groupId]);
-
-  if (isAdmin === null || !groupData) return;
+  if (!groupData) return;
 
   const handleOpenMembersModal = () => {
     openModal({
@@ -77,7 +48,11 @@ export default function TeamPage() {
               />
             </div>
           </div>
-          <ConfigIcon className={clsx('w-5 md:w-6', { hidden: !isAdmin })} />
+          <GroupConfigDropdown
+            groupId={groupId}
+            groupName={groupData.name}
+            isAdmin={isAdmin}
+          />
         </GroupTitleBar>
 
         {isAdmin && (
