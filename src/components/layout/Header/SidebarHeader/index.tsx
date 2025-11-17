@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 interface Props {
   isLoggedIn: boolean;
   currentGroup: GroupType | null;
-  onUpdateCurrentGroup: (group: GroupType) => void;
+  onUpdateCurrentGroup: (group: GroupType | null) => void;
 }
 
 export default function SidebarHeader({

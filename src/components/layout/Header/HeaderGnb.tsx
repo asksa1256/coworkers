@@ -60,7 +60,7 @@ function GnbItem({ type, href, title, current }: GnbItemProps) {
 
 interface HeaderGnbProps {
   currentGroup: GroupType | null;
-  onUpdateCurrentGroup: (group: GroupType) => void;
+  onUpdateCurrentGroup: (group: GroupType | null) => void;
 }
 
 export default function HeaderGnb({
@@ -77,8 +77,12 @@ export default function HeaderGnb({
   useEffect(() => {
     if (!groupId) return;
     const findGroup = userGroups?.find(item => String(item.id) === groupId);
-    if (findGroup) onUpdateCurrentGroup(findGroup);
-  }, [groupId, userGroups]);
+    if (findGroup) {
+      onUpdateCurrentGroup(findGroup);
+    } else {
+      onUpdateCurrentGroup(null);
+    }
+  }, [groupId, userGroups, onUpdateCurrentGroup]);
 
   if (!userGroups)
     return (
