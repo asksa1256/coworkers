@@ -106,6 +106,10 @@ export default function ArticleCommentSection({
       />
 
       <Comment.List
+        comments={allData}
+        fetchNextPage={fetchNextPage}
+        hasNextPage={hasNextPage}
+        isFetchingNextPage={isFetchingNextPage}
         itemActions={
           <Dropdown
             type='icon'

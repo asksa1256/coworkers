@@ -1,18 +1,28 @@
 import EmptyContent from '@/components/ui/EmptyContent';
 import InfiniteScrollObserver from '@/components/ui/InfiniteScrollObserver';
 import useIntersectionObserver from '@/hooks/useIntersectionObserver';
+import type { CommentData } from '@/types/commentType';
+import { getCommentAuthor } from '@/utils/typeGuard';
 import { useRef } from 'react';
-import { useCommentContext } from './CommentContext';
 import { CommentItem } from './CommentItem';
 
 interface CommentListProps {
+  comments: CommentData[];
+  fetchNextPage?: () => void;
+  hasNextPage?: boolean;
+  isFetchingNextPage?: boolean;
   itemActions?: React.ReactNode;
+  className?: string;
 }
 
-export default function CommentList({ itemActions }: CommentListProps) {
-  const { comments, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useCommentContext();
-
+export default function CommentList({
+  comments,
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
+  itemActions,
+  className,
+}: CommentListProps) {
   const scrollRef = useRef(null);
 
   useIntersectionObserver({
@@ -34,12 +44,13 @@ export default function CommentList({ itemActions }: CommentListProps) {
   }
 
   return (
-    <>
+    <div className={className}>
       <ol>
         {comments.map(comment => (
           <CommentItem
             key={comment.id}
             comment={comment}
+            author={getCommentAuthor(comment)}
             actions={itemActions}
           />
         ))}
@@ -53,6 +64,6 @@ export default function CommentList({ itemActions }: CommentListProps) {
           hasNextPage={!!hasNextPage}
         />
       )}
-    </>
+    </div>
   );
 }
