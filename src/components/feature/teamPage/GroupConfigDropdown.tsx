@@ -10,12 +10,14 @@ interface Props {
   groupId: number;
   groupName: string;
   isAdmin: boolean;
+  align?: string;
 }
 
 export default function GroupConfigDropdown({
   groupId,
   groupName,
   isAdmin,
+  align = 'end',
 }: Props) {
   const navigate = useNavigate();
   const { openModal } = useModal();
@@ -49,7 +51,7 @@ export default function GroupConfigDropdown({
     <>
       <Dropdown
         type='icon'
-        align='end'
+        align={align}
         menuItems={groupConfigDropdownMenu}
         triggerChildren={groupConfigDropdownTrigger}
       />
