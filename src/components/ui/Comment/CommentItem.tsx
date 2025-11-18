@@ -1,26 +1,18 @@
 import Avatar from '@/components/ui/Avatar';
 import { userAtom } from '@/store/authAtom';
-import type { CommentData } from '@/types/commentType';
+import type { CommentAuthor, CommentData } from '@/types/commentType';
 import { formatRelativeTime } from '@/utils/formatters';
 import { useAtomValue } from 'jotai';
 import { type ReactNode } from 'react';
 
 interface CommentItemProps {
   comment: CommentData;
+  author: CommentAuthor;
   actions?: ReactNode;
 }
 
-export function CommentItem({ comment, actions }: CommentItemProps) {
-  let author;
-
-  if ('writer' in comment) {
-    author = comment.writer;
-  } else if ('user' in comment) {
-    author = comment.user;
-  }
-
+export function CommentItem({ comment, author, actions }: CommentItemProps) {
   const user = useAtomValue(userAtom);
-
   const showActions = author?.id === user?.id;
 
   return (
