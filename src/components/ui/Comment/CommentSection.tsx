@@ -1,5 +1,4 @@
 import { cn } from '@/lib/utils';
-import type { CommentData } from '@/types/commentType';
 import { type ReactNode } from 'react';
 import EmptyContent from '../EmptyContent';
 import CommentEmpty from './CommentEmpty';
@@ -9,23 +8,19 @@ import CommentInfiniteScroll from './CommentInfiniteScroll';
 import CommentList from './CommentList';
 
 interface CommentSectionProps {
-  comments: CommentData[];
   isPending: boolean;
   status: string;
   error: Error | null;
-  fetchNextPage?: () => void;
-  hasNextPage?: boolean;
-  isFetchingNextPage?: boolean;
-  className?: string;
   children: ReactNode;
+  className?: string;
 }
 
 export default function Comment({
   isPending,
   status,
   error,
-  className,
   children,
+  className,
 }: CommentSectionProps) {
   return (
     <div className={cn('mt-4 md:mt-[28px] lg:mt-10', className)}>

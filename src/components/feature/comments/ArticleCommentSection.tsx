@@ -97,15 +97,7 @@ export default function ArticleCommentSection({
   if (!allData) return null;
 
   return (
-    <Comment
-      comments={allData}
-      isPending={isPending}
-      status={status}
-      error={error}
-      fetchNextPage={fetchNextPage}
-      hasNextPage={hasNextPage}
-      isFetchingNextPage={isFetchingNextPage}
-    >
+    <Comment isPending={isPending} status={status} error={error}>
       <Comment.Header count={commentCount} />
 
       <Comment.Form
