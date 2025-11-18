@@ -6,17 +6,19 @@ import InputField from '@/components/ui/Input/InputField';
 import { Label } from '@/components/ui/Label';
 import Modal from '@/components/ui/Modal';
 import TextareaField from '@/components/ui/Textarea/TextareaField';
-import {
-  taskFormSchema,
-  type MonthlyTaskFormSchema,
-  type TaskFormSchema,
-  type WeeklyTaskFormSchema,
-} from '@/types/taskFormSchema';
+import type { FREQUENCY_TO_TEXT } from '@/constants';
+import { taskFormSchema, type TaskFormSchema } from '@/types/taskFormSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-const FREQUENCY_DROPDOWN = [
+type FrequencyType = keyof typeof FREQUENCY_TO_TEXT;
+
+interface FrequencyDropdownType {
+  label: string;
+  value: FrequencyType;
+}
+
+const FREQUENCY_DROPDOWN: FrequencyDropdownType[] = [
   { label: '한 번', value: 'ONCE' },
   { label: '매일 반복', value: 'DAILY' },
   { label: '매주 반복', value: 'WEEKLY' },
@@ -24,11 +26,10 @@ const FREQUENCY_DROPDOWN = [
 ];
 
 interface Props {
-  initialData?: TaskFormSchema;
   onSubmit: (formData: TaskFormSchema) => void;
 }
 
-export default function TaskForm({ initialData, onSubmit }: Props) {
+export default function TaskForm({ onSubmit }: Props) {
   const {
     register,
     control,
@@ -41,10 +42,10 @@ export default function TaskForm({ initialData, onSubmit }: Props) {
     resolver: zodResolver(taskFormSchema),
     mode: 'onChange',
     defaultValues: {
-      name: initialData?.name || '',
-      description: initialData?.description || '',
-      startDate: initialData?.startDate || new Date(),
-      frequencyType: initialData?.frequencyType || 'ONCE',
+      name: '',
+      description: '',
+      startDate: new Date(),
+      frequencyType: 'ONCE',
     },
   });
 
@@ -52,7 +53,6 @@ export default function TaskForm({ initialData, onSubmit }: Props) {
 
   const isWeekly = frequencyType === 'WEEKLY';
   const isMonthly = frequencyType === 'MONTHLY';
-  const isEditMode = !!initialData;
 
   const handleSubmitTaskForm = (formData: TaskFormSchema) => onSubmit(formData);
 
@@ -63,26 +63,6 @@ export default function TaskForm({ initialData, onSubmit }: Props) {
     });
   };
 
-  useEffect(() => {
-    if (isWeekly) {
-      const initialWeeklyData = initialData as WeeklyTaskFormSchema;
-      setValue('weekDays', initialWeeklyData?.weekDays || [], {
-        shouldDirty: false,
-      });
-    }
-
-    if (isMonthly) {
-      const initialMonthlyData = initialData as MonthlyTaskFormSchema;
-      setValue(
-        'monthDay',
-        initialMonthlyData?.monthDay || new Date().getDate(),
-        {
-          shouldDirty: false,
-        },
-      );
-    }
-  }, [initialData, isWeekly, isMonthly, frequencyType, setValue]);
-
   return (
     <>
       <form
@@ -91,7 +71,7 @@ export default function TaskForm({ initialData, onSubmit }: Props) {
       >
         <Modal.Body>
           <div className='mb-6 text-center font-medium'>
-            <h2>{isEditMode ? '할 일 수정하기' : '할 일 만들기'}</h2>
+            <h2>할 일 만들기</h2>
           </div>
           <div>
             <Label className='mb-4 font-medium' htmlFor='name'>
@@ -123,14 +103,13 @@ export default function TaskForm({ initialData, onSubmit }: Props) {
                     value={value}
                     id='startDate'
                     onChange={handleChange}
-                    disabled={isEditMode}
                   />
                 );
               }}
             />
           </div>
 
-          <div className='relative mt-6'>
+          <div className='mt-6'>
             <Label className='mb-4 font-medium'>반복 설정</Label>
             <Controller
               name='frequencyType'
@@ -148,9 +127,6 @@ export default function TaskForm({ initialData, onSubmit }: Props) {
                       value={value}
                       onSelect={handleSelect}
                     />
-                    {isEditMode && (
-                      <div className='absolute top-0 right-0 bottom-0 left-0' />
-                    )}
                   </>
                 );
               }}
