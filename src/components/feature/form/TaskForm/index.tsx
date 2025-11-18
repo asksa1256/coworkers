@@ -71,7 +71,7 @@ export default function TaskForm({ onSubmit }: Props) {
       >
         <Modal.Body>
           <div className='mb-6 text-center font-medium'>
-            <h2>할 일 만들기</h2>
+            <h2 className='text-base'>할 일 만들기</h2>
           </div>
           <div>
             <Label className='mb-4 font-medium' htmlFor='name'>
