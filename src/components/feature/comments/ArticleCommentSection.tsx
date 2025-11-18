@@ -3,6 +3,7 @@ import { boardQueries } from '@/api/queries';
 import KebabIcon from '@/assets/icons/KebabIcon.svg?react';
 import Comment from '@/components/ui/Comment/CommentSection';
 import Dropdown from '@/components/ui/Dropdown';
+import useIntersectionObserver from '@/hooks/useIntersectionObserver';
 import { userAtom } from '@/store/authAtom';
 import {
   type CreateCommentRequest,
@@ -15,6 +16,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
+import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
@@ -29,6 +31,7 @@ export default function ArticleCommentSection({
 }: Props) {
   const user = useAtomValue(userAtom);
   const queryClient = useQueryClient();
+  const scrollRef = useRef(null);
 
   const {
     data,
@@ -85,6 +88,12 @@ export default function ArticleCommentSection({
     { label: '삭제하기', onClick: handleDelete },
   ];
 
+  useIntersectionObserver({
+    target: scrollRef,
+    onIntersect: fetchNextPage || (() => {}),
+    enabled: !!hasNextPage,
+  });
+
   if (!allData) return null;
 
   return (
@@ -107,9 +116,6 @@ export default function ArticleCommentSection({
 
       <Comment.List
         comments={allData}
-        fetchNextPage={fetchNextPage}
-        hasNextPage={hasNextPage}
-        isFetchingNextPage={isFetchingNextPage}
         itemActions={
           <Dropdown
             type='icon'
@@ -119,7 +125,13 @@ export default function ArticleCommentSection({
             className='text-center'
           />
         }
-      />
+      >
+        <Comment.InfiniteScroll
+          fetchNextPage={fetchNextPage}
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+        />
+      </Comment.List>
     </Comment>
   );
 }

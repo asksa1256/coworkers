@@ -1,36 +1,22 @@
 import EmptyContent from '@/components/ui/EmptyContent';
-import InfiniteScrollObserver from '@/components/ui/InfiniteScrollObserver';
-import useIntersectionObserver from '@/hooks/useIntersectionObserver';
 import type { CommentData } from '@/types/commentType';
 import { getCommentAuthor } from '@/utils/typeGuard';
-import { useRef } from 'react';
-import { CommentItem } from './CommentItem';
+import type { ReactNode } from 'react';
+import CommentItem from './CommentItem';
 
 interface CommentListProps {
   comments: CommentData[];
-  fetchNextPage?: () => void;
-  hasNextPage?: boolean;
-  isFetchingNextPage?: boolean;
   itemActions?: React.ReactNode;
+  children: ReactNode;
   className?: string;
 }
 
 export default function CommentList({
   comments,
-  fetchNextPage,
-  hasNextPage,
-  isFetchingNextPage,
   itemActions,
+  children,
   className,
 }: CommentListProps) {
-  const scrollRef = useRef(null);
-
-  useIntersectionObserver({
-    target: scrollRef,
-    onIntersect: fetchNextPage || (() => {}),
-    enabled: !!hasNextPage,
-  });
-
   const isEmpty = comments.length === 0;
 
   if (isEmpty) {
@@ -56,14 +42,8 @@ export default function CommentList({
         ))}
       </ol>
 
-      {/* 무한 스크롤 사용 시에만 렌더링 */}
-      {hasNextPage && (
-        <InfiniteScrollObserver
-          ref={scrollRef}
-          isLoading={!!isFetchingNextPage}
-          hasNextPage={!!hasNextPage}
-        />
-      )}
+      {/* 무한 스크롤 요소 등 추가 컴포넌트 */}
+      {children}
     </div>
   );
 }

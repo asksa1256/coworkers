@@ -5,7 +5,7 @@ import EmptyContent from '../EmptyContent';
 import CommentEmpty from './CommentEmpty';
 import CommentForm from './CommentForm';
 import CommentHeader from './CommentHeader';
-import CommentItem from './CommentItem';
+import CommentInfiniteScroll from './CommentInfiniteScroll';
 import CommentList from './CommentList';
 
 interface CommentSectionProps {
@@ -47,5 +47,5 @@ export default function Comment({
 Comment.Header = CommentHeader;
 Comment.Form = CommentForm;
 Comment.List = CommentList;
-Comment.Item = CommentItem;
 Comment.Empty = CommentEmpty;
+Comment.InfiniteScroll = CommentInfiniteScroll;
