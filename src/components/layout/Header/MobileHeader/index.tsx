@@ -31,7 +31,7 @@ export default function MobileHeader({
           <MobileUser />
         ) : (
           <Link
-            to='/login'
+            to='/auth/signIn'
             className='text-md text-text-default flex h-full items-center'
           >
             로그인

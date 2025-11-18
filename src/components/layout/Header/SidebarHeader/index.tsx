@@ -72,7 +72,7 @@ export default function SidebarHeader({
               'border-border-primary mx-4 flex items-center gap-3 border-t pt-5 pb-6 text-center leading-10 font-medium whitespace-nowrap',
               'group-[.is-fold]:text-text-default',
             )}
-            to='/login'
+            to='/auth/signIn'
           >
             <span
               className={cn(
