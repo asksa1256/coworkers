@@ -75,7 +75,6 @@ export default function HeaderGnb({
   const { data: userGroups } = useQuery(groupQueries.groupsOptions(user));
 
   useEffect(() => {
-    if (!groupId) return;
     const findGroup = userGroups?.find(item => String(item.id) === groupId);
     if (findGroup) {
       onUpdateCurrentGroup(findGroup);
