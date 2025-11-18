@@ -10,7 +10,7 @@ interface Props {
   groupId: number;
   groupName: string;
   isAdmin: boolean;
-  align?: string;
+  align?: 'start' | 'end' | 'center';
 }
 
 export default function GroupConfigDropdown({
