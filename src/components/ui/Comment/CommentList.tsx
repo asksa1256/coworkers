@@ -1,19 +1,21 @@
 import EmptyContent from '@/components/ui/EmptyContent';
 import type { CommentData } from '@/types/commentType';
-import { getCommentAuthor } from '@/utils/typeGuard';
 import type { ReactNode } from 'react';
-import CommentItem from './CommentItem';
 
 interface CommentListProps {
   comments: CommentData[];
-  itemActions?: React.ReactNode;
+  // itemActions?: React.ReactNode;
+  // itemActions: (commentId: number) => {
+  //   dropdown: ReactNode;
+  //   editActions: CommentItemProps['actions']; // CommentItemProps의 actions 타입 재사용
+  // };
   children: ReactNode;
   className?: string;
 }
 
 export default function CommentList({
   comments,
-  itemActions,
+  // itemActions,
   children,
   className,
 }: CommentListProps) {
@@ -29,21 +31,5 @@ export default function CommentList({
     );
   }
 
-  return (
-    <div className={className}>
-      <ol>
-        {comments.map(comment => (
-          <CommentItem
-            key={comment.id}
-            comment={comment}
-            author={getCommentAuthor(comment)}
-            actions={itemActions}
-          />
-        ))}
-      </ol>
-
-      {/* 무한 스크롤 요소 등 추가 컴포넌트 */}
-      {children}
-    </div>
-  );
+  return <div className={className}>{children}</div>;
 }

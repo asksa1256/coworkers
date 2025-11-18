@@ -1,10 +1,12 @@
 import { cn } from '@/lib/utils';
 import { type ReactNode } from 'react';
 import EmptyContent from '../EmptyContent';
+import CommentDropdown from './CommentDropdown';
 import CommentEmpty from './CommentEmpty';
 import CommentForm from './CommentForm';
 import CommentHeader from './CommentHeader';
 import CommentInfiniteScroll from './CommentInfiniteScroll';
+import CommentItem from './CommentItem';
 import CommentList from './CommentList';
 
 interface CommentSectionProps {
@@ -42,5 +44,7 @@ export default function Comment({
 Comment.Header = CommentHeader;
 Comment.Form = CommentForm;
 Comment.List = CommentList;
+Comment.Item = CommentItem;
 Comment.Empty = CommentEmpty;
 Comment.InfiniteScroll = CommentInfiniteScroll;
+Comment.Dropdown = CommentDropdown;

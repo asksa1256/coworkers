@@ -1,14 +1,13 @@
 import { articleCommentMutations } from '@/api/mutations';
 import { boardQueries } from '@/api/queries';
-import KebabIcon from '@/assets/icons/KebabIcon.svg?react';
 import Comment from '@/components/ui/Comment/CommentSection';
-import Dropdown from '@/components/ui/Dropdown';
 import useIntersectionObserver from '@/hooks/useIntersectionObserver';
 import { userAtom } from '@/store/authAtom';
 import {
   type CreateCommentRequest,
   createCommentRequestSchema,
 } from '@/types/CommentRequestSchema';
+import { getCommentAuthor } from '@/utils/typeGuard';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   useInfiniteQuery,
@@ -16,7 +15,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
@@ -75,18 +74,31 @@ export default function ArticleCommentSection({
     );
   };
 
-  const handleEdit = () => {
-    console.log('edit 모드로 전환');
+  const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
+
+  // 댓글 수정 뮤테이션 선언
+  // const { mutate: updateComment } = useMutation(
+  //   articleCommentMutations.updateCommentMutationOptions({
+  //     articleId,
+  //     queryClient,
+  //   }),
+  // );
+
+  const handleEditStart = (commentId: number) => {
+    setEditingCommentId(commentId);
   };
 
-  const handleDelete = () => {
-    console.log('ArticleDeleteModal 오픈');
+  const handleEditCancel = () => {
+    setEditingCommentId(null);
   };
 
-  const COMMENT_DROPDOWN = [
-    { label: '수정하기', onClick: handleEdit },
-    { label: '삭제하기', onClick: handleDelete },
-  ];
+  const handleEditSubmit = (commentId: number, newContent: string) => {
+    // 댓글 수정 뮤테이션 호출
+  };
+
+  const handleDelete = (commentId: number) => {
+    console.log(`ArticleDeleteModal 오픈 - 댓글 ID: ${commentId}`);
+  };
 
   useIntersectionObserver({
     target: scrollRef,
@@ -106,18 +118,41 @@ export default function ArticleCommentSection({
         onSubmit={handleSubmit(onSubmit)}
       />
 
-      <Comment.List
-        comments={allData}
-        itemActions={
-          <Dropdown
-            type='icon'
-            menuItems={COMMENT_DROPDOWN}
-            triggerChildren={<KebabIcon className='h-5 w-5' />}
-            align='end'
-            className='text-center'
-          />
-        }
-      >
+      <Comment.List comments={allData}>
+        <ol>
+          {allData.map(comment => {
+            const author = getCommentAuthor(comment);
+            const commentAuthorId = author.id;
+            const isCommentAuthor = commentAuthorId === user?.id;
+
+            const editActions = isCommentAuthor
+              ? {
+                  isEditMode: editingCommentId === comment.id,
+                  onSubmit: (newContent: string) =>
+                    handleEditSubmit(comment.id, newContent),
+                  onEditCancel: handleEditCancel,
+                }
+              : undefined; // 작성자가 아니면 editActions 전달 X
+
+            return (
+              <Comment.Item
+                key={comment.id}
+                comment={comment}
+                author={author}
+                editActions={editActions}
+              >
+                {isCommentAuthor && (
+                  <Comment.Dropdown
+                    commentId={comment.id}
+                    onEditStart={handleEditStart}
+                    onDelete={handleDelete}
+                  />
+                )}
+              </Comment.Item>
+            );
+          })}
+        </ol>
+
         <Comment.InfiniteScroll
           fetchNextPage={fetchNextPage}
           hasNextPage={hasNextPage}
