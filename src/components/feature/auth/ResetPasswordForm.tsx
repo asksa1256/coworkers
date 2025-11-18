@@ -3,24 +3,29 @@ import PasswordField from '@/components/ui/Input/PasswordField';
 import { Label } from '@/components/ui/Label';
 import useSignOut from '@/hooks/useSignOut';
 import axiosInstance from '@/lib/axios';
+import { cn } from '@/lib/utils';
 import { type ErrorResponse } from '@/types';
 import {
-  type ResetPasswordFormRequest,
   resetPasswordFormRequestSchema,
+  type ResetPasswordFormRequest,
 } from '@/types/ResetPasswordSchema';
 import { getAccessToken } from '@/utils/tokenStorage';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios, { AxiosError } from 'axios';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { type NavigateFunction } from 'react-router-dom';
 import { toast } from 'sonner';
 
-export default function ResetPasswordForm() {
+interface Props {
+  navigate: NavigateFunction;
+}
+
+export default function ResetPasswordForm({ navigate }: Props) {
   const [globalError, setGlobalError] = useState('');
   const [token, setToken] = useState(''); // 비밀번호 변경용 토큰
-  const navigate = useNavigate();
   const accessToken = getAccessToken();
+  const forLoggedInUser = !!accessToken;
   const signOut = useSignOut();
 
   const {
@@ -34,7 +39,7 @@ export default function ResetPasswordForm() {
 
   const onSubmit = async (data: ResetPasswordFormRequest) => {
     try {
-      if (accessToken) {
+      if (forLoggedInUser) {
         // 로그인 사용자
         await axiosInstance.patch('/user/password', data);
 
@@ -93,7 +98,11 @@ export default function ResetPasswordForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className='w-full max-w-[550px] rounded-[20px] bg-white px-[22px] py-[56px] shadow md:px-[44px] md:py-[70px]'
+      className={cn(
+        'w-full',
+        forLoggedInUser ||
+          'max-w-[550px] rounded-[20px] bg-white px-[22px] py-[56px] shadow md:px-[44px] md:py-[70px]',
+      )}
     >
       <h3 className='mb-8 text-center text-xl font-bold md:mb-16 md:text-2xl'>
         비밀번호 재설정
@@ -105,7 +114,11 @@ export default function ResetPasswordForm() {
           <Label htmlFor='password'>새 비밀번호</Label>
           <PasswordField
             id='pw'
-            placeholder='비밀번호(영문, 숫자 포함 8자 이상)를 입력해주세요.'
+            placeholder={
+              forLoggedInUser
+                ? '새 비밀번호를 입력해주세요.'
+                : '비밀번호(영문, 숫자 포함 8자 이상)를 입력해주세요.'
+            }
             autoComplete='new-password'
             {...register('password')}
             error={errors.password}
@@ -117,7 +130,7 @@ export default function ResetPasswordForm() {
           <Label htmlFor='pw'>비밀번호 확인</Label>
           <PasswordField
             id='pw'
-            placeholder='비밀번호 확인을 입력해주세요.'
+            placeholder='새 비밀번호를 다시 한번 입력해주세요.'
             autoComplete='new-password'
             {...register('passwordConfirmation')}
             error={errors.passwordConfirmation}
