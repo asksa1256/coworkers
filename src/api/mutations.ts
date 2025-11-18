@@ -1,5 +1,9 @@
 import type { TeamFormDataType } from '@/components/feature/form/TeamForm';
 import type { ArticleDetailResponse } from '@/types/boardType';
+import type {
+  ArticleCommentResponse,
+  ArticleCommentsResponse,
+} from '@/types/commentType';
 import type { GroupDetailResponse } from '@/types/groupType';
 import type { TaskFormSchema } from '@/types/taskFormSchema';
 import type { TaskListSchema } from '@/types/taskListSchema';
@@ -14,6 +18,7 @@ import { toggleDoneAt } from '@/utils/taskUtils';
 import {
   mutationOptions,
   QueryClient,
+  type InfiniteData,
   type QueryKey,
 } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
@@ -22,6 +27,7 @@ import type { UseFormReset, UseFormSetError } from 'react-hook-form';
 import { toast } from 'sonner';
 import {
   addTaskList,
+  createArticleComment,
   createTask,
   deleteGroup,
   deleteGroupMember,
@@ -570,10 +576,83 @@ export const groupMutations = {
     }),
 };
 
+// 게시글 댓글 뮤테이션
+export const articleCommentMutations = {
+  createCommentMutation: (articleId: number) =>
+    boardQueries.comments(articleId),
+  createCommentMutationOptions: ({
+    articleId,
+    user,
+    queryClient,
+  }: {
+    articleId: number;
+    user: UserType;
+    queryClient: QueryClient;
+  }) =>
+    mutationOptions({
+      mutationFn: (variables: { articleId: number; content: string }) =>
+        createArticleComment(variables.articleId, variables.content),
+
+      onMutate: async (newCommentVariables: { content: string }) => {
+        await queryClient.cancelQueries({
+          queryKey: boardQueries.comments(articleId),
+        });
+        const prevData = queryClient.getQueryData<ArticleCommentResponse[]>(
+          boardQueries.comments(articleId),
+        );
+
+        // 낙관적 업데이트용 임시 새 댓글 객체
+        const newComment: ArticleCommentResponse = {
+          id: Date.now() * -1,
+          content: newCommentVariables.content,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          writer: { id: user.id, image: user.image, nickname: user.nickname }, // 현재 로그인한 사용자 정보 사용
+        };
+
+        queryClient.setQueryData<InfiniteData<ArticleCommentsResponse>>(
+          boardQueries.comments(articleId),
+          produce(draft => {
+            // 기존 댓글 데이터가 없으면 최초 댓글로 추가
+            if (!draft) {
+              return {
+                pages: [{ list: [newComment], nextCursor: null }],
+                pageParams: [null],
+              };
+            }
+
+            // 기존 댓글 데이터가 있으면 첫번째 페이지 맨 위에 추가
+            draft.pages[0].list.unshift(newComment);
+          }),
+        );
+
+        return { prevData };
+      },
+
+      onError: (err, _variables, context) => {
+        if (context?.prevData) {
+          queryClient.setQueryData(
+            boardQueries.comments(articleId),
+            context.prevData,
+          );
+        }
+
+        console.error(err);
+        toast.error('댓글 등록에 실패했습니다. 다시 시도해주세요.');
+      },
+
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: boardQueries.comments(articleId),
+        });
+      },
+    }),
+};
+
 // 게시글 좋아요 뮤테이션
 export const likeMutations = {
   // 좋아요 추가
-  likeMutation: (articleId: number) => ['article', articleId], // 게시글 상세 쿼리 키에 좋아요 데이터가 있으므로 해당 키 사용
+  likeMutation: (articleId: number) => boardQueries.article(articleId), // 게시글 상세 쿼리 키에 좋아요 데이터가 있으므로 해당 키 사용
   likeMutationOptions: ({
     articleId,
     queryClient,
@@ -625,7 +704,7 @@ export const likeMutations = {
     }),
 
   // 좋아요 취소
-  unlikeMutation: (articleId: number) => ['article', articleId],
+  unlikeMutation: (articleId: number) => boardQueries.article(articleId),
   unlikeMutationOptions: ({
     articleId,
     queryClient,
