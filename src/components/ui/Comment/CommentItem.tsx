@@ -11,7 +11,11 @@ interface CommentItemProps {
   actions?: ReactNode;
 }
 
-export function CommentItem({ comment, author, actions }: CommentItemProps) {
+export default function CommentItem({
+  comment,
+  author,
+  actions,
+}: CommentItemProps) {
   const user = useAtomValue(userAtom);
   const showActions = author?.id === user?.id;
 
