@@ -28,6 +28,7 @@ import {
   addTaskList,
   createArticleComment,
   createTask,
+  deleteArticleComment,
   deleteGroup,
   deleteGroupMember,
   deleteTask,
@@ -544,6 +545,7 @@ export const groupMutations = {
 
 // 게시글 댓글 뮤테이션
 export const articleCommentMutations = {
+  // 댓글 등록
   createCommentMutation: (articleId: number) =>
     boardQueries.comments(articleId),
   createCommentMutationOptions: ({
@@ -614,6 +616,7 @@ export const articleCommentMutations = {
       },
     }),
 
+  // 댓글 수정
   updateCommentMutationOptions: ({
     articleId,
     user,
@@ -682,6 +685,34 @@ export const articleCommentMutations = {
         queryClient.invalidateQueries({
           queryKey: boardQueries.comments(articleId),
         });
+      },
+    }),
+
+  // 댓글 삭제
+  deleteArticleCommentOptions: ({
+    articleId,
+    queryClient,
+    closeModal,
+  }: {
+    articleId: number;
+    queryClient: QueryClient;
+    closeModal?: () => void;
+  }) =>
+    mutationOptions({
+      mutationFn: (commentId: number) => deleteArticleComment(commentId),
+      onSuccess: () => {
+        toast.success('댓글을 삭제했습니다.');
+        queryClient.invalidateQueries({
+          queryKey: boardQueries.comments(articleId),
+        });
+        if (closeModal) closeModal();
+      },
+      onError: error => {
+        if (isAxiosError(error) && error.response?.status === 403) {
+          toast.error('댓글을 삭제할 권한이 없습니다.');
+        } else {
+          toast.error('댓글 삭제 실패. 다시 시도해주세요.');
+        }
       },
     }),
 };

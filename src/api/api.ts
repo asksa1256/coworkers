@@ -273,6 +273,13 @@ export const updateArticleComment = async (
   }
 };
 
+// 게시글 댓글 삭제
+export const deleteArticleComment = async (
+  commentId: number,
+): Promise<{ id?: number; message?: string }> => {
+  return await axiosInstance.delete(`/comments/${commentId}`);
+};
+
 // 게시글 좋아요 추가
 export const likeArticle = async (
   articleId: number,

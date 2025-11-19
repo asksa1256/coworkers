@@ -2,6 +2,7 @@ import { articleCommentMutations } from '@/api/mutations';
 import { boardQueries } from '@/api/queries';
 import Comment from '@/components/ui/Comment/CommentSection';
 import useIntersectionObserver from '@/hooks/useIntersectionObserver';
+import useModal from '@/hooks/useModal';
 import { userAtom } from '@/store/authAtom';
 import {
   type CreateCommentRequest,
@@ -18,6 +19,7 @@ import { useAtomValue } from 'jotai';
 import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import ArticleCommentDeleteModal from './ArticleCommentDeleteModal';
 
 interface Props {
   articleId: number;
@@ -31,6 +33,7 @@ export default function ArticleCommentSection({
   const user = useAtomValue(userAtom);
   const queryClient = useQueryClient();
   const scrollRef = useRef(null);
+  const { openModal } = useModal();
 
   const {
     data,
@@ -106,8 +109,16 @@ export default function ArticleCommentSection({
     );
   };
 
-  const handleDelete = (commentId: number) => {
-    console.log(`ArticleDeleteModal 오픈 - 댓글 ID: ${commentId}`);
+  const handleDelete = (commentId: number, content: string) => {
+    openModal({
+      children: (
+        <ArticleCommentDeleteModal
+          commentId={commentId}
+          content={content}
+          articleId={articleId}
+        />
+      ),
+    });
   };
 
   useIntersectionObserver({
@@ -154,6 +165,7 @@ export default function ArticleCommentSection({
                 {isCommentAuthor && (
                   <Comment.Dropdown
                     commentId={comment.id}
+                    content={comment.content}
                     onEditStart={handleEditStart}
                     onDelete={handleDelete}
                   />
