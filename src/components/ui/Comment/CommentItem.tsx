@@ -1,9 +1,11 @@
 import Avatar from '@/components/ui/Avatar';
 import { userAtom } from '@/store/authAtom';
+import { type CreateCommentRequest } from '@/types/CommentRequestSchema';
 import type { CommentAuthor, CommentData } from '@/types/commentType';
 import { formatRelativeTime } from '@/utils/formatters';
 import { useAtomValue } from 'jotai';
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import Button from '../Button';
 import TextareaField from '../Textarea/TextareaField';
 
@@ -27,12 +29,27 @@ export default function CommentItem({
 }: CommentItemProps) {
   const user = useAtomValue(userAtom);
   const showActions = author?.id === user?.id && !editActions?.isEditMode;
-  const [editedContent, setEditedContent] = useState(comment.content);
 
-  const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (editActions && editedContent.trim()) {
-      editActions.onSubmit(editedContent);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { isDirty, isValid, isSubmitting },
+  } = useForm<CreateCommentRequest>({
+    defaultValues: { content: comment.content },
+    mode: 'onBlur',
+  });
+
+  useEffect(() => {
+    if (editActions?.isEditMode) {
+      // 수정 모드가 켜지거나 꺼질 때, comment 내용이 바뀌었을 때 폼 리셋 (최신값 기준으로 isDirty 상태를 업데이트하기 위함)
+      reset({ content: comment.content });
+    }
+  }, [editActions?.isEditMode, comment.content, reset]);
+
+  const onValid = (data: { content: string }) => {
+    if (editActions) {
+      editActions.onSubmit(data.content);
     }
   };
 
@@ -40,7 +57,7 @@ export default function CommentItem({
   if (editActions?.isEditMode) {
     return (
       <li className='bg-bg-secondary -mx-[22px] px-[22px] py-5 md:-mx-10 md:px-10 lg:-mx-[60px] lg:px-[60px]'>
-        <form className='flex flex-col gap-2' onSubmit={handleFormSubmit}>
+        <form className='flex flex-col gap-2' onSubmit={handleSubmit(onValid)}>
           <div className='flex gap-4'>
             <Avatar size='md' imgSrc={author?.image ?? null} />
 
@@ -49,9 +66,8 @@ export default function CommentItem({
                 {author?.nickname}
               </span>
               <TextareaField
-                value={editedContent}
+                {...register('content', { required: true })}
                 className='[&_textarea]:bg-bg-primary'
-                onChange={e => setEditedContent(e.target.value)}
               />
             </div>
           </div>
@@ -66,7 +82,12 @@ export default function CommentItem({
             >
               취소
             </Button>
-            <Button variant='outline' className='w-auto' size='sm'>
+            <Button
+              variant='outline'
+              className='w-auto'
+              size='sm'
+              disabled={isSubmitting || !isDirty || !isValid}
+            >
               수정하기
             </Button>
           </div>

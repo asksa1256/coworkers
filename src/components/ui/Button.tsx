@@ -25,13 +25,13 @@ export const buttonVariants = cva(
           bg-transparent border border-primary text-primary 
           hover:bg-secondary/80 hover:border-primary-hover hover:text-primary-hover
           focus:border-primary-pressed focus:text-primary-pressed
-          disabled:border-disabled disabled:text-disabled
+          disabled:border-primary-inactive disabled:text-primary-inactive
         `,
         outline: `
           border bg-background border border-primary text-primary 
           hover:bg-secondary/80 hover:border-primary-hover hover:text-primary-hover
           focus:border-primary-pressed focus:text-primary-pressed
-          disabled:border-disabled disabled:text-disabled
+          disabled:border-primary-inactive disabled:text-primary-inactive disabled:bg-bg-tertiary disabled:
         `,
         danger: `
           bg-danger text-white 

@@ -14,7 +14,7 @@ export default function TextareaField({
 }: TextareaFieldProps) {
   const baseClasses = cn(
     'text-md w-full text-sm md:min-w-[343px] min-h-[75px] bg-transparent px-4 py-3 transition-colors outline-none lg:text-base rounded-[12px] border border-border-primary bg-transparent resize-none',
-    'hover:border-primary focus-within:border-primary-pressed',
+    'hover:border-primary focus-within:border-primary',
     'placeholder:text-text-default',
     // 커스텀 스크롤바 스타일 추가
     'scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent',
