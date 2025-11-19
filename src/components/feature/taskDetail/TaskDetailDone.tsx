@@ -2,13 +2,11 @@ import CustomCheckIcon from '@/assets/icons/CustomCheckIcon.svg?react';
 import { cn } from '@/lib/utils';
 
 interface Props {
-  doneAt: string | null;
+  isCheck: boolean;
   onChangeDone: () => void;
 }
 
-export default function TaskDetailDone({ doneAt, onChangeDone }: Props) {
-  const isCheck = !!doneAt;
-
+export default function TaskDetailDone({ isCheck, onChangeDone }: Props) {
   return (
     <label
       className={cn(

@@ -1,7 +1,7 @@
 import CalendarIcon from '@/assets/icons/CalendarIcon.svg?react';
 import RepeatIcon from '@/assets/icons/RepeatIcon.svg?react';
 import XIcon from '@/assets/icons/XIcon.svg?react';
-import TaskDetailComment from '@/components/feature/taskDetail/TaskDetailComment';
+import TaskDetailComment from '@/components/feature/comments/TaskDetailComment';
 import TaskDetailDone from '@/components/feature/taskDetail/TaskDetailDone';
 import TaskSectionLIstItemMenu from '@/components/feature/taskListPage/TaskSectionLIstItemMenu';
 import Avatar from '@/components/ui/Avatar';
@@ -14,6 +14,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { FREQUENCY_TO_TEXT } from '@/constants';
+import { cn } from '@/lib/utils';
 import type { TaskDetailResponse } from '@/types/taskType';
 import { formatDate } from '@/utils/dateUtils';
 import type { ReactNode } from 'react';
@@ -33,7 +34,7 @@ export default function TaskDetailSheet({
   onDeleteModalOpen,
   onEditModalOpen,
 }: Props) {
-  console.log(task);
+  const isCheck = !!task.doneAt;
 
   const scheduleSectionConfig = [
     {
@@ -60,11 +61,21 @@ export default function TaskDetailSheet({
           <SheetClose>
             <XIcon />
           </SheetClose>
-          <div className='mt-5 flex items-start justify-between md:mt-[74px]'>
-            <SheetTitle className='text-xl font-bold md:text-2xl'>
+          <div className='mt-5 flex items-start gap-2 md:mt-[74px] md:gap-3'>
+            <SheetTitle
+              className={cn(
+                'text-xl font-bold md:text-2xl',
+                isCheck && 'text-text-default line-through',
+              )}
+            >
               {task.name}
             </SheetTitle>
-            <div className='shrink-0'>
+            {isCheck && (
+              <span className='bg-bg-secondary text-md text-primary rounded-lg px-2.5 py-1.5 font-bold'>
+                완료
+              </span>
+            )}
+            <div className='my-0.5 ml-auto shrink-0'>
               <TaskSectionLIstItemMenu
                 task={task}
                 onDeleteModalOpen={onDeleteModalOpen}
@@ -103,7 +114,7 @@ export default function TaskDetailSheet({
                 ))}
               </div>
               <TaskDetailDone
-                doneAt={task.doneAt}
+                isCheck={isCheck}
                 onChangeDone={handleChangeDone}
               />
             </div>
