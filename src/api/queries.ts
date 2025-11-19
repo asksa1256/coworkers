@@ -2,6 +2,7 @@ import {
   getArticle,
   getArticleComments,
   getArticles,
+  getBestArticles,
   getGroup,
   getSingleTaskList,
   getTasks,
@@ -32,7 +33,7 @@ export const groupQueries = {
 };
 
 export const boardQueries = {
-  articles: (sort: string, searchValue: string, searchRange: string) => [
+  articles: (sort: string, searchValue?: string, searchRange?: string) => [
     'articles',
     sort,
     searchValue,
@@ -50,6 +51,13 @@ export const boardQueries = {
           ? allPages.length + 1 // nextPage
           : undefined; // nextPage 없음
       },
+    }),
+
+  bestArticles: (pageSize: number) => ['bestArticles', pageSize],
+  bestArticlesOptions: (pageSize: number) =>
+    queryOptions({
+      queryKey: boardQueries.bestArticles(pageSize),
+      queryFn: async () => getBestArticles(pageSize),
     }),
 
   article: (id: number) => ['article', id],

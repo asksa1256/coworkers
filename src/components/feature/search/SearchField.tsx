@@ -51,7 +51,7 @@ export default function SearchField({
         placeholder='검색어를 입력해주세요'
         onChange={handleChange}
         onKeyDown={handleSearch}
-        className='border-primary w-full rounded-full border-2 py-3 pl-12 text-base md:w-auto md:px-4 md:pl-[60px] lg:w-[420px]'
+        className='border-border-primary hover:border-primary focus:border-primary w-full rounded-full border-2 py-3 pl-12 text-base transition-colors md:w-auto md:px-4 md:pl-[60px] lg:w-[420px]'
       />
 
       <button

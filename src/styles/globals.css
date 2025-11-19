@@ -251,6 +251,33 @@
     appearance: none;
     display: none;
   }
+
+  /* swiper 커스텀 */
+  .swiper-pagination {
+    position: relative !important;
+    margin-top: 34px;
+  }
+
+  .swiper-pagination-bullet {
+    margin: 0 3px !important;
+    background: var(--color-gray-300) !important;
+    opacity: 1 !important;
+    transition: transform 0.3s background 0.3s;
+    border-radius: 9999px !important;
+  }
+  .swiper-pagination-bullet:hover {
+    background: var(--color-gray-400) !important;
+  }
+
+  .swiper-pagination-bullet-active {
+    width: 16px !important;
+    background: var(--color-gray-400) !important;
+  }
+
+  .swiper-button-disabled {
+    pointer-events: none;
+    background: var(--bg-secondary) !important;
+  }
 }
 
 @layer utilities {

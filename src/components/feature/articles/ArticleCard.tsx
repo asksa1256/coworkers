@@ -1,4 +1,5 @@
 import { boardQueries } from '@/api/queries';
+import BestIcon from '@/assets/icons/BestIcon.svg';
 import CommentIcon from '@/assets/icons/CommentIcon.svg?react';
 import HeartIcon from '@/assets/icons/HeartIcon.svg?react';
 import type { ArticleResponse } from '@/types/boardType';
@@ -9,10 +10,13 @@ import { Link, useSearchParams } from 'react-router-dom';
 
 interface ArticleCardProps {
   article: ArticleResponse;
-  showContent?: boolean; // content 표시 여부를 제어
+  isBest?: boolean;
 }
 
-export default function ArticleCard({ article }: ArticleCardProps) {
+export default function ArticleCard({
+  article,
+  isBest = false,
+}: ArticleCardProps) {
   const { id, title, image, createdAt, writer, likeCount, commentCount } =
     article;
 
@@ -26,11 +30,18 @@ export default function ArticleCard({ article }: ArticleCardProps) {
   return (
     <Link
       to={`/board/${id}`}
-      className='border-border-primary flex flex-col justify-between rounded-[20px] border p-4 transition-all duration-200 hover:-translate-y-1 hover:shadow-md md:px-6 md:py-5'
+      className='bg-bg-primary border-border-primary flex min-h-[148px] flex-col justify-between rounded-[20px] border p-4 transition-all duration-200 hover:-translate-y-1 hover:shadow-md md:min-h-[164px] md:px-6 md:py-5'
     >
       <div className='flex items-center justify-between md:gap-6'>
-        <div className='w-[60%]'>
-          <h6 className='md:text-2lg mb-2 text-base font-bold'>
+        <div className='w-[60%] grow'>
+          {isBest && (
+            <span className='bg-bg-secondary text-primary text-md mb-3 inline-flex gap-1 rounded-full px-3 py-[6px] font-bold lg:mb-4'>
+              <img src={BestIcon} alt='' />
+              인기
+            </span>
+          )}
+
+          <h6 className='md:text-2lg mb-2 truncate text-base font-bold'>
             {highlightSearchValue(title, searchValue)}
           </h6>
           <p className='text-text-default md:text-md pre-line line-clamp-2 text-sm break-keep'>
@@ -40,11 +51,15 @@ export default function ArticleCard({ article }: ArticleCardProps) {
           </p>
         </div>
 
-        <div className='right'>
+        <div className='self-end'>
           {image && (
-            <figure className='h-20 w-20 overflow-hidden rounded-lg md:h-[88px] md:w-[88px]'>
-              <img src={image} alt='이미지 미리보기' />
-            </figure>
+            <div className='h-18 w-18 overflow-hidden rounded-lg md:h-[76px] md:w-[76px]'>
+              <img
+                src={image}
+                alt='이미지 미리보기'
+                className='h-full w-full object-cover'
+              />
+            </div>
           )}
         </div>
       </div>
