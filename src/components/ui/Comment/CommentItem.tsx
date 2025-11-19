@@ -1,10 +1,14 @@
 import Avatar from '@/components/ui/Avatar';
 import { userAtom } from '@/store/authAtom';
-import { type CreateCommentRequest } from '@/types/CommentRequestSchema';
+import {
+  type CreateCommentRequest,
+  createCommentRequestSchema,
+} from '@/types/CommentRequestSchema';
 import type { CommentAuthor, CommentData } from '@/types/commentType';
 import { formatRelativeTime } from '@/utils/formatters';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useAtomValue } from 'jotai';
-import { type ReactNode, useEffect } from 'react';
+import { type ReactNode } from 'react';
 import { useForm } from 'react-hook-form';
 import Button from '../Button';
 import TextareaField from '../Textarea/TextareaField';
@@ -33,19 +37,12 @@ export default function CommentItem({
   const {
     register,
     handleSubmit,
-    reset,
-    formState: { isDirty, isValid, isSubmitting },
+    formState: { isDirty, isValid, isSubmitting, errors },
   } = useForm<CreateCommentRequest>({
+    resolver: zodResolver(createCommentRequestSchema),
     defaultValues: { content: comment.content },
-    mode: 'onBlur',
+    mode: 'all',
   });
-
-  useEffect(() => {
-    if (editActions?.isEditMode) {
-      // 수정 모드가 켜지거나 꺼질 때, comment 내용이 바뀌었을 때 폼 리셋 (최신값 기준으로 isDirty 상태를 업데이트하기 위함)
-      reset({ content: comment.content });
-    }
-  }, [editActions?.isEditMode, comment.content, reset]);
 
   const onValid = (data: { content: string }) => {
     if (editActions) {
@@ -66,7 +63,8 @@ export default function CommentItem({
                 {author?.nickname}
               </span>
               <TextareaField
-                {...register('content', { required: true })}
+                {...register('content')}
+                error={errors.content}
                 className='[&_textarea]:bg-bg-primary'
               />
             </div>
@@ -88,7 +86,7 @@ export default function CommentItem({
               size='sm'
               disabled={isSubmitting || !isDirty || !isValid}
             >
-              수정하기
+              {isSubmitting ? '수정중...' : '수정하기'}
             </Button>
           </div>
         </form>
