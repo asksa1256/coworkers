@@ -1,24 +1,30 @@
 import { boardQueries } from '@/api/queries';
 import LeftArrowIcon from '@/assets/icons/LeftArrowIcon.svg?react';
 import RightArrowIcon from '@/assets/icons/RightArrowIcon.svg?react';
+import Button from '@/components/ui/Button';
+import { Spinner } from '@/components/ui/spinner';
 import useCurrentView from '@/hooks/useCurrentView';
+import type { ArticleResponse } from '@/types/boardType';
 import mapCurrentViewToPageSize from '@/utils/currentViewToPageSize';
 import { useQuery } from '@tanstack/react-query';
-import { useRef } from 'react';
+import { RefreshCcw } from 'lucide-react';
+import { useRef, type RefObject } from 'react';
 import { A11y, Autoplay, Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
+import type { NavigationOptions } from 'swiper/types';
 import ArticleCard from './ArticleCard';
 
 export default function BestArticleList() {
-  const prevRef = useRef(null);
-  const nextRef = useRef(null);
+  const prevRef = useRef<HTMLButtonElement | null>(null);
+  const nextRef = useRef<HTMLButtonElement | null>(null);
   const currentView = useCurrentView();
   const pageSize = mapCurrentViewToPageSize(currentView);
 
   const { data, isPending, error } = useQuery(
     boardQueries.bestArticlesOptions(pageSize),
   );
+
   const allData = data?.list;
 
   return (
@@ -27,8 +33,76 @@ export default function BestArticleList() {
         베스트 게시글
       </h3>
 
+      <BestArticleListContent
+        isPending={isPending}
+        error={error}
+        allData={allData}
+        prevRef={prevRef}
+        nextRef={nextRef}
+      />
+    </section>
+  );
+}
+
+interface BestArticleListContentProps {
+  isPending: boolean;
+  error: unknown;
+  allData?: ArticleResponse[];
+  prevRef: RefObject<HTMLButtonElement | null>;
+  nextRef: RefObject<HTMLButtonElement | null>;
+}
+
+function BestArticleListContent({
+  isPending,
+  error,
+  allData,
+  prevRef,
+  nextRef,
+}: BestArticleListContentProps) {
+  if (isPending) return <LoadingView />;
+  if (error) return <ErrorView />;
+
+  return <SwiperView allData={allData} prevRef={prevRef} nextRef={nextRef} />;
+}
+
+function LoadingView() {
+  return (
+    <div className='text-md text-text-secondary flex flex-col items-center justify-center gap-2 py-10'>
+      <Spinner />
+      데이터를 불러오는 중입니다...
+    </div>
+  );
+}
+
+function ErrorView() {
+  return (
+    <div className='text-md text-text-secondary flex flex-col items-center justify-center gap-3 py-10'>
+      게시글을 불러오지 못했습니다.
+      <Button variant='ghost' className='hover:bg-bg-tertiary w-auto'>
+        <RefreshCcw className='h-4 w-4' /> 재시도
+      </Button>
+    </div>
+  );
+}
+
+interface SwiperViewProps {
+  allData?: ArticleResponse[];
+  prevRef: RefObject<HTMLButtonElement | null>;
+  nextRef: RefObject<HTMLButtonElement | null>;
+}
+
+function SwiperView({ allData, prevRef, nextRef }: SwiperViewProps) {
+  return (
+    <>
       <Swiper
         modules={[Navigation, Pagination, Autoplay, A11y]}
+        onBeforeInit={swiper => {
+          if (typeof swiper.params.navigation !== 'boolean') {
+            const nav = swiper.params.navigation as NavigationOptions;
+            nav.prevEl = prevRef.current;
+            nav.nextEl = nextRef.current;
+          }
+        }}
         navigation={{
           prevEl: prevRef.current,
           nextEl: nextRef.current,
@@ -69,6 +143,6 @@ export default function BestArticleList() {
           <RightArrowIcon className='text-icon-primary h-4 w-4' />
         </button>
       </div>
-    </section>
+    </>
   );
 }
