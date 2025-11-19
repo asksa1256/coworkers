@@ -1,6 +1,7 @@
 import { getGroupMembership } from '@/api/api';
 import { GroupAuthContext } from '@/hooks/useGroupAuthContext';
 import { userAtom } from '@/store/authAtom';
+import { useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { useAtomValue } from 'jotai';
 import { useEffect, useState, type ReactNode } from 'react';
@@ -13,6 +14,7 @@ export default function GroupAuthRoute({ children }: { children: ReactNode }) {
   const groupId = Number(params.groupId);
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const getUserRole = async () => {
@@ -23,6 +25,9 @@ export default function GroupAuthRoute({ children }: { children: ReactNode }) {
         setIsAdmin(data.role === 'ADMIN');
       } catch (e) {
         if (isAxiosError(e) && e.response?.status === 404) {
+          // groups 쿼리키 가진 캐싱 모두 무효화
+          queryClient.invalidateQueries({ queryKey: ['groups'] });
+
           // 그룹 멤버 아닐 시 홈으로 이동
           navigate('/', { replace: true });
         } else {

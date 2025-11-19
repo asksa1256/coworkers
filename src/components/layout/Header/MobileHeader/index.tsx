@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 interface Props {
   isLoggedIn: boolean;
   currentGroup: GroupType | null;
-  onUpdateCurrentGroup: (group: GroupType) => void;
+  onUpdateCurrentGroup: (group: GroupType | null) => void;
 }
 
 export default function MobileHeader({
@@ -31,7 +31,7 @@ export default function MobileHeader({
           <MobileUser />
         ) : (
           <Link
-            to='/login'
+            to='/auth/signIn'
             className='text-md text-text-default flex h-full items-center'
           >
             로그인

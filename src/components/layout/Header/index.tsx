@@ -10,7 +10,7 @@ export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentGroup, setCurrentGroup] = useState<GroupType | null>(null);
   const currentView = useCurrentView();
-  const handleUpdateCurrentGroup = (group: GroupType) => {
+  const handleUpdateCurrentGroup = (group: GroupType | null) => {
     setCurrentGroup(group);
   };
   const user = useAtomValue(userAtom);

@@ -7,14 +7,12 @@ import { useState } from 'react';
 interface Props {
   value: Date | undefined;
   onChange: (date: Date) => void;
-  disabled: boolean;
   id: string;
 }
 
 export default function TaskFormCalendar({
   value = new Date(),
   onChange,
-  disabled,
   id,
 }: Props) {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
@@ -34,7 +32,6 @@ export default function TaskFormCalendar({
         onClick={() => setIsCalendarOpen(prev => !prev)}
         value={formatDate(value)}
         readOnly
-        disabled={disabled}
         className={cn({ isCalendarOpen: '[&_input]:border-primary-hover' })}
       />
       {isCalendarOpen && (
@@ -42,6 +39,7 @@ export default function TaskFormCalendar({
           <Calendar
             mode='single'
             selected={value}
+            defaultMonth={value}
             onSelect={handleUpdateDate}
             className='w-full min-w-auto'
           />
