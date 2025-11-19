@@ -51,7 +51,7 @@ export default function ArticleCard({
           </p>
         </div>
 
-        <div className='right self-end'>
+        <div className='self-end'>
           {image && (
             <div className='h-18 w-18 overflow-hidden rounded-lg md:h-[76px] md:w-[76px]'>
               <img

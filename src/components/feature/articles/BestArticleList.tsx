@@ -131,6 +131,7 @@ function SwiperView({ allData, prevRef, nextRef }: SwiperViewProps) {
         <button
           ref={prevRef}
           type='button'
+          aria-label='이전 페이지'
           className='border-border-primary rounded-full border bg-white p-2 transition-colors hover:bg-gray-100'
         >
           <LeftArrowIcon className='text-icon-primary h-4 w-4' />
@@ -138,6 +139,7 @@ function SwiperView({ allData, prevRef, nextRef }: SwiperViewProps) {
         <button
           ref={nextRef}
           type='button'
+          aria-label='다음 페이지'
           className='border-border-primary rounded-full border bg-white p-2 transition-colors hover:bg-gray-100'
         >
           <RightArrowIcon className='text-icon-primary h-4 w-4' />

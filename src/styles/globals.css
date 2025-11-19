@@ -255,7 +255,7 @@
   /* swiper 커스텀 */
   .swiper-pagination {
     position: relative !important;
-    margin-top: 34px !important;
+    margin-top: 34px;
   }
 
   .swiper-pagination-bullet {
@@ -272,6 +272,11 @@
   .swiper-pagination-bullet-active {
     width: 16px !important;
     background: var(--color-gray-400) !important;
+  }
+
+  .swiper-button-disabled {
+    pointer-events: none;
+    background: var(--bg-secondary) !important;
   }
 }
 
