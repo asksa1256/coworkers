@@ -39,23 +39,34 @@ export default function CommentItem({
   // 수정 ui
   if (editActions?.isEditMode) {
     return (
-      <li>
+      <li className='bg-bg-secondary -mx-[22px] px-[22px] py-5 md:-mx-10 md:px-10 lg:-mx-[60px] lg:px-[60px]'>
         <form className='flex flex-col gap-2' onSubmit={handleFormSubmit}>
-          <TextareaField
-            value={editedContent}
-            onChange={e => setEditedContent(e.target.value)}
-          />
+          <div className='flex gap-4'>
+            <Avatar size='md' imgSrc={author?.image ?? null} />
+
+            <div className='md:text-md w-full text-xs'>
+              <span className='mb-[6px] inline-block font-bold'>
+                {author?.nickname}
+              </span>
+              <TextareaField
+                value={editedContent}
+                className='[&_textarea]:bg-bg-primary'
+                onChange={e => setEditedContent(e.target.value)}
+              />
+            </div>
+          </div>
 
           <div className='flex gap-2 self-end'>
             <Button
               variant='ghost'
               type='button'
-              className='w-auto'
+              size='sm'
+              className='hover:bg-bg-tertiary w-auto'
               onClick={editActions.onEditCancel}
             >
               취소
             </Button>
-            <Button variant='outline' className='w-auto'>
+            <Button variant='outline' className='w-auto' size='sm'>
               수정하기
             </Button>
           </div>
@@ -70,8 +81,10 @@ export default function CommentItem({
       <Avatar size='md' imgSrc={author?.image ?? null} />
 
       <div className='md:text-md w-full text-xs'>
-        <span className='mb-[6px] font-bold'>{author?.nickname}</span>
-        <p className='mb-1'>{comment.content}</p>
+        <span className='mb-[6px] inline-block font-bold'>
+          {author?.nickname}
+        </span>
+        <p className='mb-1 whitespace-pre-wrap'>{comment.content}</p>
         <span className='text-text-default'>
           {formatRelativeTime(comment.createdAt)}
         </span>
