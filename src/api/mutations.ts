@@ -701,11 +701,18 @@ export const articleCommentMutations = {
     mutationOptions({
       mutationFn: (commentId: number) => deleteArticleComment(commentId),
       onSuccess: () => {
-        toast.success('댓글을 삭제했습니다.');
         queryClient.invalidateQueries({
           queryKey: boardQueries.comments(articleId),
         });
+
+        // 댓글 삭제 시 총 댓글 갯수 동기화: 게시글 댓글 총 갯수(commentCount) 데이터는 ['articles', articleId] 쿼리 키에 있어서 함께 무효화
+        queryClient.invalidateQueries({
+          queryKey: boardQueries.article(articleId),
+        });
+
         if (closeModal) closeModal();
+
+        toast.success('댓글을 삭제했습니다.');
       },
       onError: error => {
         if (isAxiosError(error) && error.response?.status === 403) {
