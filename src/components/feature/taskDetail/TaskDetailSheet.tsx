@@ -33,7 +33,7 @@ export default function TaskDetailSheet({
   onDeleteModalOpen,
   onEditModalOpen,
 }: Props) {
-  // console.log(task);
+  console.log(task);
 
   const scheduleSectionConfig = [
     {
@@ -108,10 +108,15 @@ export default function TaskDetailSheet({
               />
             </div>
             {task.description && (
-              <p className='text-md pb-10 md:pb-14'>{task.description}</p>
+              <p className='text-md pb-10 whitespace-pre-line md:pb-14'>
+                {task.description}
+              </p>
             )}
           </div>
-          <TaskDetailComment />
+          <TaskDetailComment
+            taskId={task.id}
+            commentCount={task.commentCount}
+          />
         </div>
       </SheetContent>
     </Sheet>
