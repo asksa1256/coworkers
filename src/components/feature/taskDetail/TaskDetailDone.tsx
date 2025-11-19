@@ -7,7 +7,6 @@ interface Props {
 }
 
 export default function TaskDetailDone({ doneAt, onChangeDone }: Props) {
-  console.log(doneAt);
   const isCheck = !!doneAt;
 
   return (

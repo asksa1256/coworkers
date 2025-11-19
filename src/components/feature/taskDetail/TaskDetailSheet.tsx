@@ -33,7 +33,7 @@ export default function TaskDetailSheet({
   onDeleteModalOpen,
   onEditModalOpen,
 }: Props) {
-  console.log(task);
+  // console.log(task);
 
   const scheduleSectionConfig = [
     {
