@@ -40,22 +40,24 @@ export default function CommentItem({
   if (editActions?.isEditMode) {
     return (
       <li>
-        <form onSubmit={handleFormSubmit}>
-          <div className='mb-2'>
-            <TextareaField
-              value={editedContent}
-              onChange={e => setEditedContent(e.target.value)}
-            />
-          </div>
-          <div className='flex gap-2'>
+        <form className='flex flex-col gap-2' onSubmit={handleFormSubmit}>
+          <TextareaField
+            value={editedContent}
+            onChange={e => setEditedContent(e.target.value)}
+          />
+
+          <div className='flex gap-2 self-end'>
             <Button
               variant='ghost'
               type='button'
+              className='w-auto'
               onClick={editActions.onEditCancel}
             >
               취소
             </Button>
-            <Button variant='outline'>수정하기</Button>
+            <Button variant='outline' className='w-auto'>
+              수정하기
+            </Button>
           </div>
         </form>
       </li>

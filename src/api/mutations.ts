@@ -35,6 +35,7 @@ import {
   deleteTaskRecurring,
   likeArticle,
   unlikeArticle,
+  updateArticleComment,
   updateGroup,
   updateTask,
   updateTaskList,
@@ -572,7 +573,7 @@ export const articleCommentMutations = {
           content: newCommentVariables.content,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
-          writer: { id: user.id, image: user.image, nickname: user.nickname }, // 현재 로그인한 사용자 정보 사용
+          writer: { id: user.id, image: user.image, nickname: user.nickname },
         };
 
         queryClient.setQueryData<InfiniteData<ArticleCommentsResponse>>(
@@ -604,6 +605,77 @@ export const articleCommentMutations = {
 
         console.error(err);
         toast.error('댓글 등록에 실패했습니다. 다시 시도해주세요.');
+      },
+
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: boardQueries.comments(articleId),
+        });
+      },
+    }),
+
+  updateCommentMutationOptions: ({
+    articleId,
+    user,
+    queryClient,
+  }: {
+    articleId: number;
+    user: UserType;
+    queryClient: QueryClient;
+  }) =>
+    mutationOptions({
+      mutationFn: (variables: { commentId: number; content: string }) =>
+        updateArticleComment(variables.commentId, variables.content),
+
+      onMutate: async (newCommentVariables: {
+        commentId: number;
+        content: string;
+      }) => {
+        await queryClient.cancelQueries({
+          queryKey: boardQueries.comments(articleId),
+        });
+        const prevData = queryClient.getQueryData<ArticleCommentResponse[]>(
+          boardQueries.comments(articleId),
+        );
+
+        const newComment: ArticleCommentResponse = {
+          id: Date.now() * -1,
+          content: newCommentVariables.content,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          writer: { id: user.id, image: user.image, nickname: user.nickname },
+        };
+
+        queryClient.setQueryData<InfiniteData<ArticleCommentsResponse>>(
+          boardQueries.comments(articleId),
+          produce(draft => {
+            if (!draft) return;
+
+            draft.pages.forEach(page => {
+              const idx = page.list.findIndex(
+                cmt => cmt.id === newCommentVariables.commentId,
+              );
+
+              if (idx !== -1) {
+                page.list[idx] = newComment;
+              }
+            });
+          }),
+        );
+
+        return { prevData };
+      },
+
+      onError: (err, _variables, context) => {
+        if (context?.prevData) {
+          queryClient.setQueryData(
+            boardQueries.comments(articleId),
+            context.prevData,
+          );
+        }
+
+        console.error(err);
+        toast.error('댓글 수정에 실패했습니다. 다시 시도해주세요.');
       },
 
       onSettled: () => {

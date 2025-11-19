@@ -76,13 +76,14 @@ export default function ArticleCommentSection({
 
   const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
 
-  // 댓글 수정 뮤테이션 선언
-  // const { mutate: updateComment } = useMutation(
-  //   articleCommentMutations.updateCommentMutationOptions({
-  //     articleId,
-  //     queryClient,
-  //   }),
-  // );
+  // 댓글 수정 뮤테이션
+  const { mutate: updateComment } = useMutation(
+    articleCommentMutations.updateCommentMutationOptions({
+      articleId,
+      user: user!,
+      queryClient,
+    }),
+  );
 
   const handleEditStart = (commentId: number) => {
     setEditingCommentId(commentId);
@@ -94,6 +95,15 @@ export default function ArticleCommentSection({
 
   const handleEditSubmit = (commentId: number, newContent: string) => {
     // 댓글 수정 뮤테이션 호출
+    updateComment(
+      { commentId, content: newContent },
+      {
+        onSuccess: () => {
+          setEditingCommentId(null);
+          toast.success('댓글이 수정되었습니다.');
+        },
+      },
+    );
   };
 
   const handleDelete = (commentId: number) => {
