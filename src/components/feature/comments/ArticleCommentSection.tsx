@@ -52,6 +52,7 @@ export default function ArticleCommentSection({
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm<CreateCommentRequest>({
     resolver: zodResolver(createCommentRequestSchema),
     mode: 'onBlur',
@@ -136,6 +137,7 @@ export default function ArticleCommentSection({
       <Comment.Form
         register={register}
         error={errors.content}
+        watch={watch}
         onSubmit={handleSubmit(onSubmit)}
       />
 

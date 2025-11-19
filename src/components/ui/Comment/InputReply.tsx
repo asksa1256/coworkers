@@ -1,7 +1,7 @@
 import ArrowUpIcon from '@/assets/icons/ArrowUpIcon.svg';
 import Button from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
-import { forwardRef, useState, type FormEvent } from 'react';
+import { forwardRef, useEffect, useState, type FormEvent } from 'react';
 import { type FieldError } from 'react-hook-form';
 
 interface InputReplyProps extends React.ComponentProps<'textarea'> {
@@ -16,13 +16,15 @@ function InputReply(
   const [isEmpty, setIsEmpty] = useState(true);
 
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    // 입력 길이에 따라 입력창 높이 조절
     const el = e.target;
     el.style.height = 'auto';
     el.style.height = `${el.scrollHeight}px`;
-
-    setIsEmpty(e.target.value.trim().length === 0);
-    props.onInput?.(e);
   };
+
+  useEffect(() => {
+    setIsEmpty(!props.value);
+  }, [props.value]);
 
   return (
     <div className={cn('flex w-full flex-col gap-1', props.className)}>
@@ -47,9 +49,10 @@ function InputReply(
           size='icon-md'
           round='full'
           disabled={props.disabled || isEmpty}
+          aria-label='댓글 등록'
           onClick={onSubmit}
         >
-          <img src={ArrowUpIcon} alt='댓글 달기' />
+          <img src={ArrowUpIcon} alt='업로드 이미지' />
         </Button>
       </div>
 
