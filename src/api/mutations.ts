@@ -546,8 +546,6 @@ export const groupMutations = {
 // 게시글 댓글 뮤테이션
 export const articleCommentMutations = {
   // 댓글 등록
-  createCommentMutation: (articleId: number) =>
-    boardQueries.comments(articleId),
   createCommentMutationOptions: ({
     articleId,
     user,
