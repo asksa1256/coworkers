@@ -613,6 +613,11 @@ export const articleCommentMutations = {
         queryClient.invalidateQueries({
           queryKey: boardQueries.comments(articleId),
         });
+
+        // 댓글 등록 시 총 댓글 갯수 동기화: 게시글 댓글 총 갯수(commentCount) 데이터는 ['articles', articleId] 쿼리 키에 있어서 함께 무효화
+        queryClient.invalidateQueries({
+          queryKey: boardQueries.article(articleId),
+        });
       },
     }),
 
