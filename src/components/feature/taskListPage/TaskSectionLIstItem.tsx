@@ -3,7 +3,7 @@ import CommentIcon from '@/assets/icons/CommentIcon.svg?react';
 import RepeatIcon from '@/assets/icons/RepeatIcon.svg?react';
 import VCheckIcon from '@/assets/icons/VCheckIcon.svg?react';
 import TaskDetailSheet from '@/components/feature/taskDetail/TaskDetailSheet';
-import TaskSectionLIstItemMenu from '@/components/feature/taskListPage/TaskSectionLIstItemMenu';
+import TaskItemDropdown from '@/components/feature/taskListPage/TaskItemDropdown';
 import { FREQUENCY_TO_TEXT } from '@/constants';
 import type { TaskDetailResponse } from '@/types/taskType';
 import { formatDate } from '@/utils/dateUtils';
@@ -57,7 +57,7 @@ export default function TaskSectionLIstItem({
             </button>
           </TaskDetailSheet>
           <div className='ml-auto'>
-            <TaskSectionLIstItemMenu
+            <TaskItemDropdown
               task={task}
               onDeleteModalOpen={onDeleteModalOpen}
               onEditModalOpen={onEditModalOpen}

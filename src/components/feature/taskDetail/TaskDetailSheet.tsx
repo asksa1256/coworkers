@@ -3,7 +3,7 @@ import RepeatIcon from '@/assets/icons/RepeatIcon.svg?react';
 import XIcon from '@/assets/icons/XIcon.svg?react';
 import TaskDetailComment from '@/components/feature/comments/TaskDetailComment';
 import TaskDetailDone from '@/components/feature/taskDetail/TaskDetailDone';
-import TaskSectionLIstItemMenu from '@/components/feature/taskListPage/TaskSectionLIstItemMenu';
+import TaskItemDropdown from '@/components/feature/taskListPage/TaskItemDropdown';
 import Avatar from '@/components/ui/Avatar';
 import {
   Sheet,
@@ -76,7 +76,7 @@ export default function TaskDetailSheet({
               </span>
             )}
             <div className='my-0.5 ml-auto shrink-0'>
-              <TaskSectionLIstItemMenu
+              <TaskItemDropdown
                 task={task}
                 onDeleteModalOpen={onDeleteModalOpen}
                 onEditModalOpen={onEditModalOpen}

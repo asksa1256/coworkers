@@ -10,7 +10,7 @@ interface Props {
   triggerClassName?: string;
 }
 
-export default function TaskSectionLIstItemMenu({
+export default function TaskItemDropdown({
   task,
   onDeleteModalOpen,
   onEditModalOpen,
