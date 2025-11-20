@@ -26,12 +26,17 @@ export default function TaskSectionLIstItem({
 
   return (
     <>
-      <li className='border-border-primary has-checked:bg-secondary has-checked:border-bg-secondary group mb-3 rounded-lg border px-[14px] py-3 md:rounded-xl'>
+      <li className='border-border-primary has-checked:bg-secondary has-checked:border-bg-secondary group relative mb-3 rounded-lg border px-[14px] py-3 md:rounded-xl'>
+        <TaskDetailSheet
+          task={task}
+          onChangeDone={onChangeDone}
+          onDeleteModalOpen={onDeleteModalOpen}
+          onEditModalOpen={onEditModalOpen}
+        >
+          <button className='absolute inset-0' />
+        </TaskDetailSheet>
         <div className='flex items-start gap-2'>
-          <label
-            className='border-border-primary has-checked:bg-primary has-checked:border-primary m-0.5 flex size-3 shrink-0 cursor-pointer items-center justify-center rounded-sm border md:mx-0 md:size-4 md:rounded-md'
-            htmlFor={String(id)}
-          >
+          <span className='border-border-primary has-checked:bg-primary has-checked:border-primary relative m-0.5 flex size-3 shrink-0 cursor-pointer items-center justify-center rounded-sm border md:mx-0 md:size-4 md:rounded-md'>
             <input
               id={String(id)}
               type='checkbox'
@@ -40,23 +45,19 @@ export default function TaskSectionLIstItem({
               onChange={() => onChangeDone(task)}
             />
             <VCheckIcon className='hidden w-[6px] peer-checked:block md:w-2' />
-          </label>
-          <TaskDetailSheet
-            task={task}
-            onChangeDone={onChangeDone}
-            onDeleteModalOpen={onDeleteModalOpen}
-            onEditModalOpen={onEditModalOpen}
-          >
-            <button className='flex items-start'>
-              <span className='group-has-checked:text-primary-inactive md:text-md text-sm font-medium group-has-checked:line-through'>
-                {name}
-              </span>
-              <span className='text-text-default ml-3 inline-flex shrink-0 gap-0.5 text-xs'>
-                <CommentIcon /> {commentCount}
-              </span>
-            </button>
-          </TaskDetailSheet>
-          <div className='ml-auto'>
+          </span>
+          <div className='flex items-start'>
+            <label
+              htmlFor={String(id)}
+              className='group-has-checked:text-primary-inactive md:text-md relative text-sm font-medium group-has-checked:line-through'
+            >
+              {name}
+            </label>
+            <span className='text-text-default ml-3 inline-flex shrink-0 gap-0.5 text-xs'>
+              <CommentIcon /> {commentCount}
+            </span>
+          </div>
+          <div className='relative ml-auto'>
             <TaskItemDropdown
               task={task}
               onDeleteModalOpen={onDeleteModalOpen}
