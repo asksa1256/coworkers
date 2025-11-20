@@ -106,7 +106,7 @@ export default function TaskDetailSheet({
                     key={schedule.label}
                   >
                     <span className='inline-flex w-[82px] shrink-0 items-center gap-1.5'>
-                      {schedule.Icon && <schedule.Icon className='size-4' />}
+                      <schedule.Icon className='size-4' />
                       {schedule.label}
                     </span>
                     <span>{schedule.value}</span>
