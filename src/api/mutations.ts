@@ -584,13 +584,11 @@ export const articleCommentMutations = {
   createCommentMutationOptions: ({
     articleId,
     user,
-    formReset,
     queryClient,
   }: {
     articleId: number;
     user: UserType;
     queryClient: QueryClient;
-    formReset: UseFormReset<{ content: string }>;
   }) =>
     mutationOptions({
       mutationFn: (variables: { articleId: number; content: string }) =>
@@ -633,7 +631,6 @@ export const articleCommentMutations = {
       },
 
       onSuccess: () => {
-        formReset();
         toast.success('댓글이 등록되었습니다.');
       },
 

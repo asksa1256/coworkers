@@ -1,10 +1,15 @@
+import { articleCommentMutations } from '@/api/mutations';
 import { boardQueries } from '@/api/queries';
 import Comment from '@/components/ui/Comment/CommentSection';
 import useIntersectionObserver from '@/hooks/useIntersectionObserver';
 import useModal from '@/hooks/useModal';
 import { userAtom } from '@/store/authAtom';
 import { getCommentAuthor } from '@/utils/typeGuard';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
 import { useRef, useState } from 'react';
 import ArticleCommentDeleteModal from './ArticleCommentDeleteModal';
@@ -21,6 +26,7 @@ export default function ArticleCommentSection({
   const user = useAtomValue(userAtom);
   const scrollRef = useRef(null);
   const { openModal } = useModal();
+  const queryClient = useQueryClient();
 
   const {
     data,
@@ -36,6 +42,33 @@ export default function ArticleCommentSection({
 
   // 여러 수정 가능한 댓글 중 1개만 수정하기 위한 상태
   const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
+
+  const { mutate: createComment } = useMutation(
+    articleCommentMutations.createCommentMutationOptions({
+      articleId,
+      user: user!,
+      queryClient,
+    }),
+  );
+
+  const { mutate: updateComment } = useMutation(
+    articleCommentMutations.updateCommentMutationOptions({
+      articleId,
+      user: user!,
+      queryClient,
+      onSuccess: () => {
+        setEditingCommentId(null);
+      },
+    }),
+  );
+
+  const handleCreateSubmit = (content: string) => {
+    createComment({ articleId, content });
+  };
+
+  const handleEditSubmit = (commentId: number, content: string) => {
+    updateComment({ commentId, content });
+  };
 
   const handleDelete = (commentId: number, content: string) => {
     openModal({
@@ -61,7 +94,7 @@ export default function ArticleCommentSection({
     <Comment isPending={isPending} status={status} error={error}>
       <Comment.Header count={commentCount} />
 
-      <Comment.Form articleId={articleId} />
+      <Comment.Form onSubmit={handleCreateSubmit} />
 
       <Comment.List comments={allData}>
         <ol>
@@ -73,9 +106,8 @@ export default function ArticleCommentSection({
               return (
                 <Comment.Form
                   key={comment.id}
-                  articleId={articleId}
                   comment={comment}
-                  onEditSuccess={() => setEditingCommentId(null)}
+                  onSubmit={content => handleEditSubmit(comment.id, content)}
                   onCancel={() => setEditingCommentId(null)}
                 />
               );

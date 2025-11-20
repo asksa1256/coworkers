@@ -1,4 +1,3 @@
-import { articleCommentMutations } from '@/api/mutations';
 import Avatar from '@/components/ui/Avatar';
 import { cn } from '@/lib/utils';
 import { userAtom } from '@/store/authAtom';
@@ -9,7 +8,6 @@ import {
 import type { CommentData } from '@/types/commentType';
 import { getCommentAuthor } from '@/utils/typeGuard';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
 import { useForm } from 'react-hook-form';
 import Button from '../Button';
@@ -17,27 +15,24 @@ import TextareaField from '../Textarea/TextareaField';
 import InputReply from './InputReply';
 
 interface CommentFormProps {
-  articleId: number; // 쿼리 키 ['comments', articleId]
   comment?: CommentData;
   className?: string;
-  onEditSuccess?: () => void; // 수정 완료 처리
+  onSubmit: (v: string) => void;
   onCancel?: () => void;
 }
 
 export default function CommentForm({
-  articleId,
   comment,
   className,
-  onEditSuccess,
+  onSubmit,
   onCancel,
 }: CommentFormProps) {
   const user = useAtomValue(userAtom);
-  const queryClient = useQueryClient();
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty, isValid },
+    formState: { isDirty, isValid },
     reset,
     watch,
   } = useForm<CreateCommentRequest>({
@@ -48,34 +43,11 @@ export default function CommentForm({
     },
   });
 
-  const { mutate: createComment } = useMutation(
-    articleCommentMutations.createCommentMutationOptions({
-      articleId,
-      user: user!,
-      formReset: reset,
-      queryClient,
-    }),
-  );
-
-  const { mutate: updateComment } = useMutation(
-    articleCommentMutations.updateCommentMutationOptions({
-      articleId,
-      user: user!,
-      queryClient,
-      onSuccess: () => {
-        reset();
-        onEditSuccess?.();
-      },
-    }),
-  );
-
-  const onEdit = (formData: CreateCommentRequest) => {
-    if (comment?.content)
-      updateComment({ commentId: comment.id, content: formData.content });
-  };
-
-  const onCreate = async (formData: CreateCommentRequest) => {
-    createComment({ articleId, content: formData.content });
+  const handleFormSubmit = async (formData: CreateCommentRequest) => {
+    onSubmit(formData.content);
+    if (!isEditMode) {
+      reset(); // 댓글 등록 폼에서만 제출 후 입력창 비우기
+    }
   };
 
   const isEditMode = !!comment;
@@ -88,7 +60,7 @@ export default function CommentForm({
       <li className='bg-bg-secondary -mx-[22px] px-[22px] py-5 md:-mx-10 md:px-10 lg:-mx-[60px] lg:px-[60px]'>
         <form
           className='flex flex-col gap-2 pb-4'
-          onSubmit={handleSubmit(onEdit)}
+          onSubmit={handleSubmit(handleFormSubmit)}
         >
           <div className='flex gap-4'>
             <Avatar size='md' imgSrc={author?.image ?? null} />
@@ -131,7 +103,7 @@ export default function CommentForm({
   // 등록 폼
   return (
     <form
-      onSubmit={handleSubmit(onCreate)}
+      onSubmit={handleSubmit(handleFormSubmit)}
       className={cn('mb-[28px] flex gap-3 md:mb-9 md:gap-4', className)}
     >
       <Avatar size='md' imgSrc={user?.image ?? null} className='mt-3 md:mt-2' />
