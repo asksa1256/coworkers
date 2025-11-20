@@ -8,6 +8,7 @@ import CreateTeamPage from '@/pages/CreateTeamPage';
 import ErrorPage from '@/pages/ErrorPage';
 import JoinTeamPage from '@/pages/JoinTeamPage';
 import LandingPage from '@/pages/LandingPage';
+import MyHistoryPage from '@/pages/MyHistoryPage';
 import TaskListPage from '@/pages/TaskListPage';
 import TeamPage from '@/pages/TeamPage';
 import type { ReactNode } from 'react';
@@ -42,6 +43,10 @@ const routes = [
       {
         path: '/join-team',
         element: withPrivate(<JoinTeamPage />),
+      },
+      {
+        path: 'my-history',
+        element: withPrivate(<MyHistoryPage />),
       },
       {
         path: '/:groupId',
