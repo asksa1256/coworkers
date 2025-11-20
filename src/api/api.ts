@@ -7,6 +7,8 @@ import type {
 import type {
   ArticleCommentResponse,
   ArticleCommentsResponse,
+  TaskComment,
+  TaskCommentResponse,
 } from '@/types/commentType';
 import type {
   CreateGroupResponse,
@@ -392,4 +394,46 @@ export const deleteTaskRecurring = async ({
   return await axiosInstance.delete(
     `/groups/${groupId}/task-lists/${taskListId}/tasks/${taskId}/recurring/${recurringId}`,
   );
+};
+
+// 태스크 상세 댓글 가져오기
+export const getTaskComments = async (
+  taskId: number,
+): Promise<TaskComment[]> => {
+  const { data } = await axiosInstance.get(`/tasks/${taskId}/comments`);
+  return data;
+};
+
+// 태스크 상세 댓글 추가하기
+export const createTaskComment = async (
+  taskId: number,
+  content: string,
+): Promise<TaskCommentResponse> => {
+  const { data } = await axiosInstance.post(`/tasks/${taskId}/comments`, {
+    content,
+  });
+  return data;
+};
+
+// 태스크 상세 댓글 수정하기
+export const updateTaskComment = async (
+  taskId: number,
+  commentId: number,
+  content: string,
+): Promise<TaskCommentResponse> => {
+  const { data } = await axiosInstance.patch(
+    `/tasks/${taskId}/comments/${commentId}`,
+    {
+      content,
+    },
+  );
+  return data;
+};
+
+// 태스크 상세 댓글 삭제하기
+export const deleteTaskComment = async (
+  taskId: number,
+  commentId: number,
+): Promise<AxiosResponse<void>> => {
+  return await axiosInstance.delete(`/tasks/${taskId}/comments/${commentId}`);
 };

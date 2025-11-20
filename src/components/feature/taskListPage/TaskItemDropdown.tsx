@@ -1,22 +1,29 @@
 import KebabIcon from '@/assets/icons/KebabIcon.svg?react';
 import Dropdown from '@/components/ui/Dropdown';
+import { cn } from '@/lib/utils';
 import type { TaskDetailResponse } from '@/types/taskType';
 
 interface Props {
   task: TaskDetailResponse;
   onDeleteModalOpen: (task: TaskDetailResponse) => void;
   onEditModalOpen: (task: TaskDetailResponse) => void;
+  triggerClassName?: string;
 }
 
-export default function TaskSectionLIstItemMenu({
+export default function TaskItemDropdown({
   task,
   onDeleteModalOpen,
   onEditModalOpen,
+  triggerClassName,
 }: Props) {
   return (
     <Dropdown
       type='icon'
-      triggerChildren={<KebabIcon className='text-icon-primary size-4' />}
+      triggerChildren={
+        <KebabIcon
+          className={cn('text-icon-primary size-4', triggerClassName)}
+        />
+      }
       align='end'
       className='block text-center'
       menuItems={[
