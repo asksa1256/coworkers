@@ -19,6 +19,7 @@ import {
   mutationOptions,
   QueryClient,
   type InfiniteData,
+  type QueryKey,
 } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { produce } from 'immer';
@@ -470,6 +471,40 @@ export const taskMutations = {
       onError: error => {
         console.error(error);
         toast.error('할일 삭제 실패하였습니다. 다시 시도해주세요.');
+      },
+    }),
+  // 태스크 수정
+  editTaskOptions: ({
+    invalidateQueryKey,
+    queryClient,
+    closeModal,
+  }: {
+    invalidateQueryKey: QueryKey[];
+    queryClient: QueryClient;
+    closeModal: () => void;
+  }) =>
+    mutationOptions({
+      mutationFn: ({
+        taskId,
+        payload,
+      }: {
+        taskId: number;
+        payload: TaskUpdateRequestBody;
+      }) => updateTask(taskId, payload),
+      onSuccess: () => {
+        toast.success('할일 수정 성공하였습니다.');
+
+        // 태스크 캐싱 무효화
+        // task detail에서 무효화 시킬 쿼리키가 다를 것 같아서 아래와 같이 처리
+        invalidateQueryKey.forEach(key => {
+          queryClient.invalidateQueries({ queryKey: key });
+        });
+
+        closeModal();
+      },
+      onError: error => {
+        console.error(error);
+        toast.error('할일 수정 실패하였습니다. 다시 시도해주세요.');
       },
     }),
 };

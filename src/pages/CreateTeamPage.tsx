@@ -15,7 +15,7 @@ export default function CreateTeamPage() {
   const nav = useNavigate();
   const [user, setUser] = useAtom(userAtom);
   const queryClient = useQueryClient();
-  const { mutate, isSuccess, data } = useMutation({
+  const { mutateAsync, isSuccess, data } = useMutation({
     mutationFn: (formData: TeamFormDataType) => createGroup(formData),
     onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: groupQueries.groups(user) });
@@ -27,8 +27,8 @@ export default function CreateTeamPage() {
     },
   });
 
-  const handleSubmit = (formData: TeamFormDataType) => {
-    mutate(formData);
+  const handleSubmit = async (payload: TeamFormDataType) => {
+    return await mutateAsync(payload);
   };
 
   useEffect(() => {

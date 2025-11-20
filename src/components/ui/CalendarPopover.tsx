@@ -29,6 +29,7 @@ export default function CalendarPopover({ date, onChangeDate }: Props) {
         <Calendar
           mode='single'
           selected={date}
+          defaultMonth={date}
           captionLayout='label'
           onSelect={date => {
             onChangeDate(date ?? new Date());
