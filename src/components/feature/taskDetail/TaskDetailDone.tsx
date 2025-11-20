@@ -17,7 +17,7 @@ export default function TaskDetailDone({ isCheck, onChangeDone }: Props) {
     >
       <input
         type='checkbox'
-        className='peer hidden appearance-none'
+        className='hidden'
         checked={isCheck}
         onChange={onChangeDone}
       />
