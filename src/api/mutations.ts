@@ -584,11 +584,13 @@ export const articleCommentMutations = {
   createCommentMutationOptions: ({
     articleId,
     user,
+    formReset,
     queryClient,
   }: {
     articleId: number;
     user: UserType;
     queryClient: QueryClient;
+    formReset: UseFormReset<{ content: string }>;
   }) =>
     mutationOptions({
       mutationFn: (variables: { articleId: number; content: string }) =>
@@ -630,6 +632,11 @@ export const articleCommentMutations = {
         return { prevData };
       },
 
+      onSuccess: () => {
+        formReset();
+        toast.success('댓글이 등록되었습니다.');
+      },
+
       onError: (err, _variables, context) => {
         if (context?.prevData) {
           queryClient.setQueryData(
@@ -659,10 +666,12 @@ export const articleCommentMutations = {
     articleId,
     user,
     queryClient,
+    onSuccess,
   }: {
     articleId: number;
     user: UserType;
     queryClient: QueryClient;
+    onSuccess: () => void;
   }) =>
     mutationOptions({
       mutationFn: (variables: { commentId: number; content: string }) =>
@@ -705,6 +714,11 @@ export const articleCommentMutations = {
         );
 
         return { prevData };
+      },
+
+      onSuccess: () => {
+        if (onSuccess) onSuccess();
+        toast.success('댓글이 수정되었습니다.');
       },
 
       onError: (err, _variables, context) => {

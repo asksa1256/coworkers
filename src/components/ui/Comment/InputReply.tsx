@@ -1,16 +1,15 @@
 import ArrowUpIcon from '@/assets/icons/ArrowUpIcon.svg';
 import Button from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
-import { forwardRef, useEffect, useState, type FormEvent } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import { type FieldError } from 'react-hook-form';
 
 interface InputReplyProps extends React.ComponentProps<'textarea'> {
   error?: FieldError;
-  onSubmit: (e: FormEvent) => void;
 }
 
 function InputReply(
-  { error, onSubmit, ...props }: InputReplyProps,
+  { error, ...props }: InputReplyProps,
   ref: React.ForwardedRef<HTMLTextAreaElement>,
 ) {
   const [isEmpty, setIsEmpty] = useState(true);
@@ -50,7 +49,6 @@ function InputReply(
           round='full'
           disabled={props.disabled || isEmpty}
           aria-label='댓글 등록'
-          onClick={onSubmit}
         >
           <img src={ArrowUpIcon} alt='업로드 이미지' />
         </Button>
