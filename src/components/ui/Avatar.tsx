@@ -15,7 +15,7 @@ export default function Avatar({
   return (
     <div
       className={cn(
-        'bg-bg-tertiary inline-flex items-center justify-center overflow-hidden rounded-md md:rounded-lg',
+        'bg-bg-tertiary inline-flex shrink-0 items-center justify-center overflow-hidden rounded-md md:rounded-lg',
         {
           'h-6 w-6': size === 'sm',
           'h-6 w-6 md:h-8 md:w-8': size === 'md',

@@ -29,6 +29,7 @@ import {
   addTaskList,
   createArticleComment,
   createTask,
+  deleteArticleComment,
   deleteGroup,
   deleteGroupMember,
   deleteTask,
@@ -36,6 +37,7 @@ import {
   deleteTaskRecurring,
   likeArticle,
   unlikeArticle,
+  updateArticleComment,
   updateGroup,
   updateTask,
   updateTaskList,
@@ -578,8 +580,7 @@ export const groupMutations = {
 
 // 게시글 댓글 뮤테이션
 export const articleCommentMutations = {
-  createCommentMutation: (articleId: number) =>
-    boardQueries.comments(articleId),
+  // 댓글 등록
   createCommentMutationOptions: ({
     articleId,
     user,
@@ -607,7 +608,7 @@ export const articleCommentMutations = {
           content: newCommentVariables.content,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
-          writer: { id: user.id, image: user.image, nickname: user.nickname }, // 현재 로그인한 사용자 정보 사용
+          writer: { id: user.id, image: user.image, nickname: user.nickname },
         };
 
         queryClient.setQueryData<InfiniteData<ArticleCommentsResponse>>(
@@ -629,6 +630,10 @@ export const articleCommentMutations = {
         return { prevData };
       },
 
+      onSuccess: () => {
+        toast.success('댓글이 등록되었습니다.');
+      },
+
       onError: (err, _variables, context) => {
         if (context?.prevData) {
           queryClient.setQueryData(
@@ -645,6 +650,125 @@ export const articleCommentMutations = {
         queryClient.invalidateQueries({
           queryKey: boardQueries.comments(articleId),
         });
+
+        // 댓글 등록 시 총 댓글 갯수 동기화: 게시글 댓글 총 갯수(commentCount) 데이터는 ['articles', articleId] 쿼리 키에 있어서 함께 무효화
+        queryClient.invalidateQueries({
+          queryKey: boardQueries.article(articleId),
+        });
+      },
+    }),
+
+  // 댓글 수정
+  updateCommentMutationOptions: ({
+    articleId,
+    user,
+    queryClient,
+    onSuccess,
+  }: {
+    articleId: number;
+    user: UserType;
+    queryClient: QueryClient;
+    onSuccess: () => void;
+  }) =>
+    mutationOptions({
+      mutationFn: (variables: { commentId: number; content: string }) =>
+        updateArticleComment(variables.commentId, variables.content),
+
+      onMutate: async (newCommentVariables: {
+        commentId: number;
+        content: string;
+      }) => {
+        await queryClient.cancelQueries({
+          queryKey: boardQueries.comments(articleId),
+        });
+        const prevData = queryClient.getQueryData<ArticleCommentResponse[]>(
+          boardQueries.comments(articleId),
+        );
+
+        const newComment: ArticleCommentResponse = {
+          id: Date.now() * -1,
+          content: newCommentVariables.content,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          writer: { id: user.id, image: user.image, nickname: user.nickname },
+        };
+
+        queryClient.setQueryData<InfiniteData<ArticleCommentsResponse>>(
+          boardQueries.comments(articleId),
+          produce(draft => {
+            if (!draft) return;
+
+            draft.pages.forEach(page => {
+              const idx = page.list.findIndex(
+                cmt => cmt.id === newCommentVariables.commentId,
+              );
+
+              if (idx !== -1) {
+                page.list[idx] = newComment;
+              }
+            });
+          }),
+        );
+
+        return { prevData };
+      },
+
+      onSuccess: () => {
+        if (onSuccess) onSuccess();
+        toast.success('댓글이 수정되었습니다.');
+      },
+
+      onError: (err, _variables, context) => {
+        if (context?.prevData) {
+          queryClient.setQueryData(
+            boardQueries.comments(articleId),
+            context.prevData,
+          );
+        }
+
+        console.error(err);
+        toast.error('댓글 수정에 실패했습니다. 다시 시도해주세요.');
+      },
+
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: boardQueries.comments(articleId),
+        });
+      },
+    }),
+
+  // 댓글 삭제
+  deleteArticleCommentOptions: ({
+    articleId,
+    queryClient,
+    closeModal,
+  }: {
+    articleId: number;
+    queryClient: QueryClient;
+    closeModal?: () => void;
+  }) =>
+    mutationOptions({
+      mutationFn: (commentId: number) => deleteArticleComment(commentId),
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: boardQueries.comments(articleId),
+        });
+
+        // 댓글 삭제 시 총 댓글 갯수 동기화: 게시글 댓글 총 갯수(commentCount) 데이터는 ['articles', articleId] 쿼리 키에 있어서 함께 무효화
+        queryClient.invalidateQueries({
+          queryKey: boardQueries.article(articleId),
+        });
+
+        if (closeModal) closeModal();
+
+        toast.success('댓글을 삭제했습니다.');
+      },
+      onError: error => {
+        if (isAxiosError(error) && error.response?.status === 403) {
+          toast.error('댓글을 삭제할 권한이 없습니다.');
+        } else {
+          toast.error('댓글 삭제 실패. 다시 시도해주세요.');
+        }
       },
     }),
 };

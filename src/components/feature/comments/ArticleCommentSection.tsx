@@ -2,13 +2,9 @@ import { articleCommentMutations } from '@/api/mutations';
 import { boardQueries } from '@/api/queries';
 import Comment from '@/components/ui/Comment/CommentSection';
 import useIntersectionObserver from '@/hooks/useIntersectionObserver';
+import useModal from '@/hooks/useModal';
 import { userAtom } from '@/store/authAtom';
-import {
-  type CreateCommentRequest,
-  createCommentRequestSchema,
-} from '@/types/CommentRequestSchema';
 import { getCommentAuthor } from '@/utils/typeGuard';
-import { zodResolver } from '@hookform/resolvers/zod';
 import {
   useInfiniteQuery,
   useMutation,
@@ -16,8 +12,7 @@ import {
 } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
 import { useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
+import ArticleCommentDeleteModal from './ArticleCommentDeleteModal';
 
 interface Props {
   articleId: number;
@@ -29,8 +24,9 @@ export default function ArticleCommentSection({
   commentCount,
 }: Props) {
   const user = useAtomValue(userAtom);
-  const queryClient = useQueryClient();
   const scrollRef = useRef(null);
+  const { openModal } = useModal();
+  const queryClient = useQueryClient();
 
   const {
     data,
@@ -44,15 +40,8 @@ export default function ArticleCommentSection({
 
   const allData = data?.pages.flatMap(page => page.list);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<CreateCommentRequest>({
-    resolver: zodResolver(createCommentRequestSchema),
-    mode: 'onBlur',
-  });
+  // 여러 수정 가능한 댓글 중 1개만 수정하기 위한 상태
+  const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
 
   const { mutate: createComment } = useMutation(
     articleCommentMutations.createCommentMutationOptions({
@@ -62,42 +51,35 @@ export default function ArticleCommentSection({
     }),
   );
 
-  const onSubmit = async (formData: CreateCommentRequest) => {
-    createComment(
-      { articleId, content: formData.content },
-      {
-        onSuccess: () => {
-          reset();
-          toast.success('댓글이 등록되었습니다.');
-        },
+  const { mutate: updateComment } = useMutation(
+    articleCommentMutations.updateCommentMutationOptions({
+      articleId,
+      user: user!,
+      queryClient,
+      onSuccess: () => {
+        setEditingCommentId(null);
       },
-    );
+    }),
+  );
+
+  const handleCreateSubmit = (content: string) => {
+    createComment({ articleId, content });
   };
 
-  const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
-
-  // 댓글 수정 뮤테이션 선언
-  // const { mutate: updateComment } = useMutation(
-  //   articleCommentMutations.updateCommentMutationOptions({
-  //     articleId,
-  //     queryClient,
-  //   }),
-  // );
-
-  const handleEditStart = (commentId: number) => {
-    setEditingCommentId(commentId);
+  const handleEditSubmit = (commentId: number, content: string) => {
+    updateComment({ commentId, content });
   };
 
-  const handleEditCancel = () => {
-    setEditingCommentId(null);
-  };
-
-  const handleEditSubmit = (commentId: number, newContent: string) => {
-    // 댓글 수정 뮤테이션 호출
-  };
-
-  const handleDelete = (commentId: number) => {
-    console.log(`ArticleDeleteModal 오픈 - 댓글 ID: ${commentId}`);
+  const handleDelete = (commentId: number, content: string) => {
+    openModal({
+      children: (
+        <ArticleCommentDeleteModal
+          commentId={commentId}
+          content={content}
+          articleId={articleId}
+        />
+      ),
+    });
   };
 
   useIntersectionObserver({
@@ -112,39 +94,35 @@ export default function ArticleCommentSection({
     <Comment isPending={isPending} status={status} error={error}>
       <Comment.Header count={commentCount} />
 
-      <Comment.Form
-        register={register}
-        error={errors.content}
-        onSubmit={handleSubmit(onSubmit)}
-      />
+      <Comment.Form onSubmit={handleCreateSubmit} />
 
       <Comment.List comments={allData}>
         <ol>
           {allData.map(comment => {
             const author = getCommentAuthor(comment);
-            const commentAuthorId = author.id;
-            const isCommentAuthor = commentAuthorId === user?.id;
 
-            const editActions = isCommentAuthor
-              ? {
-                  isEditMode: editingCommentId === comment.id,
-                  onSubmit: (newContent: string) =>
-                    handleEditSubmit(comment.id, newContent),
-                  onEditCancel: handleEditCancel,
-                }
-              : undefined; // 작성자가 아니면 editActions 전달 X
+            // 수정
+            if (editingCommentId === comment.id) {
+              return (
+                <Comment.Form
+                  key={comment.id}
+                  comment={comment}
+                  onSubmit={content => handleEditSubmit(comment.id, content)}
+                  onCancel={() => setEditingCommentId(null)}
+                />
+              );
+            }
 
+            // 조회
             return (
-              <Comment.Item
-                key={comment.id}
-                comment={comment}
-                author={author}
-                editActions={editActions}
-              >
-                {isCommentAuthor && (
+              <Comment.Item key={comment.id} comment={comment} author={author}>
+                {author.id === user?.id && (
                   <Comment.Dropdown
                     commentId={comment.id}
-                    onEditStart={handleEditStart}
+                    content={comment.content}
+                    onEdit={() => {
+                      setEditingCommentId(comment.id);
+                    }}
                     onDelete={handleDelete}
                   />
                 )}
