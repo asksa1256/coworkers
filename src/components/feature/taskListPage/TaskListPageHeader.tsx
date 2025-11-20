@@ -3,9 +3,8 @@ import CreateTaskGroupListButton from '@/components/feature/taskListPage/CreateT
 import TaskGroupList from '@/components/feature/taskListPage/TaskGroupList';
 import GroupConfigDropdown from '@/components/feature/teamPage/GroupConfigDropdown';
 import GroupTitleBar from '@/components/ui/GroupTitleBar';
-import { userAtom } from '@/store/authAtom';
+import { useGroupAuthContext } from '@/hooks/useGroupAuthContext';
 import { useQuery } from '@tanstack/react-query';
-import { useAtomValue } from 'jotai';
 import { useParams } from 'react-router-dom';
 
 interface Props {
@@ -14,17 +13,13 @@ interface Props {
 
 export default function TaskListPageHeader({ date }: Props) {
   const { groupId } = useParams();
-  const user = useAtomValue(userAtom);
+  const isAdmin = useGroupAuthContext();
 
   const { data: groupData } = useQuery(
     groupQueries.groupOptions(Number(groupId)),
   );
 
   if (!groupData) return null;
-
-  const isAdmin =
-    groupData.members.find(member => member.userId === user?.id)?.role ===
-    'ADMIN';
 
   return (
     <>
