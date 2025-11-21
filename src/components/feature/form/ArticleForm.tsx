@@ -24,8 +24,6 @@ export default function ArticleForm({ initialValue }: ArticleFormProps) {
   const {
     register,
     handleSubmit,
-    setError,
-    reset,
     formState: { errors, isDirty, isValid, isSubmitting },
   } = useForm({
     resolver: zodResolver(createArticleRequestSchema),
@@ -86,7 +84,7 @@ export default function ArticleForm({ initialValue }: ArticleFormProps) {
         </div>
       </div>
 
-      <Button disabled={!isValid}>
+      <Button disabled={isEditMode ? !isDirty || !isValid : !isValid}>
         {isSubmitting ? isSubmittingText : submitText}
       </Button>
     </form>
