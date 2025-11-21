@@ -17,7 +17,7 @@ export default function UpdateTeamPage() {
   const { data: groupData } = useQuery(groupQueries.groupOptions(groupId));
   const [user, setUser] = useAtom(userAtom);
   const {
-    mutate,
+    mutateAsync,
     isSuccess,
     data: mutationResponse,
   } = useMutation(
@@ -48,8 +48,8 @@ export default function UpdateTeamPage() {
 
   return (
     <TeamForm
-      onSubmit={(formData: TeamFormDataType) => {
-        mutate({ groupId: groupId, payload: formData });
+      onSubmit={async (formData: TeamFormDataType) => {
+        await mutateAsync({ groupId: groupId, payload: formData });
       }}
       initialData={{ name: groupData.name, image: groupData.image }}
     />

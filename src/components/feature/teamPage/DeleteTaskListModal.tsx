@@ -8,12 +8,14 @@ interface Props {
   groupId: number;
   taskListId: number;
   taskListName: string;
+  currentTaskListId?: string;
 }
 
 export default function DeleteTaskListModal({
   groupId,
   taskListId,
   taskListName,
+  currentTaskListId,
 }: Props) {
   const { closeModal } = useModal();
   const queryClient = useQueryClient();
@@ -23,6 +25,7 @@ export default function DeleteTaskListModal({
       taskListId,
       queryClient,
       closeModal,
+      Number(currentTaskListId),
     ),
   );
 

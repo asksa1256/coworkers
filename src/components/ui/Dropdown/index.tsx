@@ -26,6 +26,7 @@ export interface SelectDropdownProps extends DropdownBaseProps {
   value: string;
   menuItems: SelectMenuItem[];
   suffix?: React.ReactNode;
+  disabled?: boolean;
   onSelect: (value: string) => void;
 }
 
@@ -34,7 +35,8 @@ export interface IconDropdownProps extends DropdownBaseProps {
   type: 'icon';
   triggerChildren: React.ReactNode;
   menuItems: MenuItem[];
-  onSelect?: never; // onSelect 대신 onClick 사용
+  disabled?: boolean;
+  onSelect?: never; // onSelect 대신 onClick 사용 + onSelect 타입 추론 방지
 }
 
 export type DropdownProps = SelectDropdownProps | IconDropdownProps;
@@ -55,6 +57,7 @@ function SelectDropdown({
   value,
   suffix,
   align = 'start',
+  disabled,
   className,
   onSelect,
 }: SelectDropdownProps & { align?: 'start' | 'center' | 'end' }) {
@@ -69,7 +72,9 @@ function SelectDropdown({
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger suffix={suffix}>{selectedLabel}</DropdownMenuTrigger>
+      <DropdownMenuTrigger suffix={suffix} disabled={disabled}>
+        {selectedLabel}
+      </DropdownMenuTrigger>
 
       <DropdownMenuContent align={align}>
         {menuItems.map(item => (
@@ -91,6 +96,7 @@ function IconDropdown({
   triggerChildren,
   menuItems,
   align = 'start',
+  disabled,
   className,
 }: IconDropdownProps & { align?: 'start' | 'center' | 'end' }) {
   const handleItemClick = (item: MenuItem) => {
@@ -99,7 +105,9 @@ function IconDropdown({
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>{triggerChildren}</DropdownMenuTrigger>
+      <DropdownMenuTrigger disabled={disabled}>
+        {triggerChildren}
+      </DropdownMenuTrigger>
 
       <DropdownMenuContent align={align}>
         {menuItems.map((item, i) => (

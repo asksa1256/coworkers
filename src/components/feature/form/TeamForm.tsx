@@ -45,6 +45,8 @@ export default function TeamForm({ initialData, onSubmit }: Props) {
 
   const imgSrc = watch('image');
   const isEditMode = !!initialData;
+  const isEditModeButtonText = isEditMode ? '수정하기' : '생성하기';
+  const isEditModeButtonTextLoading = isEditMode ? '수정중...' : '생성중...';
 
   const handleChangeImage = async (e: ChangeEvent<HTMLInputElement>) => {
     const url = await handleUploadImage(e);
@@ -72,7 +74,7 @@ export default function TeamForm({ initialData, onSubmit }: Props) {
       return;
     }
 
-    onSubmit(formData);
+    return onSubmit(formData);
   };
 
   return (
@@ -112,7 +114,7 @@ export default function TeamForm({ initialData, onSubmit }: Props) {
           className='mt-10 text-base'
           disabled={!isValid || isSubmitting || !isDirty}
         >
-          {isEditMode ? '수정하기' : '생성하기'}
+          {isSubmitting ? isEditModeButtonTextLoading : isEditModeButtonText}
         </Button>
         <p className='text-text-default mt-5 text-center text-xs md:mt-6 md:text-base'>
           팀 이름은 회사명이나 모임 이름 등으로 설정하면 좋아요.

@@ -35,6 +35,9 @@ const meta = {
       options: ['start', 'center', 'end'],
       description: '드롭다운 메뉴 정렬',
     },
+    disabled: {
+      control: 'boolean',
+    },
     className: {
       control: 'text',
       description: '커스텀 스타일',

@@ -1,6 +1,11 @@
 import type { TeamFormDataType } from '@/components/feature/form/TeamForm';
 import type { ArticleDetailResponse } from '@/types/boardType';
+import type {
+  ArticleCommentResponse,
+  ArticleCommentsResponse,
+} from '@/types/commentType';
 import type { GroupDetailResponse } from '@/types/groupType';
+import type { TaskFormSchema } from '@/types/taskFormSchema';
 import type { TaskListSchema } from '@/types/taskListSchema';
 import type {
   TaskDetailResponse,
@@ -10,18 +15,29 @@ import type {
 } from '@/types/taskType';
 import type { UserType } from '@/types/userType';
 import { toggleDoneAt } from '@/utils/taskUtils';
-import { mutationOptions, QueryClient } from '@tanstack/react-query';
+import {
+  mutationOptions,
+  QueryClient,
+  type InfiniteData,
+  type QueryKey,
+} from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { produce } from 'immer';
 import type { UseFormReset, UseFormSetError } from 'react-hook-form';
 import { toast } from 'sonner';
 import {
   addTaskList,
+  createArticleComment,
+  createTask,
+  deleteArticleComment,
   deleteGroup,
   deleteGroupMember,
+  deleteTask,
   deleteTaskList,
+  deleteTaskRecurring,
   likeArticle,
   unlikeArticle,
+  updateArticleComment,
   updateGroup,
   updateTask,
   updateTaskList,
@@ -89,6 +105,9 @@ export const taskListMutations = {
         queryClient.invalidateQueries({
           queryKey: groupQueries.group(groupId),
         });
+        queryClient.invalidateQueries({
+          queryKey: ['singleTaskList'],
+        });
         if (closeModal) closeModal();
       },
       onError: error => {
@@ -110,6 +129,7 @@ export const taskListMutations = {
     taskListId: number,
     queryClient: QueryClient,
     closeModal?: () => void,
+    currentTaskListId?: number,
   ) =>
     mutationOptions({
       mutationFn: (taskListId: number) => deleteTaskList(taskListId),
@@ -118,6 +138,11 @@ export const taskListMutations = {
         queryClient.invalidateQueries({
           queryKey: groupQueries.group(groupId),
         });
+
+        // 태스크 리스트 페이지에서 삭제할 taskListId와 현재 taskListId가 동일하면, 팀페이지로 이동
+        if (currentTaskListId && currentTaskListId === taskListId) {
+          window.location.href = `/${groupId}`;
+        }
         if (closeModal) closeModal();
       },
       onError: error => {
@@ -365,6 +390,123 @@ export const taskMutations = {
         });
       },
     }),
+  // 태스크 생성
+  createTaskOptions: ({
+    queryClient,
+    closeModal,
+  }: {
+    queryClient: QueryClient;
+    closeModal: () => void;
+  }) =>
+    mutationOptions({
+      mutationFn: ({
+        groupId,
+        taskListId,
+        payload,
+      }: {
+        groupId: string;
+        taskListId: string;
+        payload: TaskFormSchema;
+      }) => createTask(groupId, taskListId, payload),
+      onSuccess: (data, { groupId, taskListId }) => {
+        toast.success('할 일 만들기 성공!');
+        // 서버에서 보내주는 일자와 쿼리키값에 등록한 일자의 매칭 불일치로
+        // 프리픽스 매칭으로 적용함
+
+        // 할일 목록 캐싱 무효화
+        queryClient.invalidateQueries({
+          queryKey: ['singleTaskList', groupId, taskListId],
+        });
+
+        // 태스크 캐싱 무효화
+        queryClient.invalidateQueries({
+          queryKey: ['tasks', groupId, taskListId],
+        });
+
+        closeModal();
+      },
+      onError: error => {
+        console.error(error);
+        toast.error('할 일 만들기에 실패하였습니다. 다시 시도해주세요.');
+      },
+    }),
+  // 태스크 삭제
+  deleteTaskOptions: ({
+    queryClient,
+    closeModal,
+  }: {
+    queryClient: QueryClient;
+    closeModal: () => void;
+  }) =>
+    mutationOptions({
+      mutationFn: ({
+        groupId,
+        taskListId,
+        taskId,
+        recurringId,
+      }: {
+        groupId: string;
+        taskListId: string;
+        taskId: string;
+        recurringId?: string;
+      }) =>
+        recurringId
+          ? deleteTaskRecurring({ groupId, taskListId, taskId, recurringId })
+          : deleteTask({ groupId, taskListId, taskId }),
+      onSuccess: (data, { groupId, taskListId }) => {
+        toast.success('할일 삭제 성공하였습니다.');
+
+        // 할일 목록 캐싱 무효화
+        queryClient.invalidateQueries({
+          queryKey: ['singleTaskList', groupId, taskListId],
+        });
+
+        // 태스크 캐싱 무효화
+        queryClient.invalidateQueries({
+          queryKey: ['tasks', groupId, taskListId],
+        });
+
+        closeModal();
+      },
+      onError: error => {
+        console.error(error);
+        toast.error('할일 삭제 실패하였습니다. 다시 시도해주세요.');
+      },
+    }),
+  // 태스크 수정
+  editTaskOptions: ({
+    invalidateQueryKey,
+    queryClient,
+    closeModal,
+  }: {
+    invalidateQueryKey: QueryKey[];
+    queryClient: QueryClient;
+    closeModal: () => void;
+  }) =>
+    mutationOptions({
+      mutationFn: ({
+        taskId,
+        payload,
+      }: {
+        taskId: number;
+        payload: TaskUpdateRequestBody;
+      }) => updateTask(taskId, payload),
+      onSuccess: () => {
+        toast.success('할일 수정 성공하였습니다.');
+
+        // 태스크 캐싱 무효화
+        // task detail에서 무효화 시킬 쿼리키가 다를 것 같아서 아래와 같이 처리
+        invalidateQueryKey.forEach(key => {
+          queryClient.invalidateQueries({ queryKey: key });
+        });
+
+        closeModal();
+      },
+      onError: error => {
+        console.error(error);
+        toast.error('할일 수정 실패하였습니다. 다시 시도해주세요.');
+      },
+    }),
 };
 
 export const groupMutations = {
@@ -436,10 +578,205 @@ export const groupMutations = {
     }),
 };
 
+// 게시글 댓글 뮤테이션
+export const articleCommentMutations = {
+  // 댓글 등록
+  createCommentMutationOptions: ({
+    articleId,
+    user,
+    queryClient,
+  }: {
+    articleId: number;
+    user: UserType;
+    queryClient: QueryClient;
+  }) =>
+    mutationOptions({
+      mutationFn: (variables: { articleId: number; content: string }) =>
+        createArticleComment(variables.articleId, variables.content),
+
+      onMutate: async (newCommentVariables: { content: string }) => {
+        await queryClient.cancelQueries({
+          queryKey: boardQueries.comments(articleId),
+        });
+        const prevData = queryClient.getQueryData<ArticleCommentResponse[]>(
+          boardQueries.comments(articleId),
+        );
+
+        // 낙관적 업데이트용 임시 새 댓글 객체
+        const newComment: ArticleCommentResponse = {
+          id: Date.now() * -1,
+          content: newCommentVariables.content,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          writer: { id: user.id, image: user.image, nickname: user.nickname },
+        };
+
+        queryClient.setQueryData<InfiniteData<ArticleCommentsResponse>>(
+          boardQueries.comments(articleId),
+          produce(draft => {
+            // 기존 댓글 데이터가 없으면 최초 댓글로 추가
+            if (!draft) {
+              return {
+                pages: [{ list: [newComment], nextCursor: null }],
+                pageParams: [null],
+              };
+            }
+
+            // 기존 댓글 데이터가 있으면 첫번째 페이지 맨 위에 추가
+            draft.pages[0].list.unshift(newComment);
+          }),
+        );
+
+        return { prevData };
+      },
+
+      onSuccess: () => {
+        toast.success('댓글이 등록되었습니다.');
+      },
+
+      onError: (err, _variables, context) => {
+        if (context?.prevData) {
+          queryClient.setQueryData(
+            boardQueries.comments(articleId),
+            context.prevData,
+          );
+        }
+
+        console.error(err);
+        toast.error('댓글 등록에 실패했습니다. 다시 시도해주세요.');
+      },
+
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: boardQueries.comments(articleId),
+        });
+
+        // 댓글 등록 시 총 댓글 갯수 동기화: 게시글 댓글 총 갯수(commentCount) 데이터는 ['articles', articleId] 쿼리 키에 있어서 함께 무효화
+        queryClient.invalidateQueries({
+          queryKey: boardQueries.article(articleId),
+        });
+      },
+    }),
+
+  // 댓글 수정
+  updateCommentMutationOptions: ({
+    articleId,
+    user,
+    queryClient,
+    onSuccess,
+  }: {
+    articleId: number;
+    user: UserType;
+    queryClient: QueryClient;
+    onSuccess: () => void;
+  }) =>
+    mutationOptions({
+      mutationFn: (variables: { commentId: number; content: string }) =>
+        updateArticleComment(variables.commentId, variables.content),
+
+      onMutate: async (newCommentVariables: {
+        commentId: number;
+        content: string;
+      }) => {
+        await queryClient.cancelQueries({
+          queryKey: boardQueries.comments(articleId),
+        });
+        const prevData = queryClient.getQueryData<ArticleCommentResponse[]>(
+          boardQueries.comments(articleId),
+        );
+
+        const newComment: ArticleCommentResponse = {
+          id: Date.now() * -1,
+          content: newCommentVariables.content,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          writer: { id: user.id, image: user.image, nickname: user.nickname },
+        };
+
+        queryClient.setQueryData<InfiniteData<ArticleCommentsResponse>>(
+          boardQueries.comments(articleId),
+          produce(draft => {
+            if (!draft) return;
+
+            draft.pages.forEach(page => {
+              const idx = page.list.findIndex(
+                cmt => cmt.id === newCommentVariables.commentId,
+              );
+
+              if (idx !== -1) {
+                page.list[idx] = newComment;
+              }
+            });
+          }),
+        );
+
+        return { prevData };
+      },
+
+      onSuccess: () => {
+        if (onSuccess) onSuccess();
+        toast.success('댓글이 수정되었습니다.');
+      },
+
+      onError: (err, _variables, context) => {
+        if (context?.prevData) {
+          queryClient.setQueryData(
+            boardQueries.comments(articleId),
+            context.prevData,
+          );
+        }
+
+        console.error(err);
+        toast.error('댓글 수정에 실패했습니다. 다시 시도해주세요.');
+      },
+
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: boardQueries.comments(articleId),
+        });
+      },
+    }),
+
+  // 댓글 삭제
+  deleteArticleCommentOptions: ({
+    articleId,
+    queryClient,
+    closeModal,
+  }: {
+    articleId: number;
+    queryClient: QueryClient;
+    closeModal?: () => void;
+  }) =>
+    mutationOptions({
+      mutationFn: (commentId: number) => deleteArticleComment(commentId),
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: boardQueries.comments(articleId),
+        });
+
+        // 댓글 삭제 시 총 댓글 갯수 동기화: 게시글 댓글 총 갯수(commentCount) 데이터는 ['articles', articleId] 쿼리 키에 있어서 함께 무효화
+        queryClient.invalidateQueries({
+          queryKey: boardQueries.article(articleId),
+        });
+
+        if (closeModal) closeModal();
+
+        toast.success('댓글을 삭제했습니다.');
+      },
+      onError: error => {
+        if (isAxiosError(error) && error.response?.status === 403) {
+          toast.error('댓글을 삭제할 권한이 없습니다.');
+        } else {
+          toast.error('댓글 삭제 실패. 다시 시도해주세요.');
+        }
+      },
+    }),
+};
+
 // 게시글 좋아요 뮤테이션
 export const likeMutations = {
   // 좋아요 추가
-  likeMutation: (articleId: number) => ['article', articleId], // 게시글 상세 쿼리 키에 좋아요 데이터가 있으므로 해당 키 사용
+  likeMutation: (articleId: number) => boardQueries.article(articleId), // 게시글 상세 쿼리 키에 좋아요 데이터가 있으므로 해당 키 사용
   likeMutationOptions: ({
     articleId,
     queryClient,
@@ -491,7 +828,7 @@ export const likeMutations = {
     }),
 
   // 좋아요 취소
-  unlikeMutation: (articleId: number) => ['article', articleId],
+  unlikeMutation: (articleId: number) => boardQueries.article(articleId),
   unlikeMutationOptions: ({
     articleId,
     queryClient,

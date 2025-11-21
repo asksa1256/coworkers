@@ -13,7 +13,7 @@ import { DialogTitle } from '@radix-ui/react-dialog';
 
 interface Props {
   currentGroup: GroupType | null;
-  onUpdateCurrentGroup: (group: GroupType) => void;
+  onUpdateCurrentGroup: (group: GroupType | null) => void;
 }
 
 export default function MobileMenu({

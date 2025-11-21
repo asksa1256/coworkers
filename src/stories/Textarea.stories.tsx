@@ -39,6 +39,7 @@ export const WithError: Story = {
     ...Default.args,
     value: '',
     error: {
+      type: 'required',
       message: '내용을 입력해주세요.',
     },
   },

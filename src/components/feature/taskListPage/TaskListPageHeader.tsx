@@ -1,10 +1,11 @@
 import { groupQueries } from '@/api/queries';
-import ConfigIcon from '@/assets/icons/ConfigIcon.svg?react';
 import CreateTaskGroupListButton from '@/components/feature/taskListPage/CreateTaskGroupListButton';
 import TaskGroupList from '@/components/feature/taskListPage/TaskGroupList';
+import GroupConfigDropdown from '@/components/feature/teamPage/GroupConfigDropdown';
 import GroupTitleBar from '@/components/ui/GroupTitleBar';
+import { useGroupAuthContext } from '@/hooks/useGroupAuthContext';
 import { useQuery } from '@tanstack/react-query';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 interface Props {
   date: Date;
@@ -12,6 +13,7 @@ interface Props {
 
 export default function TaskListPageHeader({ date }: Props) {
   const { groupId } = useParams();
+  const isAdmin = useGroupAuthContext();
 
   const { data: groupData } = useQuery(
     groupQueries.groupOptions(Number(groupId)),
@@ -27,10 +29,12 @@ export default function TaskListPageHeader({ date }: Props) {
       >
         <h2>{groupData.name}</h2>
 
-        {/* 임시 경로 / */}
-        <Link aria-label='팀 수정하기 페이지로 이동' to='/'>
-          <ConfigIcon className='size-5 md:size-6' />
-        </Link>
+        <GroupConfigDropdown
+          groupId={Number(groupId)}
+          groupName={groupData.name}
+          isAdmin={isAdmin}
+          align='start'
+        />
       </GroupTitleBar>
 
       <div className='mt-5 shrink-0 md:mt-10 lg:mt-0 lg:w-[270px]'>

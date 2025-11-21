@@ -25,13 +25,13 @@ export const buttonVariants = cva(
           bg-transparent border border-primary text-primary 
           hover:bg-secondary/80 hover:border-primary-hover hover:text-primary-hover
           focus:border-primary-pressed focus:text-primary-pressed
-          disabled:border-disabled disabled:text-disabled
+          disabled:border-primary-inactive disabled:text-primary-inactive
         `,
         outline: `
           border bg-background border border-primary text-primary 
           hover:bg-secondary/80 hover:border-primary-hover hover:text-primary-hover
           focus:border-primary-pressed focus:text-primary-pressed
-          disabled:border-disabled disabled:text-disabled
+          disabled:border-primary-inactive disabled:text-primary-inactive disabled:bg-bg-tertiary disabled:
         `,
         danger: `
           bg-danger text-white 
@@ -39,12 +39,12 @@ export const buttonVariants = cva(
           disabled:bg-primary-inactive
         `,
         ghost:
-          'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50',
+          'hover:bg-bg-secondary hover:text-accent-foreground dark:hover:bg-accent/50',
         link: 'text-primary underline-offset-4 hover:underline',
       },
       size: {
         default: 'px-4 py-3 rounded-xl has-[>svg]:px-3 text-md font-semibold',
-        sm: 'rounded-[8px] gap-1 px-[14px] py-2 text-md',
+        sm: '!rounded-[8px] gap-1 md:px-[14px] md:py-2 md:text-md px-2.5 py-1.5 text-sm',
         lg: 'py-[14px] rounded-xl px-6 has-[>svg]:px-4 text-base',
         'icon-sm': 'size-[18px] [&_svg]:!size-[10px]',
         'icon-md': 'size-6 [&_svg]:!size-4',
