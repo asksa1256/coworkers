@@ -18,6 +18,7 @@ import KakaoSignUpPage from './pages/auth/KakaoSignUpPage';
 import ResetPasswordPage from './pages/auth/ResetPasswordPage';
 import SignUpPage from './pages/auth/SignUpPage';
 import ArticleDetailPage from './pages/board/ArticleDetailPage';
+import ArticleFormPage from './pages/board/ArticleFormPage';
 import UpdateTeamPage from './pages/UpdateTeamPage';
 
 const withPrivate = (element: ReactNode) => {
@@ -108,6 +109,14 @@ const routes = [
       {
         path: ':articleId',
         element: withPrivate(<ArticleDetailPage />),
+      },
+      {
+        path: 'post',
+        element: withPrivate(<ArticleFormPage />),
+      },
+      {
+        path: ':articleId/edit',
+        element: withPrivate(<ArticleFormPage />),
       },
     ],
   },
