@@ -1,9 +1,13 @@
 import ImageIcon from '@/assets/icons/ImageIcon.svg?react';
 import { XIcon } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 
-export default function ImageUploader() {
-  const [image, setImage] = useState<string | null>(null);
+interface ImageUploaderProps {
+  value?: string;
+  onChange: (value: string | null) => void;
+}
+
+export default function ImageUploader({ value, onChange }: ImageUploaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -12,7 +16,7 @@ export default function ImageUploader() {
 
     const reader = new FileReader();
     reader.onload = e => {
-      setImage(e.target?.result as string);
+      onChange(e.target?.result as string);
     };
     reader.readAsDataURL(file);
   };
@@ -22,7 +26,7 @@ export default function ImageUploader() {
   };
 
   const handleRemoveImage = () => {
-    setImage(null);
+    onChange(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -33,7 +37,7 @@ export default function ImageUploader() {
       <div className='relative flex flex-col content-stretch items-start gap-2'>
         <div className='flex flex-wrap gap-2'>
           {/* 이미지 등록 버튼 (이미지가 없을 때만 표시) */}
-          {!image && (
+          {!value && (
             <>
               <button
                 type='button'
@@ -57,24 +61,22 @@ export default function ImageUploader() {
           )}
 
           {/* 이미지 미리보기 */}
-          {image && (
-            <ol className='flex flex-wrap gap-2'>
-              <li className='group relative size-[100px] shrink-0 overflow-hidden rounded-[12px] md:size-[120px]'>
-                <img
-                  src={image}
-                  alt='이미지 미리보기'
-                  className='size-full object-cover'
-                />
-                <button
-                  type='button'
-                  className='absolute top-1 right-1 rounded-full bg-slate-900/70 p-1'
-                  aria-label='이미지 등록 취소'
-                  onClick={handleRemoveImage}
-                >
-                  <XIcon className='size-4 text-white' />
-                </button>
-              </li>
-            </ol>
+          {value && (
+            <div className='group relative size-[100px] shrink-0 overflow-hidden rounded-[12px] md:size-[120px]'>
+              <img
+                src={value}
+                alt='이미지 미리보기'
+                className='size-full object-cover'
+              />
+              <button
+                type='button'
+                className='absolute top-1 right-1 rounded-full bg-slate-900/70 p-1'
+                aria-label='이미지 등록 취소'
+                onClick={handleRemoveImage}
+              >
+                <XIcon className='size-4 text-white' />
+              </button>
+            </div>
           )}
         </div>
       </div>
