@@ -76,7 +76,7 @@ export default function ArticleForm({ initialValue }: ArticleFormProps) {
             placeholder='내용을 입력해주세요.'
             {...register('content')}
             error={errors.content}
-            className='[&_textarea]:!text-md [&_textarea]:min-h-60 [&_textarea]:md:!text-base'
+            className='[&_textarea]:min-h-60 [&_textarea]:md:!text-base'
           />
         </div>
 
