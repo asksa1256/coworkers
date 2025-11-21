@@ -169,6 +169,14 @@ export const deleteGroup = async (groupId: number) => {
   }
 };
 
+export const deleteAccount = async () => {
+  try {
+    await axiosInstance.delete('/user');
+  } catch (e) {
+    console.log('회원탈퇴 에러:', e);
+  }
+};
+
 export const createInviteToken = async (groupId: string): Promise<string> => {
   const { data: token } = await axiosInstance.get(
     `/groups/${groupId}/invitation`,

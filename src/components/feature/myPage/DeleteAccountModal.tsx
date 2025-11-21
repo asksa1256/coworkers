@@ -1,9 +1,16 @@
+import { userMutations } from '@/api/mutations';
 import AlertIcon from '@/assets/icons/AlertIcon.svg?react';
 import Button from '@/components/ui/Button';
 import useModal from '@/hooks/useModal';
+import useSignOut from '@/hooks/useSignOut';
+import { useMutation } from '@tanstack/react-query';
 
 export default function DeleteAccountModal() {
   const { closeModal } = useModal();
+  const signOut = useSignOut();
+  const { mutate, isPending } = useMutation(
+    userMutations.deleteAccountMutationOptions(signOut, closeModal),
+  );
 
   return (
     <div className='text-center'>
@@ -27,11 +34,12 @@ export default function DeleteAccountModal() {
         <Button
           className='shrink-1'
           variant='danger'
-          onClick={() => {}}
-          // disabled={isPending}
+          onClick={() => {
+            mutate();
+          }}
+          disabled={isPending}
         >
-          {/* {isPending ? '탈퇴중...' : '회원 탈퇴'} */}
-          회원 탈퇴
+          {isPending ? '탈퇴중...' : '회원 탈퇴'}
         </Button>
       </div>
     </div>

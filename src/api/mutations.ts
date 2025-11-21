@@ -29,6 +29,7 @@ import {
   addTaskList,
   createArticleComment,
   createTask,
+  deleteAccount,
   deleteArticleComment,
   deleteGroup,
   deleteGroupMember,
@@ -875,6 +876,22 @@ export const likeMutations = {
         queryClient.invalidateQueries({
           queryKey: boardQueries.article(articleId),
         });
+      },
+    }),
+};
+
+export const userMutations = {
+  //회원탈퇴
+  deleteAccountMutationOptions: (signOut: () => void, closeModal: () => void) =>
+    mutationOptions({
+      mutationFn: () => deleteAccount(),
+      onSuccess: () => {
+        toast.success('정상적으로 탈퇴 처리되었습니다.');
+        closeModal();
+        signOut();
+      },
+      onError: () => {
+        toast.error('회원 탈퇴 실패. 다시 시도해주세요.');
       },
     }),
 };
