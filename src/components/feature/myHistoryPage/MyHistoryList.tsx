@@ -1,22 +1,11 @@
+import { historyQueries } from '@/api/queries';
 import HistoryDateSection from '@/components/feature/myHistoryPage/HistoryDateSection';
-import axiosInstance from '@/lib/axios';
-import type {
-  MyHistoryResponse,
-  MyHistoryTaskDoneItem,
-} from '@/types/userType';
+import type { MyHistoryTaskDoneItem } from '@/types/userType';
 import { dayToText, formatDate } from '@/utils/dateUtils';
 import { useQuery } from '@tanstack/react-query';
 
-const getMyHistory = async (): Promise<MyHistoryResponse> => {
-  const { data } = await axiosInstance.get('/user/history');
-  return data;
-};
-
 export default function MyHistoryList() {
-  const { data: myHistoryData } = useQuery({
-    queryKey: ['myHistory'],
-    queryFn: () => getMyHistory(),
-  });
+  const { data: myHistoryData } = useQuery(historyQueries.historyOptions());
 
   if (!myHistoryData) return null;
 
