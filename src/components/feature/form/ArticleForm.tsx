@@ -44,6 +44,9 @@ export default function ArticleForm({ initialValue }: ArticleFormProps) {
   const isSubmittingText = isEditMode ? '수정중...' : '등록중...';
   const submitText = isEditMode ? '수정하기' : '등록하기';
 
+  const isEditInvalid = !isDirty || !isValid || isSubmitting;
+  const isCreateInvalid = !isValid || isSubmitting;
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <h4 className='text-2lg mb-10 font-bold md:text-xl'>
@@ -84,7 +87,7 @@ export default function ArticleForm({ initialValue }: ArticleFormProps) {
         </div>
       </div>
 
-      <Button disabled={isEditMode ? !isDirty || !isValid : !isValid}>
+      <Button disabled={isEditMode ? isEditInvalid : isCreateInvalid}>
         {isSubmitting ? isSubmittingText : submitText}
       </Button>
     </form>
