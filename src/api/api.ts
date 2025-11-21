@@ -259,6 +259,29 @@ export const createArticleComment = async (
   }
 };
 
+// 게시글 댓글 수정
+export const updateArticleComment = async (
+  commentId: number,
+  content: string,
+): Promise<ArticleCommentResponse> => {
+  try {
+    const response = await axiosInstance.patch(`/comments/${commentId}`, {
+      content,
+    });
+    return response.data;
+  } catch (e) {
+    console.log('댓글 수정 에러: ', e);
+    throw e;
+  }
+};
+
+// 게시글 댓글 삭제
+export const deleteArticleComment = async (
+  commentId: number,
+): Promise<{ id?: number; message?: string }> => {
+  return await axiosInstance.delete(`/comments/${commentId}`);
+};
+
 // 게시글 좋아요 추가
 export const likeArticle = async (
   articleId: number,

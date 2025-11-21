@@ -8,7 +8,8 @@ import type { ArticleResponse } from '@/types/boardType';
 import mapCurrentViewToPageSize from '@/utils/currentViewToPageSize';
 import { useQuery } from '@tanstack/react-query';
 import { RefreshCcw } from 'lucide-react';
-import { useRef, type RefObject } from 'react';
+import { useEffect, useRef } from 'react';
+import type { Swiper as SwiperClass } from 'swiper';
 import { A11y, Autoplay, Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
@@ -16,8 +17,6 @@ import type { NavigationOptions } from 'swiper/types';
 import ArticleCard from './ArticleCard';
 
 export default function BestArticleList() {
-  const prevRef = useRef<HTMLButtonElement | null>(null);
-  const nextRef = useRef<HTMLButtonElement | null>(null);
   const currentView = useCurrentView();
   const pageSize = mapCurrentViewToPageSize(currentView);
 
@@ -37,8 +36,6 @@ export default function BestArticleList() {
         isPending={isPending}
         error={error}
         allData={allData}
-        prevRef={prevRef}
-        nextRef={nextRef}
       />
     </section>
   );
@@ -48,21 +45,17 @@ interface BestArticleListContentProps {
   isPending: boolean;
   error: unknown;
   allData?: ArticleResponse[];
-  prevRef: RefObject<HTMLButtonElement | null>;
-  nextRef: RefObject<HTMLButtonElement | null>;
 }
 
 function BestArticleListContent({
   isPending,
   error,
   allData,
-  prevRef,
-  nextRef,
 }: BestArticleListContentProps) {
   if (isPending) return <LoadingView />;
   if (error) return <ErrorView />;
 
-  return <SwiperView allData={allData} prevRef={prevRef} nextRef={nextRef} />;
+  return <SwiperView allData={allData} />;
 }
 
 function LoadingView() {
@@ -87,22 +80,35 @@ function ErrorView() {
 
 interface SwiperViewProps {
   allData?: ArticleResponse[];
-  prevRef: RefObject<HTMLButtonElement | null>;
-  nextRef: RefObject<HTMLButtonElement | null>;
 }
 
-function SwiperView({ allData, prevRef, nextRef }: SwiperViewProps) {
+function SwiperView({ allData }: SwiperViewProps) {
+  const prevRef = useRef<HTMLButtonElement>(null);
+  const nextRef = useRef<HTMLButtonElement>(null);
+  const swiperRef = useRef<SwiperClass | null>(null);
+
+  useEffect(() => {
+    if (swiperRef.current && prevRef.current && nextRef.current) {
+      const swiper = swiperRef.current;
+
+      if (typeof swiper.params.navigation !== 'boolean') {
+        const nav = swiper.params.navigation as NavigationOptions;
+        nav.prevEl = prevRef.current;
+        nav.nextEl = nextRef.current;
+      }
+
+      swiper.navigation.init();
+      swiper.navigation.update();
+    }
+  }, []);
+
   return (
     <>
       <Swiper
-        modules={[Navigation, Pagination, Autoplay, A11y]}
-        onBeforeInit={swiper => {
-          if (typeof swiper.params.navigation !== 'boolean') {
-            const nav = swiper.params.navigation as NavigationOptions;
-            nav.prevEl = prevRef.current;
-            nav.nextEl = nextRef.current;
-          }
+        onInit={swiper => {
+          swiperRef.current = swiper;
         }}
+        modules={[Navigation, Pagination, Autoplay, A11y]}
         navigation={{
           prevEl: prevRef.current,
           nextEl: nextRef.current,
