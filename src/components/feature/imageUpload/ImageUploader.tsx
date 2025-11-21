@@ -48,7 +48,7 @@ export default function ImageUploader() {
                 type='button'
                 title='이미지 등록하기'
                 onClick={handleUploadClick}
-                className='border-border-primary relative flex size-20 shrink-0 items-center justify-center gap-3 rounded-xl border transition-colors hover:bg-slate-50 md:size-[120px]'
+                className='border-border-primary relative flex size-[100px] shrink-0 items-center justify-center gap-3 rounded-xl border transition-colors hover:bg-slate-50 md:size-[120px]'
               >
                 <div className='relative flex flex-col items-center gap-2 md:gap-4'>
                   <ImageIcon />
@@ -67,11 +67,11 @@ export default function ImageUploader() {
           )}
 
           {/* 이미지 미리보기 */}
-          <ol className='flex gap-2'>
+          <ol className='flex flex-wrap gap-2'>
             {images.map((src, i) => (
               <li
                 key={i}
-                className='group relative size-20 shrink-0 overflow-hidden rounded-[12px] md:size-[120px]'
+                className='group relative size-[100px] shrink-0 overflow-hidden rounded-[12px] md:size-[120px]'
               >
                 <img
                   src={src}
@@ -80,7 +80,7 @@ export default function ImageUploader() {
                 />
                 <button
                   type='button'
-                  className='absolute top-1 right-1 rounded-full bg-slate-900/70 p-1 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-slate-900'
+                  className='absolute top-1 right-1 rounded-full bg-slate-900/70 p-1'
                   aria-label='이미지 등록 취소'
                   onClick={() => handleRemoveImage(i)}
                 >

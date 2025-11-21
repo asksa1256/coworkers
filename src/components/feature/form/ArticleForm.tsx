@@ -54,8 +54,9 @@ export default function ArticleForm({ initialValue }: ArticleFormProps) {
 
       <div className='mb-12 flex flex-col gap-8 md:mb-14'>
         <div className='flex flex-col gap-3'>
-          <Label htmlFor='title' className='font-bold'>
-            제목 <sup className='text-danger'>*</sup>
+          <Label htmlFor='title' className='text-md font-bold md:text-base'>
+            제목
+            <sup className='text-danger text-md -ml-2 md:text-base'>*</sup>
           </Label>
           <InputField
             id='title'
@@ -66,20 +67,21 @@ export default function ArticleForm({ initialValue }: ArticleFormProps) {
         </div>
 
         <div className='flex flex-col gap-3'>
-          <Label htmlFor='content' className='font-bold'>
-            내용 <sup className='text-danger'>*</sup>
+          <Label htmlFor='content' className='text-md font-bold md:text-base'>
+            내용
+            <sup className='text-danger text-md -ml-2 md:text-base'>*</sup>
           </Label>
           <TextareaField
             id='content'
             placeholder='내용을 입력해주세요.'
             {...register('content')}
             error={errors.content}
-            className='[&_textarea]:min-h-60'
+            className='[&_textarea]:!text-md [&_textarea]:min-h-60 [&_textarea]:md:!text-base'
           />
         </div>
 
         <div className='flex flex-col gap-3'>
-          <Label className='font-bold'>이미지</Label>
+          <Label className='text-md font-bold md:text-base'>이미지</Label>
           <ImageUploader />
         </div>
       </div>
