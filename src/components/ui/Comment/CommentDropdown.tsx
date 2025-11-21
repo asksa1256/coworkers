@@ -3,18 +3,20 @@ import Dropdown from '../Dropdown';
 
 interface CommentDropdownProps {
   commentId: number;
-  onEditStart: (id: number) => void;
-  onDelete: (id: number) => void;
+  content?: string;
+  onEdit: (id: number) => void;
+  onDelete: (id: number, content: string) => void;
 }
 
 export default function CommentDropdown({
   commentId,
-  onEditStart,
+  content,
+  onEdit,
   onDelete,
 }: CommentDropdownProps) {
   const DROPDOWN_MENU = [
-    { label: '수정하기', onClick: () => onEditStart(commentId) },
-    { label: '삭제하기', onClick: () => onDelete(commentId) },
+    { label: '수정하기', onClick: () => onEdit(commentId) },
+    { label: '삭제하기', onClick: () => onDelete(commentId, content!) },
   ];
 
   return (
