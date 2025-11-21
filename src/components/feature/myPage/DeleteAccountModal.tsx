@@ -2,7 +2,7 @@ import AlertIcon from '@/assets/icons/AlertIcon.svg?react';
 import Button from '@/components/ui/Button';
 import useModal from '@/hooks/useModal';
 
-export default function SecessionModal() {
+export default function DeleteAccountModal() {
   const { closeModal } = useModal();
 
   return (

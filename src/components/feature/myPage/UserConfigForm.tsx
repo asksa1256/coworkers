@@ -1,4 +1,4 @@
-import SecessionIcon from '@/assets/icons/SecessionIcon.svg?react';
+import DeleteAccountIcon from '@/assets/icons/DeleteAccountIcon.svg?react';
 import Button from '@/components/ui/Button';
 import InputField from '@/components/ui/Input/InputField';
 import PasswordChangeField from '@/components/ui/Input/PasswordChangeField';
@@ -14,7 +14,7 @@ import type React from 'react';
 import { useForm } from 'react-hook-form';
 import ResetPasswordForm from '../auth/ResetPasswordForm';
 import EditableAvatar from '../profile/EditableAvatar';
-import SecessionModal from '../teamPage/SecessionModal';
+import DeleteAccountModal from './DeleteAccountModal';
 
 interface Props {
   userData: UserType;
@@ -99,12 +99,12 @@ export default function UserConfigForm({ userData }: Props) {
         type='button'
         onClick={() => {
           openModal({
-            children: <SecessionModal />,
+            children: <DeleteAccountModal />,
             closeIconButton: false,
           });
         }}
       >
-        <SecessionIcon className='svg:size-6' /> 회원 탈퇴하기
+        <DeleteAccountIcon className='svg:size-6' /> 회원 탈퇴하기
       </Button>
 
       <Button className='md:py-4 md:text-lg' disabled={!isDirty}>
