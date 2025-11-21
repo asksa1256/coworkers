@@ -72,7 +72,7 @@ const routes = [
       },
       {
         path: 'reset-password',
-        element: <ResetPasswordPage />,
+        element: withAuth(<ResetPasswordPage />),
       },
       {
         path: '/auth',
