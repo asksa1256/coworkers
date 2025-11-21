@@ -1,4 +1,5 @@
 import ImageIcon from '@/assets/icons/ImageIcon.svg?react';
+import useUploadImage from '@/hooks/useUploadImage';
 import { XIcon } from 'lucide-react';
 import { useRef } from 'react';
 
@@ -9,16 +10,15 @@ interface ImageUploaderProps {
 
 export default function ImageUploader({ value, onChange }: ImageUploaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { handleUploadImage, isUploading } = useUploadImage();
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = e => {
-      onChange(e.target?.result as string);
-    };
-    reader.readAsDataURL(file);
+    try {
+      const url = await handleUploadImage(e);
+      if (url) onChange(url);
+    } catch (err) {
+      console.error('이미지 업로드 실패', err);
+    }
   };
 
   const handleUploadClick = () => {
@@ -27,9 +27,7 @@ export default function ImageUploader({ value, onChange }: ImageUploaderProps) {
 
   const handleRemoveImage = () => {
     onChange(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   return (
@@ -46,7 +44,9 @@ export default function ImageUploader({ value, onChange }: ImageUploaderProps) {
               >
                 <div className='relative flex flex-col items-center gap-2 md:gap-4'>
                   <ImageIcon />
-                  <span className='text-text-default text-sm'>추가하기</span>
+                  <span className='text-text-default text-sm'>
+                    {isUploading ? '추가중...' : '추가하기'}
+                  </span>
                 </div>
               </button>
 
