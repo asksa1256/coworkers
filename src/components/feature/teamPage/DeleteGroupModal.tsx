@@ -6,21 +6,17 @@ import { userAtom } from '@/store/authAtom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAtom } from 'jotai';
 import { useEffect } from 'react';
-import { type NavigateFunction } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   groupId: number;
   groupName: string;
-  navigate: NavigateFunction;
 }
 
-export default function DeleteGroupModal({
-  groupId,
-  groupName,
-  navigate,
-}: Props) {
+export default function DeleteGroupModal({ groupId, groupName }: Props) {
   const { closeModal } = useModal();
   const [user, setUser] = useAtom(userAtom);
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { mutate, isPending, isSuccess } = useMutation(
     groupMutations.deleteGroupOptions(user!, queryClient),

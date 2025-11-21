@@ -18,6 +18,7 @@ import KakaoSignUpPage from './pages/auth/KakaoSignUpPage';
 import ResetPasswordPage from './pages/auth/ResetPasswordPage';
 import SignUpPage from './pages/auth/SignUpPage';
 import ArticleDetailPage from './pages/board/ArticleDetailPage';
+import MyPage from './pages/MyPage';
 import UpdateTeamPage from './pages/UpdateTeamPage';
 
 const withPrivate = (element: ReactNode) => {
@@ -44,6 +45,10 @@ const routes = [
         element: withPrivate(<JoinTeamPage />),
       },
       {
+        path: '/mypage',
+        element: withPrivate(<MyPage />),
+      },
+      {
         path: '/:groupId',
         element: (
           <GroupAuthRoute>
@@ -67,7 +72,7 @@ const routes = [
       },
       {
         path: 'reset-password',
-        element: <ResetPasswordPage />,
+        element: withAuth(<ResetPasswordPage />),
       },
       {
         path: '/auth',

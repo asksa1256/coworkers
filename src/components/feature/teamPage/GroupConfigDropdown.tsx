@@ -33,11 +33,7 @@ export default function GroupConfigDropdown({
       onClick: () => {
         openModal({
           children: (
-            <DeleteGroupModal
-              groupId={groupId}
-              groupName={groupName}
-              navigate={navigate}
-            />
+            <DeleteGroupModal groupId={groupId} groupName={groupName} />
           ),
         });
       },
