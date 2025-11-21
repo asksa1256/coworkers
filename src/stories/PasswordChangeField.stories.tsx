@@ -1,5 +1,6 @@
 import PasswordChangeField from '@/components/ui/Input/PasswordChangeField';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { fn } from 'storybook/internal/test';
 
 const meta = {
   title: 'Example/PasswordChangeField',
@@ -22,5 +23,6 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     value: '12345678',
+    onClick: fn(),
   },
 };

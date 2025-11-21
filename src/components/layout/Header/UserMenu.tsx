@@ -10,14 +10,14 @@ interface Props {
 
 export default function UserMenu({ children, align = 'start' }: Props) {
   const signOut = useSignOut();
-  const nav = useNavigate();
+  const navigate = useNavigate();
 
   const userMenu = [
     {
       label: '마이 히스토리',
-      onClick: () => nav('/my-history'),
+      onClick: () => navigate('/my-history'),
     },
-    { label: '계정 설정', onClick: () => alert('계정 설정 페이지로 이동') },
+    { label: '계정 설정', onClick: () => navigate('/mypage') },
     { label: '로그아웃', onClick: () => signOut() },
   ];
 
