@@ -8,7 +8,7 @@ import {
   createArticleRequestSchema,
 } from '@/types/ArticleRequestSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 
 interface ArticleFormType {
   title: string;
@@ -25,6 +25,7 @@ export default function ArticleForm({ initialValue }: ArticleFormProps) {
     register,
     handleSubmit,
     formState: { errors, isDirty, isValid, isSubmitting },
+    control,
   } = useForm({
     resolver: zodResolver(createArticleRequestSchema),
     mode: 'onBlur',
@@ -35,11 +36,16 @@ export default function ArticleForm({ initialValue }: ArticleFormProps) {
     },
   });
 
-  const onSubmit = (formData: CreateArticleRequest) => {
-    console.log(formData);
-  };
-
   const isEditMode = !!initialValue;
+
+  const onSubmit = (formData: CreateArticleRequest) => {
+    const payload = {
+      title: formData.title,
+      content: formData.content,
+      image: formData.image,
+    };
+    console.log(payload);
+  };
 
   const isSubmittingText = isEditMode ? '수정중...' : '등록중...';
   const submitText = isEditMode ? '수정하기' : '등록하기';
@@ -83,7 +89,13 @@ export default function ArticleForm({ initialValue }: ArticleFormProps) {
 
         <div className='flex flex-col gap-3'>
           <Label className='text-md font-bold md:text-base'>이미지</Label>
-          <ImageUploader />
+          <Controller
+            name='image'
+            control={control}
+            render={({ field }) => (
+              <ImageUploader value={field.value} onChange={field.onChange} />
+            )}
+          />
         </div>
       </div>
 
