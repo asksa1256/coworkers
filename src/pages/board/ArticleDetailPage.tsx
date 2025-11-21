@@ -49,7 +49,7 @@ export default function ArticleDetailPage() {
     );
 
   return (
-    <article className='lg:mx-auto lg:flex lg:gap-[26px]'>
+    <article className='lg:flex lg:justify-center lg:gap-[26px]'>
       <div className='bg-bg-primary relative my-4 w-full rounded-[20px] px-[22px] py-10 shadow-sm md:my-[68px] md:px-10 md:pt-[54px] md:pb-[120px] lg:max-w-280 lg:px-[60px] lg:py-[88px]'>
         <Button
           type='button'
