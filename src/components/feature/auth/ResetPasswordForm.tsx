@@ -1,6 +1,7 @@
 import Button from '@/components/ui/Button';
 import PasswordField from '@/components/ui/Input/PasswordField';
 import { Label } from '@/components/ui/Label';
+import useModal from '@/hooks/useModal';
 import useSignOut from '@/hooks/useSignOut';
 import axiosInstance from '@/lib/axios';
 import { cn } from '@/lib/utils';
@@ -14,16 +15,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import axios, { AxiosError } from 'axios';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { type NavigateFunction } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-interface Props {
-  navigate: NavigateFunction;
-}
-
-export default function ResetPasswordForm({ navigate }: Props) {
+export default function ResetPasswordForm() {
   const [globalError, setGlobalError] = useState('');
   const [token, setToken] = useState(''); // 비밀번호 변경용 토큰
+  const { closeModal } = useModal();
+  const navigate = useNavigate();
   const accessToken = getAccessToken();
   const forLoggedInUser = !!accessToken;
   const signOut = useSignOut();
@@ -56,6 +55,7 @@ export default function ResetPasswordForm({ navigate }: Props) {
         await axiosInstance.patch('/user/reset-password', payload);
       }
 
+      if (forLoggedInUser) closeModal();
       toast.success('비밀번호 변경이 완료되었습니다.');
       navigate('/auth/signIn');
     } catch (error) {
@@ -111,25 +111,23 @@ export default function ResetPasswordForm({ navigate }: Props) {
       <div className='mb-10 space-y-6'>
         {/* 새 비밀번호 */}
         <div className='flex flex-col gap-3'>
-          <Label htmlFor='password'>새 비밀번호</Label>
+          <Label htmlFor='password'>
+            {'새 비밀번호(영문, 숫자, 포함 8자 이상)'}
+          </Label>
           <PasswordField
-            id='pw'
-            placeholder={
-              forLoggedInUser
-                ? '새 비밀번호를 입력해주세요.'
-                : '비밀번호(영문, 숫자 포함 8자 이상)를 입력해주세요.'
-            }
+            id='password'
+            placeholder='새 비밀번호를 입력해주세요.'
             autoComplete='new-password'
             {...register('password')}
             error={errors.password}
           />
         </div>
 
-        {/* 비밀번호 */}
+        {/* 비밀번호 확인*/}
         <div className='flex flex-col gap-3'>
-          <Label htmlFor='pw'>비밀번호 확인</Label>
+          <Label htmlFor='passwordConfirmation'>비밀번호 확인</Label>
           <PasswordField
-            id='pw'
+            id='passwordConfirmation'
             placeholder='새 비밀번호를 다시 한번 입력해주세요.'
             autoComplete='new-password'
             {...register('passwordConfirmation')}

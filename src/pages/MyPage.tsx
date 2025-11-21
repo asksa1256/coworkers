@@ -20,7 +20,7 @@ export default function MyPage() {
   if (!user) return;
 
   return (
-    <div className='flex h-[100vh] items-center'>
+    <div className='py-18 md:py-44 lg:py-39'>
       <UserConfigForm userData={user} onSubmitSuccess={handleUpdateUserAtom} />
     </div>
   );

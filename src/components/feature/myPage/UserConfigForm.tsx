@@ -12,7 +12,6 @@ import type { UserType } from '@/types/userType';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type React from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 import ResetPasswordForm from '../auth/ResetPasswordForm';
 import EditableAvatar from '../profile/EditableAvatar';
 import SecessionModal from '../teamPage/SecessionModal';
@@ -24,7 +23,6 @@ interface Props {
 
 export default function UserConfigForm({ userData }: Props) {
   const { openModal } = useModal();
-  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -78,14 +76,15 @@ export default function UserConfigForm({ userData }: Props) {
         </div>
 
         <div>
-          <label className={LABEL_STYLE} htmlFor='password'>
+          <label className={LABEL_STYLE} htmlFor='passwordPlaceholder'>
             비밀번호
           </label>
           <PasswordChangeField
-            value={'dummyStr'}
+            id='passwordPlaceholder'
+            placeholder='●●●●●●●●'
             onClick={() => {
               openModal({
-                children: <ResetPasswordForm navigate={navigate} />,
+                children: <ResetPasswordForm />,
                 closeIconButton: false,
                 className: 'md:w-105',
               });
@@ -108,7 +107,7 @@ export default function UserConfigForm({ userData }: Props) {
         <SecessionIcon className='svg:size-6' /> 회원 탈퇴하기
       </Button>
 
-      <Button className='md:py-4 md:text-xl' disabled={!isDirty}>
+      <Button className='md:py-4 md:text-lg' disabled={!isDirty}>
         변경사항 저장
       </Button>
     </form>
