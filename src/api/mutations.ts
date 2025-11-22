@@ -948,6 +948,9 @@ export const taskDetailCommentMutations = {
           queryClient.invalidateQueries({
             queryKey: taskQueries.taskComment(),
           });
+          queryClient.invalidateQueries({
+            queryKey: ['tasks'],
+          });
         }
       },
     }),
