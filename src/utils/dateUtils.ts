@@ -1,4 +1,4 @@
-import { WEEK_DAYS } from '@/constants';
+import { WEEK_DAYS_DAYNUMBER, WEEK_DAYS_INDEX } from '@/constants';
 
 export const getWeekDates = (date: Date = new Date()) => {
   const day = date.getDay(); // 0 일 1 월 2 화 3 수 4 목 5 금 6 토
@@ -10,7 +10,7 @@ export const getWeekDates = (date: Date = new Date()) => {
     const newDate = new Date(monday);
     newDate.setDate(monday.getDate() + i);
     return {
-      week: WEEK_DAYS[i],
+      week: WEEK_DAYS_INDEX[i],
       date: newDate,
     };
   });
@@ -23,4 +23,9 @@ export function formatDate(date: Date): string {
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
   return `${year}년 ${month}월 ${day}일`;
+}
+
+export function dayToText(date: Date): string {
+  const day = date.getDay();
+  return WEEK_DAYS_DAYNUMBER[day];
 }

@@ -4,6 +4,7 @@ import {
   getArticles,
   getBestArticles,
   getGroup,
+  getMyHistory,
   getSingleTaskList,
   getTasks,
 } from '@/api/api';
@@ -111,5 +112,14 @@ export const taskQueries = {
       queryKey: [...taskQueries.tasks(groupId, taskListId, date)],
       queryFn: () => getTasks(groupId!, taskListId!, date!),
       enabled: !!groupId && !!taskListId,
+    }),
+};
+
+export const historyQueries = {
+  histroy: () => ['myHistory'],
+  historyOptions: () =>
+    queryOptions({
+      queryKey: historyQueries.histroy(),
+      queryFn: () => getMyHistory(),
     }),
 };
