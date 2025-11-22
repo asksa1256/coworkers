@@ -60,7 +60,7 @@ export default function LandingPage() {
 
 function HeroSection({ onClick }: { onClick?: () => void }) {
   return (
-    <section className='bg-bg-secondary flex h-screen flex-col overflow-hidden lg:flex-row'>
+    <section className='bg-bg-secondary relative flex flex-col overflow-hidden lg:h-screen lg:flex-row'>
       <div className='pt-[34px] md:pt-[89px] lg:pt-[208px]'>
         <FadeInFromTop>
           <div className='pr-[167px] pl-5 md:pl-9 lg:pl-[76px]'>
@@ -118,19 +118,19 @@ function HeroSection({ onClick }: { onClick?: () => void }) {
             className='hidden h-full w-full object-cover lg:block'
           />
         </div>
-      </FadeIn>
 
-      {/* CTA Button (tablet, mobile) */}
-      <FadeIn immediate={true} delay={0.5}>
-        <div className='absolute right-4 bottom-[52px] text-center md:right-8 lg:hidden'>
-          <Button
-            size='lg'
-            className='w-auto px-9 !text-base'
-            onClick={onClick}
-          >
-            지금 시작하기
-          </Button>
-        </div>
+        {/* CTA Button (tablet, mobile) */}
+        <FadeIn immediate={true} delay={0.5}>
+          <div className='absolute right-4 bottom-[52px] text-center md:right-8 lg:hidden'>
+            <Button
+              size='lg'
+              className='w-auto px-9 !text-base'
+              onClick={onClick}
+            >
+              지금 시작하기
+            </Button>
+          </div>
+        </FadeIn>
       </FadeIn>
     </section>
   );
