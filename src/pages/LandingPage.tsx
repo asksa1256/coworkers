@@ -14,21 +14,41 @@ import LandingHeroSmallImg from '@/assets/images/LandingHeroSmallImg.png';
 import TodoListLargeImg from '@/assets/images/TodoListLargeImg.png';
 import TodoListMediumImg from '@/assets/images/TodoListMediumImg.png';
 import TodoListSmallImg from '@/assets/images/TodoListSmallImg.png';
+import SelectGroupModal from '@/components/feature/teamPage/SelectGroupModal';
 import Button from '@/components/ui/Button';
+import useModal from '@/hooks/useModal';
+import { userAtom } from '@/store/authAtom';
+import { useAtomValue } from 'jotai';
+import { useNavigate } from 'react-router-dom';
 
 export default function LandingPage() {
+  const user = useAtomValue(userAtom);
+  const navigate = useNavigate();
+  const { openModal } = useModal();
+
+  const handleStart = () => {
+    if (user) {
+      openModal({
+        children: () => <SelectGroupModal />,
+        closeIconButton: true,
+      });
+    } else {
+      navigate('/auth/signin');
+    }
+  };
+
   return (
     <div className='-mx-4 md:-mx-[26px] lg:-mx-[30px]'>
-      <HeroSection />
+      <HeroSection onClick={handleStart} />
       <FeatureSection1 />
       <FeatureSection2 />
       <FeatureSection3 />
-      <FinalCTA />
+      <FinalCTA onClick={handleStart} />
     </div>
   );
 }
 
-function HeroSection() {
+function HeroSection({ onClick }: { onClick?: () => void }) {
   return (
     <section className='bg-bg-secondary flex h-screen flex-col overflow-hidden lg:flex-row'>
       <div className='pt-[34px] md:pt-[89px] lg:pt-[208px]'>
@@ -51,6 +71,7 @@ function HeroSection() {
             <Button
               size='lg'
               className='hidden w-auto px-9 !text-base lg:block'
+              onClick={onClick}
             >
               지금 시작하기
             </Button>
@@ -222,7 +243,7 @@ function FeatureSection3() {
 }
 
 // CTA Section
-function FinalCTA() {
+function FinalCTA({ onClick }: { onClick?: () => void }) {
   return (
     <section className='relative bg-white py-[60px] pt-[60px] pb-[125px] md:py-[80px] md:pt-[76px] md:pb-[117px] lg:pt-[97px] lg:pb-[123px]'>
       <div className='mx-auto max-w-[1920px] px-4 text-center'>
@@ -236,7 +257,11 @@ function FinalCTA() {
         </div>
 
         <div className='text-center'>
-          <Button size='lg' className='w-auto px-9 !text-base'>
+          <Button
+            size='lg'
+            className='w-auto px-9 !text-base'
+            onClick={onClick}
+          >
             지금 시작하기
           </Button>
         </div>
