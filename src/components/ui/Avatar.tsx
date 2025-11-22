@@ -28,6 +28,7 @@ export default function Avatar({
         src={imgSrc || DefaultProfileIcon}
         alt='프로필 이미지'
         className={cn(
+          'overflow-clip [overflow-clip-margin:unset]', // 이미지 깨짐 방지
           imgSrc && 'h-full w-full object-cover',
           !imgSrc && 'object-contain',
           !imgSrc && {
