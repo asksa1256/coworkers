@@ -37,6 +37,7 @@ export default function UserConfigForm({ userData, onSubmitSuccess }: Props) {
     formState: { isDirty, isSubmitting, errors, isValid },
   } = useForm<UserConfigSchema>({
     resolver: zodResolver(userConfigSchema),
+    mode: 'onBlur',
     defaultValues: {
       nickname: userData.nickname,
       image: userData.image,
