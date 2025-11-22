@@ -926,7 +926,7 @@ export const taskDetailCommentMutations = {
           taskQueries.taskComment(),
           prev => {
             if (!prev) return prev;
-            return [...prev, newComment];
+            return [newComment, ...prev];
           },
         );
 

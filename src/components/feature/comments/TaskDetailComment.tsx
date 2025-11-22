@@ -62,7 +62,7 @@ export default function TaskDetailComment({ taskId }: Props) {
 
   // 댓글 작성시 랜덤으로 가장 첫번째에 생성되는 경우가 있어서, 프론트단에서 다시 정렬
   const sortedComments = [...comments].sort((a, b) => {
-    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
 
   return (
