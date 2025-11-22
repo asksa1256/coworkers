@@ -271,6 +271,19 @@ export const updateArticle = async ({
   }
 };
 
+// 게시글 삭제
+export const deleteArticle = async (
+  articleId: number,
+): Promise<{ id?: number; message?: string }> => {
+  try {
+    const response = await axiosInstance.delete(`/articles/${articleId}`);
+    return response.data;
+  } catch (e) {
+    console.log('게시글 삭제 에러: ', e);
+    throw e;
+  }
+};
+
 // 게시글 댓글 목록 불러오기
 export const getArticleComments = async (
   articleId: number,
@@ -324,7 +337,12 @@ export const updateArticleComment = async (
 export const deleteArticleComment = async (
   commentId: number,
 ): Promise<{ id?: number; message?: string }> => {
-  return await axiosInstance.delete(`/comments/${commentId}`);
+  try {
+    return await axiosInstance.delete(`/comments/${commentId}`);
+  } catch (e) {
+    console.log('댓글 삭제 에러: ', e);
+    throw e;
+  }
 };
 
 // 게시글 좋아요 추가

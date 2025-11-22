@@ -1,6 +1,7 @@
 import { boardQueries } from '@/api/queries';
 import KebabIcon from '@/assets/icons/KebabIcon.svg?react';
 import LeftArrowIcon from '@/assets/icons/LeftArrowIcon.svg?react';
+import ArticleDeleteModal from '@/components/feature/articles/ArticleDeleteModal';
 import ArticleCommentSection from '@/components/feature/comments/ArticleCommentSection';
 import LikeButton from '@/components/feature/like/LikeButton';
 import LikeFloatingButton from '@/components/feature/like/LikeFloatingButton';
@@ -9,6 +10,7 @@ import Button from '@/components/ui/Button';
 import Dropdown from '@/components/ui/Dropdown';
 import EmptyContent from '@/components/ui/EmptyContent';
 import { Spinner } from '@/components/ui/spinner';
+import useModal from '@/hooks/useModal';
 import { userAtom } from '@/store/authAtom';
 import { formatRelativeTime } from '@/utils/formatters';
 import { useQuery } from '@tanstack/react-query';
@@ -19,9 +21,12 @@ export default function ArticleDetailPage() {
   const { articleId } = useParams();
   const navigate = useNavigate();
   const user = useAtomValue(userAtom);
+  const { openModal } = useModal();
+
+  const articleIdNum = Number(articleId);
 
   const { data, isPending, isError } = useQuery(
-    boardQueries.articleOptions(Number(articleId)),
+    boardQueries.articleOptions(Number(articleIdNum)),
   );
 
   const handleEdit = () => {
@@ -30,7 +35,11 @@ export default function ArticleDetailPage() {
     });
   };
 
-  const handleDelete = () => {};
+  const handleDelete = () => {
+    openModal({
+      children: () => <ArticleDeleteModal articleId={Number(articleIdNum)} />,
+    });
+  };
 
   const MODIFY_DELETE_DROPDOWN_MAP = [
     { label: '수정하기', onClick: handleEdit },
