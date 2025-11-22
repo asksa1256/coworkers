@@ -13,6 +13,7 @@ import type {
   TaskListsResponse,
   TaskUpdateRequestBody,
 } from '@/types/taskType';
+import type { UserConfigSchema } from '@/types/userConfigSchema';
 import type { UserType } from '@/types/userType';
 import { toggleDoneAt } from '@/utils/taskUtils';
 import {
@@ -35,6 +36,7 @@ import {
   deleteTask,
   deleteTaskList,
   deleteTaskRecurring,
+  deleteUser,
   likeArticle,
   unlikeArticle,
   updateArticleComment,
@@ -42,6 +44,7 @@ import {
   updateTask,
   updateTaskList,
   updateTaskListOrder,
+  updateUser,
 } from './api';
 import {
   boardQueries,
@@ -875,6 +878,34 @@ export const likeMutations = {
         queryClient.invalidateQueries({
           queryKey: boardQueries.article(articleId),
         });
+      },
+    }),
+};
+
+export const userMutations = {
+  // 유저 정보 수정
+  updateUserMutationOptions: () =>
+    mutationOptions({
+      mutationFn: (payload: UserConfigSchema) => updateUser(payload),
+      onSuccess: () => {
+        toast.success('사용자 정보를 변경했습니다.');
+      },
+      onError: () => {
+        toast.error('사용자 정보 변경 실패. 다시 시도해주세요.');
+      },
+    }),
+
+  // 회원탈퇴
+  deleteAccountMutationOptions: (signOut: () => void, closeModal: () => void) =>
+    mutationOptions({
+      mutationFn: () => deleteUser(),
+      onSuccess: () => {
+        toast.success('정상적으로 탈퇴 처리되었습니다.');
+        closeModal();
+        signOut();
+      },
+      onError: () => {
+        toast.error('회원 탈퇴 실패. 다시 시도해주세요.');
       },
     }),
 };

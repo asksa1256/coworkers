@@ -1,12 +1,12 @@
 import UserConfigForm from '@/components/feature/myPage/UserConfigForm';
 import { userAtom } from '@/store/authAtom';
-import type { UserType } from '@/types/userType';
+import type { UserConfigSchema } from '@/types/userConfigSchema';
 import { useAtom } from 'jotai';
 
 export default function MyPage() {
   const [user, setUser] = useAtom(userAtom);
 
-  const handleUpdateUserAtom = (data: UserType) => {
+  const handleUpdateUserAtom = (data: UserConfigSchema) => {
     setUser(prev => {
       if (!prev) return prev;
       return {
