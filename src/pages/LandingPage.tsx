@@ -121,7 +121,7 @@ function HeroSection({ onClick }: { onClick?: () => void }) {
       </FadeIn>
 
       {/* CTA Button (tablet, mobile) */}
-      <FadeIn>
+      <FadeIn immediate={true} delay={0.5}>
         <div className='absolute right-4 bottom-[52px] text-center md:right-8 lg:hidden'>
           <Button
             size='lg'

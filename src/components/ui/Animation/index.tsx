@@ -8,6 +8,7 @@ interface FramerAnimationProps {
   children: ReactNode; // 애니메이션 대상 요소
   once?: boolean; // 애니메이션을 한 번만 실행할지 여부 (기본값: true)
   amount?: number | 'some' | 'all'; // 애니메이션 트리거 시점
+  immediate?: boolean; // 애니메이션 즉시 실행 여부 (스크롤 인터랙션 여부)
 }
 
 const ANIMATE_DURATION = 0.8;
@@ -21,6 +22,7 @@ export const FadeInFromTop: FC<FramerAnimationProps> = ({
   children,
   once = true,
   amount = SCROLL_AMOUNT,
+  immediate = false,
 }) => {
   const variants: Variants = {
     // initial: 컴포넌트가 처음 마운트될 때의 상태 (시작 상태)
@@ -42,11 +44,15 @@ export const FadeInFromTop: FC<FramerAnimationProps> = ({
     },
   };
 
+  const triggerProps = immediate
+    ? { animate: 'animate' }
+    : { whileInView: 'animate', viewport: { once, amount } };
+
   return (
     <motion.div
       variants={variants}
       initial='initial'
-      whileInView='animate'
+      {...triggerProps}
       viewport={{ once: once, amount: amount }}
     >
       {children}
@@ -61,6 +67,7 @@ export const FadeInFromBottom: FC<FramerAnimationProps> = ({
   children,
   once = true,
   amount = SCROLL_AMOUNT,
+  immediate = false,
 }) => {
   const variants: Variants = {
     initial: {
@@ -79,11 +86,15 @@ export const FadeInFromBottom: FC<FramerAnimationProps> = ({
     },
   };
 
+  const triggerProps = immediate
+    ? { animate: 'animate' }
+    : { whileInView: 'animate', viewport: { once, amount } };
+
   return (
     <motion.div
       variants={variants}
       initial='initial'
-      whileInView='animate'
+      {...triggerProps}
       viewport={{ once: once, amount: amount }}
     >
       {children}
@@ -97,6 +108,7 @@ export const FadeIn: FC<FramerAnimationProps> = ({
   children,
   once = true,
   amount = SCROLL_AMOUNT,
+  immediate = false,
 }) => {
   const variants: Variants = {
     initial: {
@@ -113,11 +125,15 @@ export const FadeIn: FC<FramerAnimationProps> = ({
     },
   };
 
+  const triggerProps = immediate
+    ? { animate: 'animate' }
+    : { whileInView: 'animate', viewport: { once, amount } };
+
   return (
     <motion.div
       variants={variants}
       initial='initial'
-      whileInView='animate'
+      {...triggerProps}
       viewport={{ once: once, amount: amount }}
     >
       {children}
