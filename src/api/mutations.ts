@@ -884,7 +884,7 @@ export const likeMutations = {
 
 export const userMutations = {
   // 유저 정보 수정
-  updateUserMutationOptions: (queryClient: QueryClient) =>
+  updateUserMutationOptions: () =>
     mutationOptions({
       mutationFn: (payload: UserConfigSchema) => updateUser(payload),
       onSuccess: () => {

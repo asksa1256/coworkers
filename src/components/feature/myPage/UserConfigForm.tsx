@@ -11,7 +11,7 @@ import {
 } from '@/types/userConfigSchema';
 import type { UserType } from '@/types/userType';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -34,7 +34,7 @@ export default function UserConfigForm({ userData, onSubmitSuccess }: Props) {
     watch,
     setValue,
     reset,
-    formState: { isDirty, isSubmitting, errors, isValid },
+    formState: { isDirty, errors, isValid },
   } = useForm<UserConfigSchema>({
     resolver: zodResolver(userConfigSchema),
     mode: 'onBlur',
@@ -49,12 +49,12 @@ export default function UserConfigForm({ userData, onSubmitSuccess }: Props) {
   const shouldBlock = isDirty && !hasWarned;
   const blocker = useBlocker(shouldBlock);
 
-  const queryClient = useQueryClient();
   const {
     mutate: updateUserMutate,
     isSuccess,
+    isPending,
     variables: requestPayload,
-  } = useMutation(userMutations.updateUserMutationOptions(queryClient));
+  } = useMutation(userMutations.updateUserMutationOptions());
 
   const LABEL_STYLE =
     'text-md mb-2 md:mb-3 inline-block font-medium md:text-base';
@@ -180,9 +180,9 @@ export default function UserConfigForm({ userData, onSubmitSuccess }: Props) {
 
       <Button
         className='md:py-4 md:text-lg'
-        disabled={!isDirty || !isValid || isSubmitting}
+        disabled={!isDirty || !isValid || isPending}
       >
-        {isSubmitting ? '저장중...' : '변경사항 저장'}
+        {isPending ? '저장중...' : '변경사항 저장'}
       </Button>
     </form>
   );
