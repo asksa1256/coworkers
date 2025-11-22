@@ -8,14 +8,12 @@ import { getCommentAuthor } from '@/utils/typeGuard';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
 
 interface Props {
   taskId: number;
 }
 
 export default function TaskDetailComment({ taskId }: Props) {
-  const { groupId, taskListId } = useParams();
   const user = useAtomValue(userAtom);
   const queryClient = useQueryClient();
   const { openModal } = useModal();
