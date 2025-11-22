@@ -15,10 +15,6 @@ export const SEARCH_RANGE_MAP = [
   { label: '제목', value: 'title' },
 ];
 
-export const MODIFY_DELETE_DROPDOWN_MAP = [
-  { label: '수정하기', onClick: () => console.log('수정하기') },
-  { label: '삭제하기', onClick: () => console.log('삭제하기') },
-];
 export const WEEK_DAYS_INDEX = ['월', '화', '수', '목', '금', '토', '일'];
 export const WEEK_DAYS_DAYNUMBER = ['일', '월', '화', '수', '목', '금', '토'];
 

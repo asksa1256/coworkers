@@ -48,7 +48,7 @@ export default function ArticleCommentDeleteModal({
           onClick={handleClickDelete}
           disabled={isPending}
         >
-          {isPending ? '삭제중....' : '삭제하기'}
+          {isPending ? '삭제중...' : '삭제하기'}
         </Button>
       </div>
     </div>

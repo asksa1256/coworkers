@@ -1,6 +1,7 @@
 import { boardQueries } from '@/api/queries';
 import KebabIcon from '@/assets/icons/KebabIcon.svg?react';
 import LeftArrowIcon from '@/assets/icons/LeftArrowIcon.svg?react';
+import ArticleDeleteModal from '@/components/feature/articles/ArticleDeleteModal';
 import ArticleCommentSection from '@/components/feature/comments/ArticleCommentSection';
 import LikeButton from '@/components/feature/like/LikeButton';
 import LikeFloatingButton from '@/components/feature/like/LikeFloatingButton';
@@ -9,18 +10,41 @@ import Button from '@/components/ui/Button';
 import Dropdown from '@/components/ui/Dropdown';
 import EmptyContent from '@/components/ui/EmptyContent';
 import { Spinner } from '@/components/ui/spinner';
-import { MODIFY_DELETE_DROPDOWN_MAP } from '@/constants';
+import useModal from '@/hooks/useModal';
+import { userAtom } from '@/store/authAtom';
 import { formatRelativeTime } from '@/utils/formatters';
 import { useQuery } from '@tanstack/react-query';
+import { useAtomValue } from 'jotai';
 import { useNavigate, useParams } from 'react-router-dom';
 
 export default function ArticleDetailPage() {
   const { articleId } = useParams();
   const navigate = useNavigate();
+  const user = useAtomValue(userAtom);
+  const { openModal } = useModal();
+
+  const articleIdNum = Number(articleId);
 
   const { data, isPending, isError } = useQuery(
-    boardQueries.articleOptions(Number(articleId)),
+    boardQueries.articleOptions(Number(articleIdNum)),
   );
+
+  const handleEdit = () => {
+    navigate(`/board/${articleId}/edit`, {
+      state: { article: data },
+    });
+  };
+
+  const handleDelete = () => {
+    openModal({
+      children: () => <ArticleDeleteModal articleId={Number(articleIdNum)} />,
+    });
+  };
+
+  const MODIFY_DELETE_DROPDOWN_MAP = [
+    { label: '수정하기', onClick: handleEdit },
+    { label: '삭제하기', onClick: handleDelete },
+  ];
 
   if (isPending)
     return (
@@ -65,13 +89,16 @@ export default function ArticleDetailPage() {
         <div className='border-border-primary flex flex-col gap-4 border-b pb-3'>
           <div className='flex items-center justify-between'>
             <h4 className='text-2lg font-bold md:text-xl'>{data.title}</h4>
-            <Dropdown
-              type='icon'
-              menuItems={MODIFY_DELETE_DROPDOWN_MAP}
-              triggerChildren={<KebabIcon />}
-              align='end'
-              className='text-center'
-            />
+
+            {user?.id === data.writer.id && (
+              <Dropdown
+                type='icon'
+                menuItems={MODIFY_DELETE_DROPDOWN_MAP}
+                triggerChildren={<KebabIcon />}
+                align='end'
+                className='text-center'
+              />
+            )}
           </div>
 
           <div className='md:text-md flex items-center gap-2 text-xs'>

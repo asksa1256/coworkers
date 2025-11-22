@@ -115,10 +115,10 @@ function SwiperView({ allData }: SwiperViewProps) {
         }}
         pagination={{ clickable: true }}
         spaceBetween={12}
-        autoplay={{
-          delay: 5000,
-          disableOnInteraction: false,
-        }}
+        // autoplay={{
+        //   delay: 5000,
+        //   disableOnInteraction: false,
+        // }}
         speed={500}
         breakpoints={{
           320: { slidesPerView: 1, slidesPerGroup: 1 },
@@ -128,7 +128,11 @@ function SwiperView({ allData }: SwiperViewProps) {
       >
         {allData?.map(article => (
           <SwiperSlide key={article.id}>
-            <ArticleCard article={article} isBest={true} />
+            <ArticleCard
+              article={article}
+              isBest={true}
+              className='md:min-h-[200px]'
+            />
           </SwiperSlide>
         ))}
       </Swiper>

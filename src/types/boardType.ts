@@ -29,3 +29,9 @@ export type ArticleCard = ArticleResponse & {
   content: string;
   isLiked?: boolean; // 상세 페이지에서만 필요
 };
+
+export interface ArticleDetailRequest {
+  title: string;
+  content: string;
+  image?: string;
+}

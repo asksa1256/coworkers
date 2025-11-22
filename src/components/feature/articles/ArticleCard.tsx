@@ -2,6 +2,7 @@ import { boardQueries } from '@/api/queries';
 import BestIcon from '@/assets/icons/BestIcon.svg';
 import CommentIcon from '@/assets/icons/CommentIcon.svg?react';
 import HeartIcon from '@/assets/icons/HeartIcon.svg?react';
+import { cn } from '@/lib/utils';
 import type { ArticleResponse } from '@/types/boardType';
 import { formatRelativeTime } from '@/utils/formatters';
 import highlightSearchValue from '@/utils/highlightSearchValue';
@@ -11,11 +12,13 @@ import { Link, useSearchParams } from 'react-router-dom';
 interface ArticleCardProps {
   article: ArticleResponse;
   isBest?: boolean;
+  className?: string;
 }
 
 export default function ArticleCard({
   article,
   isBest = false,
+  className,
 }: ArticleCardProps) {
   const { id, title, image, createdAt, writer, likeCount, commentCount } =
     article;
@@ -30,7 +33,10 @@ export default function ArticleCard({
   return (
     <Link
       to={`/board/${id}`}
-      className='bg-bg-primary border-border-primary flex min-h-[148px] flex-col justify-between rounded-[20px] border p-4 transition-all duration-200 hover:-translate-y-1 hover:shadow-md md:min-h-[164px] md:px-6 md:py-5'
+      className={cn(
+        'bg-bg-primary border-border-primary flex min-h-[148px] flex-col justify-between rounded-[20px] border p-4 transition-all duration-200 hover:-translate-y-1 hover:shadow-md md:min-h-[164px] md:px-6 md:py-5',
+        className,
+      )}
     >
       <div className='flex items-center justify-between md:gap-6'>
         <div className='w-[60%] grow'>
