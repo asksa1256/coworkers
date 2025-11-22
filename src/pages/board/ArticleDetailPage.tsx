@@ -9,18 +9,33 @@ import Button from '@/components/ui/Button';
 import Dropdown from '@/components/ui/Dropdown';
 import EmptyContent from '@/components/ui/EmptyContent';
 import { Spinner } from '@/components/ui/spinner';
-import { MODIFY_DELETE_DROPDOWN_MAP } from '@/constants';
+import { userAtom } from '@/store/authAtom';
 import { formatRelativeTime } from '@/utils/formatters';
 import { useQuery } from '@tanstack/react-query';
+import { useAtomValue } from 'jotai';
 import { useNavigate, useParams } from 'react-router-dom';
 
 export default function ArticleDetailPage() {
   const { articleId } = useParams();
   const navigate = useNavigate();
+  const user = useAtomValue(userAtom);
 
   const { data, isPending, isError } = useQuery(
     boardQueries.articleOptions(Number(articleId)),
   );
+
+  const handleEdit = () => {
+    navigate(`/board/${articleId}/edit`, {
+      state: { article: data },
+    });
+  };
+
+  const handleDelete = () => {};
+
+  const MODIFY_DELETE_DROPDOWN_MAP = [
+    { label: '수정하기', onClick: handleEdit },
+    { label: '삭제하기', onClick: handleDelete },
+  ];
 
   if (isPending)
     return (
@@ -65,13 +80,16 @@ export default function ArticleDetailPage() {
         <div className='border-border-primary flex flex-col gap-4 border-b pb-3'>
           <div className='flex items-center justify-between'>
             <h4 className='text-2lg font-bold md:text-xl'>{data.title}</h4>
-            <Dropdown
-              type='icon'
-              menuItems={MODIFY_DELETE_DROPDOWN_MAP}
-              triggerChildren={<KebabIcon />}
-              align='end'
-              className='text-center'
-            />
+
+            {user?.id === data.writer.id && (
+              <Dropdown
+                type='icon'
+                menuItems={MODIFY_DELETE_DROPDOWN_MAP}
+                triggerChildren={<KebabIcon />}
+                align='end'
+                className='text-center'
+              />
+            )}
           </div>
 
           <div className='md:text-md flex items-center gap-2 text-xs'>

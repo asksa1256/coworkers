@@ -1,6 +1,7 @@
 import type { TeamFormDataType } from '@/components/feature/form/TeamForm';
 import axiosInstance from '@/lib/axios';
 import type {
+  ArticleDetailRequest,
   ArticleDetailResponse,
   ArticleListResponse,
 } from '@/types/boardType';
@@ -222,6 +223,50 @@ export const getArticle = async (
     return response.data;
   } catch (e) {
     console.log('게시글 불러오기 에러: ', e);
+    throw e;
+  }
+};
+
+// 게시글 작성
+export const createArticle = async (payload: {
+  title: string;
+  content: string;
+  image?: string;
+}): Promise<ArticleDetailResponse> => {
+  try {
+    const response = await axiosInstance.post(`/articles`, {
+      title: payload.title,
+      content: payload.content,
+      ...(payload.image ? { image: payload.image } : {}),
+    });
+    return response.data;
+  } catch (e) {
+    console.log('게시글 작성 에러: ', e);
+    throw e;
+  }
+};
+
+// 게시글 수정
+export const updateArticle = async ({
+  payload,
+  articleId,
+}: {
+  payload: {
+    title: string;
+    content: string;
+    image?: string;
+  };
+  articleId: number;
+}): Promise<ArticleDetailRequest> => {
+  try {
+    const response = await axiosInstance.patch(`/articles/${articleId}`, {
+      title: payload.title,
+      content: payload.content,
+      ...(payload.image ? { image: payload.image } : {}),
+    });
+    return response.data;
+  } catch (e) {
+    console.log('게시글 수정 에러: ', e);
     throw e;
   }
 };

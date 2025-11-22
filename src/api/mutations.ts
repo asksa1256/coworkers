@@ -37,6 +37,7 @@ import {
   deleteTaskRecurring,
   likeArticle,
   unlikeArticle,
+  updateArticle,
   updateArticleComment,
   updateGroup,
   updateTask,
@@ -573,6 +574,47 @@ export const groupMutations = {
       },
       onError: error => {
         toast.error('팀 삭제 실패. 다시 시도해주세요.');
+        throw error;
+      },
+    }),
+};
+
+// 게시글 뮤테이션
+export const articleMutations = {
+  updateArticleMutationOptions: (articleId: number, queryClient: QueryClient) =>
+    mutationOptions({
+      mutationFn: (variables: {
+        title: string;
+        content: string;
+        image?: string;
+      }) =>
+        updateArticle({
+          payload: {
+            title: variables.title,
+            content: variables.content,
+            image: variables.image || '',
+          },
+          articleId,
+        }),
+
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: boardQueries.article(articleId),
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: boardQueries.articles(),
+        });
+
+        toast.success('게시글이 수정되었습니다.');
+      },
+
+      onError: error => {
+        if (isAxiosError(error) && error.response?.status === 403) {
+          toast.error('게시글 수정 권한이 없습니다. 로그인 해주세요.');
+        } else {
+          toast.error('게시글 수정 실패. 다시 시도해주세요.');
+        }
         throw error;
       },
     }),

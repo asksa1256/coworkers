@@ -33,7 +33,7 @@ export const groupQueries = {
 };
 
 export const boardQueries = {
-  articles: (sort: string, searchValue?: string, searchRange?: string) => [
+  articles: (sort?: string, searchValue?: string, searchRange?: string) => [
     'articles',
     sort,
     searchValue,
