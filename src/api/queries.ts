@@ -114,10 +114,10 @@ export const taskQueries = {
       queryFn: () => getTasks(groupId!, taskListId!, date!),
       enabled: !!groupId && !!taskListId,
     }),
-  taskComment: () => ['taskComments'],
+  taskComments: () => ['taskComments'],
   taskCommentOptions: (taskId: number) =>
     queryOptions({
-      queryKey: taskQueries.taskComment(),
+      queryKey: taskQueries.taskComments(),
       queryFn: () => getTaskComments(taskId),
     }),
 };

@@ -902,11 +902,11 @@ export const taskDetailCommentMutations = {
         createTaskComment(taskId, content),
       onMutate: async ({ taskId, content }) => {
         await queryClient.cancelQueries({
-          queryKey: taskQueries.taskComment(),
+          queryKey: taskQueries.taskComments(),
         });
 
         const prevComments = queryClient.getQueryData<TaskCommentResponse[]>(
-          taskQueries.taskComment(),
+          taskQueries.taskComments(),
         );
 
         const newComment: TaskCommentResponse = {
@@ -923,7 +923,7 @@ export const taskDetailCommentMutations = {
         };
 
         queryClient.setQueryData<TaskCommentResponse[]>(
-          taskQueries.taskComment(),
+          taskQueries.taskComments(),
           prev => {
             if (!prev) return prev;
             return [newComment, ...prev];
@@ -934,7 +934,7 @@ export const taskDetailCommentMutations = {
       },
       onError: (error, variant, context) => {
         queryClient.setQueryData(
-          taskQueries.taskComment(),
+          taskQueries.taskComments(),
           context?.prevComments,
         );
         console.error(error);
@@ -947,7 +947,7 @@ export const taskDetailCommentMutations = {
           }) === 1
         ) {
           queryClient.invalidateQueries({
-            queryKey: taskQueries.taskComment(),
+            queryKey: taskQueries.taskComments(),
           });
           queryClient.invalidateQueries({
             queryKey: ['tasks'],
@@ -975,15 +975,15 @@ export const taskDetailCommentMutations = {
       }) => updateTaskComment(taskId, commentId, content),
       onMutate: async ({ content, commentId }) => {
         await queryClient.cancelQueries({
-          queryKey: taskQueries.taskComment(),
+          queryKey: taskQueries.taskComments(),
         });
 
         const prevComments = queryClient.getQueryData<TaskCommentResponse[]>(
-          taskQueries.taskComment(),
+          taskQueries.taskComments(),
         );
 
         queryClient.setQueryData<TaskCommentResponse[]>(
-          taskQueries.taskComment(),
+          taskQueries.taskComments(),
           prev => {
             if (!prev) return prev;
             return prev.map(cmt =>
@@ -998,7 +998,7 @@ export const taskDetailCommentMutations = {
       },
       onError: (error, variant, context) => {
         queryClient.setQueryData(
-          taskQueries.taskComment(),
+          taskQueries.taskComments(),
           context?.prevComments,
         );
         console.error(error);
@@ -1006,7 +1006,7 @@ export const taskDetailCommentMutations = {
       },
       onSettled: () => {
         queryClient.invalidateQueries({
-          queryKey: taskQueries.taskComment(),
+          queryKey: taskQueries.taskComments(),
         });
       },
     }),
@@ -1028,7 +1028,7 @@ export const taskDetailCommentMutations = {
       }) => deleteTaskComment(taskId, commentId),
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: taskQueries.taskComment(),
+          queryKey: taskQueries.taskComments(),
         });
 
         queryClient.invalidateQueries({
