@@ -42,6 +42,7 @@ import {
   updateArticleComment,
   updateGroup,
   updateTask,
+  updateTaskComment,
   updateTaskList,
   updateTaskListOrder,
 } from './api';
@@ -884,6 +885,7 @@ export const likeMutations = {
 // task 상세페이지 댓글 뮤테이션
 export const taskDetailCommentMutations = {
   taskCmtCreate: (taskId: number) => ['taskCommentCreate', taskId],
+  // 생성
   taskCmtCreateMutationOptions: ({
     queryClient,
     taskId,
@@ -947,6 +949,61 @@ export const taskDetailCommentMutations = {
             queryKey: taskQueries.taskComment(),
           });
         }
+      },
+    }),
+  // 수정
+  taskCmtEditMutationOptions: ({
+    queryClient,
+    setEditingCommentId,
+  }: {
+    queryClient: QueryClient;
+    setEditingCommentId: (value: number | null) => void;
+  }) =>
+    mutationOptions({
+      mutationFn: ({
+        taskId,
+        commentId,
+        content,
+      }: {
+        taskId: number;
+        commentId: number;
+        content: string;
+      }) => updateTaskComment(taskId, commentId, content),
+      onMutate: async ({ content, commentId }) => {
+        await queryClient.cancelQueries({
+          queryKey: taskQueries.taskComment(),
+        });
+
+        const prevComments = queryClient.getQueryData<TaskCommentResponse[]>(
+          taskQueries.taskComment(),
+        );
+
+        queryClient.setQueryData<TaskCommentResponse[]>(
+          taskQueries.taskComment(),
+          prev => {
+            if (!prev) return prev;
+            return prev.map(cmt =>
+              cmt.id === commentId ? { ...cmt, content: content } : cmt,
+            );
+          },
+        );
+
+        setEditingCommentId(null);
+
+        return { prevComments };
+      },
+      onError: (error, variant, context) => {
+        queryClient.setQueryData(
+          taskQueries.taskComment(),
+          context?.prevComments,
+        );
+        console.error(error);
+        toast.error('댓글 수정에 실패하였습니다. 다시 시도해주세요.');
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: taskQueries.taskComment(),
+        });
       },
     }),
 };

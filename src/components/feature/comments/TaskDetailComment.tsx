@@ -14,13 +14,13 @@ interface Props {
 export default function TaskDetailComment({ taskId }: Props) {
   const user = useAtomValue(userAtom);
   const queryClient = useQueryClient();
+  const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
   const {
     data: comments,
     isPending: commentsPending,
     status: commentsStatus,
     error: commentsError,
   } = useQuery(taskQueries.taskCommentOptions(taskId));
-
   const { mutate: createTaskCommentMutate } = useMutation(
     taskDetailCommentMutations.taskCmtCreateMutationOptions({
       queryClient,
@@ -28,15 +28,20 @@ export default function TaskDetailComment({ taskId }: Props) {
       user: user!,
     }),
   );
-
-  // 여러 수정 가능한 댓글 중 1개만 수정하기 위한 상태
-  const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
+  const { mutate: editTaskCommentMutate } = useMutation(
+    taskDetailCommentMutations.taskCmtEditMutationOptions({
+      queryClient,
+      setEditingCommentId,
+    }),
+  );
 
   const handleCreateSubmit = (content: string) => {
     createTaskCommentMutate({ content, taskId });
   };
 
-  const handleEditSubmit = (commentId: number, content: string) => {};
+  const handleEditSubmit = (commentId: number, content: string) => {
+    editTaskCommentMutate({ commentId, taskId, content });
+  };
 
   const handleDelete = (commentId: number, content: string) => {};
 
