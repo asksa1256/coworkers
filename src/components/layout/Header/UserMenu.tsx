@@ -15,7 +15,7 @@ export default function UserMenu({ children, align = 'start' }: Props) {
   const userMenu = [
     {
       label: '마이 히스토리',
-      onClick: () => alert('마이 히스토리 페이지로 이동'),
+      onClick: () => navigate('/my-history'),
     },
     { label: '계정 설정', onClick: () => navigate('/mypage') },
     { label: '로그아웃', onClick: () => signOut() },

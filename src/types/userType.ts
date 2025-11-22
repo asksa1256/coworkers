@@ -1,3 +1,5 @@
+import type { FrequencyType } from '@/types/taskType';
+
 export interface UserType {
   teamId: string;
   image: string | null;
@@ -29,3 +31,27 @@ export interface GroupType {
 }
 
 export type MemberType = Omit<MembershipsType, 'group'>;
+
+export interface MyHistoryTaskDoneItem {
+  date: string;
+  deletedAt: string | null;
+  description: string | null;
+  displayIndex: number;
+  doneAt: string;
+  frequency: FrequencyType;
+  id: number;
+  name: string;
+  recurringId: number;
+  updatedAt: string;
+  userId: number;
+  writerId: number;
+}
+
+export interface MyHistoryResponse {
+  tasksDone: MyHistoryTaskDoneItem[];
+}
+
+export interface HistoryByDateType {
+  dateTitle: string;
+  tasks: MyHistoryTaskDoneItem[];
+}
