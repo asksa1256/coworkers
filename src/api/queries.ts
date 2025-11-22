@@ -4,6 +4,7 @@ import {
   getArticles,
   getBestArticles,
   getGroup,
+  getMyHistory,
   getSingleTaskList,
   getTaskComments,
   getTasks,
@@ -118,5 +119,14 @@ export const taskQueries = {
     queryOptions({
       queryKey: taskQueries.taskComment(),
       queryFn: () => getTaskComments(taskId),
+    }),
+};
+
+export const historyQueries = {
+  histroy: () => ['myHistory'],
+  historyOptions: () =>
+    queryOptions({
+      queryKey: historyQueries.histroy(),
+      queryFn: () => getMyHistory(),
     }),
 };

@@ -36,7 +36,10 @@ export default function TaskSectionLIstItem({
           <button className='absolute inset-0' />
         </TaskDetailSheet>
         <div className='flex items-start gap-2'>
-          <span className='border-border-primary has-checked:bg-primary has-checked:border-primary relative m-0.5 flex size-3 shrink-0 cursor-pointer items-center justify-center rounded-sm border md:mx-0 md:size-4 md:rounded-md'>
+          <span
+            className='border-border-primary has-checked:bg-primary has-checked:border-primary relative m-0.5 flex size-3 shrink-0 cursor-pointer items-center justify-center rounded-sm border md:mx-0 md:size-4 md:rounded-md'
+            onClick={() => onChangeDone(task)}
+          >
             <input
               id={String(id)}
               type='checkbox'

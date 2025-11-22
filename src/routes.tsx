@@ -8,6 +8,7 @@ import CreateTeamPage from '@/pages/CreateTeamPage';
 import ErrorPage from '@/pages/ErrorPage';
 import JoinTeamPage from '@/pages/JoinTeamPage';
 import LandingPage from '@/pages/LandingPage';
+import MyHistoryPage from '@/pages/MyHistoryPage';
 import TaskListPage from '@/pages/TaskListPage';
 import TeamPage from '@/pages/TeamPage';
 import type { ReactNode } from 'react';
@@ -18,6 +19,7 @@ import KakaoSignUpPage from './pages/auth/KakaoSignUpPage';
 import ResetPasswordPage from './pages/auth/ResetPasswordPage';
 import SignUpPage from './pages/auth/SignUpPage';
 import ArticleDetailPage from './pages/board/ArticleDetailPage';
+import ArticleFormPage from './pages/board/ArticleFormPage';
 import MyPage from './pages/MyPage';
 import UpdateTeamPage from './pages/UpdateTeamPage';
 
@@ -47,6 +49,10 @@ const routes = [
       {
         path: '/mypage',
         element: withPrivate(<MyPage />),
+      },
+      {
+        path: '/my-history',
+        element: withPrivate(<MyHistoryPage />),
       },
       {
         path: '/:groupId',
@@ -113,6 +119,14 @@ const routes = [
       {
         path: ':articleId',
         element: withPrivate(<ArticleDetailPage />),
+      },
+      {
+        path: 'post',
+        element: withPrivate(<ArticleFormPage />),
+      },
+      {
+        path: ':articleId/edit',
+        element: withPrivate(<ArticleFormPage />),
       },
     ],
   },
