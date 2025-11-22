@@ -35,11 +35,13 @@ export default function LandingPage() {
   const { openModal } = useModal();
 
   const handleStart = () => {
-    if (user) {
+    if (user && user.memberships.length > 1) {
       openModal({
         children: () => <SelectGroupModal />,
         closeIconButton: true,
       });
+    } else if (user) {
+      navigate(`/${user.memberships[0].groupId}`);
     } else {
       navigate('/auth/signin');
     }
