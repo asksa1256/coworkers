@@ -27,7 +27,7 @@ import type {
   TaskListsResponse,
   TaskUpdateRequestBody,
 } from '@/types/taskType';
-import type { MembershipsType } from '@/types/userType';
+import type { MembershipsType, MyHistoryResponse } from '@/types/userType';
 import type { AxiosResponse } from 'axios';
 
 export const getGroup = async (
@@ -499,4 +499,10 @@ export const deleteTaskComment = async (
   commentId: number,
 ): Promise<AxiosResponse<void>> => {
   return await axiosInstance.delete(`/tasks/${taskId}/comments/${commentId}`);
+};
+
+// 마이페이지 히스토리 가져오기
+export const getMyHistory = async (): Promise<MyHistoryResponse> => {
+  const { data } = await axiosInstance.get('/user/history');
+  return data;
 };

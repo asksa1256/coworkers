@@ -1,6 +1,6 @@
 import type { UserType } from './userType';
 
-type FrequencyType = 'ONCE' | 'DAILY' | 'WEEKLY' | 'MONTHLY';
+export type FrequencyType = 'ONCE' | 'DAILY' | 'WEEKLY' | 'MONTHLY';
 
 export interface RecurringResponse {
   id: number;
