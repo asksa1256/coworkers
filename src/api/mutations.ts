@@ -35,6 +35,7 @@ import {
   deleteGroup,
   deleteGroupMember,
   deleteTask,
+  deleteTaskComment,
   deleteTaskList,
   deleteTaskRecurring,
   likeArticle,
@@ -1007,6 +1008,38 @@ export const taskDetailCommentMutations = {
         queryClient.invalidateQueries({
           queryKey: taskQueries.taskComment(),
         });
+      },
+    }),
+  // 삭제
+  taskCmtDeleteMutationOptions: ({
+    queryClient,
+    closeModal,
+  }: {
+    queryClient: QueryClient;
+    closeModal: () => void;
+  }) =>
+    mutationOptions({
+      mutationFn: ({
+        taskId,
+        commentId,
+      }: {
+        taskId: number;
+        commentId: number;
+      }) => deleteTaskComment(taskId, commentId),
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: taskQueries.taskComment(),
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: ['tasks'],
+        });
+
+        toast.success('댓글을 삭제했습니다.');
+        closeModal();
+      },
+      onError: () => {
+        toast.error('댓글 삭제 실패. 다시 시도해주세요.');
       },
     }),
 };

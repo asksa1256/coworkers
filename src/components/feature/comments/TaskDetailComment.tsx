@@ -1,19 +1,24 @@
 import { taskDetailCommentMutations } from '@/api/mutations';
 import { taskQueries } from '@/api/queries';
+import TaskDetailCommentDeleteModal from '@/components/feature/comments/TaskDetailCommentDeleteModal';
 import Comment from '@/components/ui/Comment/CommentSection';
+import useModal from '@/hooks/useModal';
 import { userAtom } from '@/store/authAtom';
 import { getCommentAuthor } from '@/utils/typeGuard';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 interface Props {
   taskId: number;
 }
 
 export default function TaskDetailComment({ taskId }: Props) {
+  const { groupId, taskListId } = useParams();
   const user = useAtomValue(userAtom);
   const queryClient = useQueryClient();
+  const { openModal } = useModal();
   const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
   const {
     data: comments,
@@ -43,7 +48,17 @@ export default function TaskDetailComment({ taskId }: Props) {
     editTaskCommentMutate({ commentId, taskId, content });
   };
 
-  const handleDelete = (commentId: number, content: string) => {};
+  const handleDelete = (commentId: number, content: string) => {
+    openModal({
+      children: (
+        <TaskDetailCommentDeleteModal
+          commentId={commentId}
+          content={content}
+          taskId={taskId}
+        />
+      ),
+    });
+  };
 
   if (!comments) return null;
 
