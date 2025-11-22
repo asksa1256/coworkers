@@ -5,6 +5,7 @@ import {
   getBestArticles,
   getGroup,
   getSingleTaskList,
+  getTaskComments,
   getTasks,
 } from '@/api/api';
 import axiosInstance from '@/lib/axios';
@@ -111,5 +112,11 @@ export const taskQueries = {
       queryKey: [...taskQueries.tasks(groupId, taskListId, date)],
       queryFn: () => getTasks(groupId!, taskListId!, date!),
       enabled: !!groupId && !!taskListId,
+    }),
+  taskComment: () => ['taskComments'],
+  taskCommentOptions: (taskId: number) =>
+    queryOptions({
+      queryKey: taskQueries.taskComment(),
+      queryFn: () => getTaskComments(taskId),
     }),
 };

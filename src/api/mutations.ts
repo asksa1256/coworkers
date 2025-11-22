@@ -898,11 +898,13 @@ export const taskDetailCommentMutations = {
       mutationFn: ({ taskId, content }: { taskId: number; content: string }) =>
         createTaskComment(taskId, content),
       onMutate: async ({ taskId, content }) => {
-        await queryClient.cancelQueries({ queryKey: ['taskComments'] });
+        await queryClient.cancelQueries({
+          queryKey: taskQueries.taskComment(),
+        });
 
-        const prevComments = queryClient.getQueryData<TaskCommentResponse[]>([
-          'taskComments',
-        ]);
+        const prevComments = queryClient.getQueryData<TaskCommentResponse[]>(
+          taskQueries.taskComment(),
+        );
 
         const newComment: TaskCommentResponse = {
           content: content,
@@ -918,7 +920,7 @@ export const taskDetailCommentMutations = {
         };
 
         queryClient.setQueryData<TaskCommentResponse[]>(
-          ['taskComments'],
+          taskQueries.taskComment(),
           prev => {
             if (!prev) return prev;
             return [...prev, newComment];
@@ -928,7 +930,10 @@ export const taskDetailCommentMutations = {
         return { prevComments };
       },
       onError: (error, variant, context) => {
-        queryClient.setQueryData(['taskComments'], context?.prevComments);
+        queryClient.setQueryData(
+          taskQueries.taskComment(),
+          context?.prevComments,
+        );
         console.error(error);
         toast.error('댓글 등록에 실패하였습니다. 다시 시도해주세요.');
       },
@@ -938,7 +943,9 @@ export const taskDetailCommentMutations = {
             mutationKey: ['taskCommentCreate', taskId],
           }) === 1
         ) {
-          queryClient.invalidateQueries({ queryKey: ['taskComments'] });
+          queryClient.invalidateQueries({
+            queryKey: taskQueries.taskComment(),
+          });
         }
       },
     }),

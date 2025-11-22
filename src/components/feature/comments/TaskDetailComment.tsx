@@ -1,5 +1,5 @@
-import { getTaskComments } from '@/api/api';
 import { taskDetailCommentMutations } from '@/api/mutations';
+import { taskQueries } from '@/api/queries';
 import Comment from '@/components/ui/Comment/CommentSection';
 import { userAtom } from '@/store/authAtom';
 import { getCommentAuthor } from '@/utils/typeGuard';
@@ -19,10 +19,7 @@ export default function TaskDetailComment({ taskId }: Props) {
     isPending: commentsPending,
     status: commentsStatus,
     error: commentsError,
-  } = useQuery({
-    queryKey: ['taskComments'],
-    queryFn: () => getTaskComments(taskId),
-  });
+  } = useQuery(taskQueries.taskCommentOptions(taskId));
 
   const { mutate: createTaskCommentMutate } = useMutation(
     taskDetailCommentMutations.taskCmtCreateMutationOptions({
