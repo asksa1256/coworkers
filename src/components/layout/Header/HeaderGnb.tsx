@@ -181,7 +181,7 @@ export default function HeaderGnb({
           type='board'
           title='자유게시판'
           href='/board'
-          current={location.pathname === '/board'}
+          current={location.pathname.includes('/board')}
         />
       </ul>
     </nav>

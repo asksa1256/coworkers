@@ -1,11 +1,14 @@
+import PencilIcon from '@/assets/icons/PencilIcon.svg?react';
 import ArticleList from '@/components/feature/articles/ArticleList';
 import BestArticleList from '@/components/feature/articles/BestArticleList';
 import SearchField from '@/components/feature/search/SearchField';
-import { useSearchParams } from 'react-router-dom';
+import Button from '@/components/ui/Button';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 export default function BoardPage() {
   const [searchParams] = useSearchParams();
   const keyword = searchParams.get('q');
+  const navigate = useNavigate();
 
   return (
     <div className='bg-bg-primary view-white w-full max-w-280 pt-6 pb-10 md:pt-[77px] lg:mx-auto lg:pt-[87px]'>
@@ -21,6 +24,16 @@ export default function BoardPage() {
       {!keyword && <BestArticleList />}
 
       <ArticleList />
+
+      <Button
+        size='icon-lg'
+        round='full'
+        title='글 작성하기'
+        className='fixed right-10 bottom-10 h-14 w-14 lg:right-[10%] lg:bottom-[76px] [&_svg]:!size-5'
+        onClick={() => navigate('/board/post')}
+      >
+        <PencilIcon />
+      </Button>
     </div>
   );
 }
