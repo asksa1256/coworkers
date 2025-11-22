@@ -3,6 +3,7 @@ import type { ArticleDetailResponse } from '@/types/boardType';
 import type {
   ArticleCommentResponse,
   ArticleCommentsResponse,
+  TaskCommentResponse,
 } from '@/types/commentType';
 import type { GroupDetailResponse } from '@/types/groupType';
 import type { TaskFormSchema } from '@/types/taskFormSchema';
@@ -29,6 +30,7 @@ import {
   addTaskList,
   createArticleComment,
   createTask,
+  createTaskComment,
   deleteArticleComment,
   deleteGroup,
   deleteGroupMember,
@@ -875,6 +877,69 @@ export const likeMutations = {
         queryClient.invalidateQueries({
           queryKey: boardQueries.article(articleId),
         });
+      },
+    }),
+};
+
+// task 상세페이지 댓글 뮤테이션
+export const taskDetailCommentMutations = {
+  taskCmtCreate: (taskId: number) => ['taskCommentCreate', taskId],
+  taskCmtCreateMutationOptions: ({
+    queryClient,
+    taskId,
+    user,
+  }: {
+    queryClient: QueryClient;
+    taskId: number;
+    user: UserType;
+  }) =>
+    mutationOptions({
+      mutationKey: taskDetailCommentMutations.taskCmtCreate(taskId),
+      mutationFn: ({ taskId, content }: { taskId: number; content: string }) =>
+        createTaskComment(taskId, content),
+      onMutate: async ({ taskId, content }) => {
+        await queryClient.cancelQueries({ queryKey: ['taskComments'] });
+
+        const prevComments = queryClient.getQueryData<TaskCommentResponse[]>([
+          'taskComments',
+        ]);
+
+        const newComment: TaskCommentResponse = {
+          content: content,
+          createdAt: new Date().toISOString(),
+          id: taskId + prevComments!.length,
+          taskId: taskId,
+          updatedAt: new Date().toISOString(),
+          user: {
+            id: user!.id,
+            image: user!.image,
+            nickname: user!.nickname,
+          },
+        };
+
+        queryClient.setQueryData<TaskCommentResponse[]>(
+          ['taskComments'],
+          prev => {
+            if (!prev) return prev;
+            return [...prev, newComment];
+          },
+        );
+
+        return { prevComments };
+      },
+      onError: (error, variant, context) => {
+        queryClient.setQueryData(['taskComments'], context?.prevComments);
+        console.error(error);
+        toast.error('댓글 등록에 실패하였습니다. 다시 시도해주세요.');
+      },
+      onSettled: () => {
+        if (
+          queryClient.isMutating({
+            mutationKey: ['taskCommentCreate', taskId],
+          }) === 1
+        ) {
+          queryClient.invalidateQueries({ queryKey: ['taskComments'] });
+        }
       },
     }),
 };
