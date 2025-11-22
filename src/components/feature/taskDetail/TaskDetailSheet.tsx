@@ -124,10 +124,7 @@ export default function TaskDetailSheet({
               </p>
             )}
           </div>
-          <TaskDetailComment
-            taskId={task.id}
-            commentCount={task.commentCount}
-          />
+          <TaskDetailComment taskId={task.id} />
         </div>
       </SheetContent>
     </Sheet>

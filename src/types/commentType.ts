@@ -25,7 +25,6 @@ export interface ArticleCommentsResponse {
 }
 
 export interface TaskCommentResponse extends CommentBaseResponse {
-  userId: number; // user.id와 동일?
   taskId: number;
   user: Pick<UserType, 'id' | 'image' | 'nickname'>;
 }
