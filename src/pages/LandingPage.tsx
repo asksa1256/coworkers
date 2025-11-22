@@ -123,7 +123,11 @@ function HeroSection({ onClick }: { onClick?: () => void }) {
       {/* CTA Button (tablet, mobile) */}
       <FadeIn>
         <div className='absolute right-4 bottom-[52px] text-center md:right-8 lg:hidden'>
-          <Button size='lg' className='w-auto px-9 !text-base'>
+          <Button
+            size='lg'
+            className='w-auto px-9 !text-base'
+            onClick={onClick}
+          >
             지금 시작하기
           </Button>
         </div>
