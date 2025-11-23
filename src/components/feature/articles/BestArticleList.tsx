@@ -131,7 +131,6 @@ function SwiperView({ allData }: SwiperViewProps) {
             <ArticleCard
               article={article}
               isBest={true}
-              // className='md:min-h-[200px]'
               className='h-auto grow-1 items-stretch'
             />
           </SwiperSlide>

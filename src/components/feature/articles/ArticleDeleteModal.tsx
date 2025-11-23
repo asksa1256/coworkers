@@ -23,7 +23,7 @@ export default function ArticleDeleteModal({
         queryKey: boardQueries.articles(),
       });
       toast.success('게시글이 삭제되었습니다.');
-      navigate(`/board`);
+      navigate(`/board`, { replace: true });
       closeModal();
     },
     onError: error => {
