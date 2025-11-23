@@ -1,5 +1,4 @@
-import { createArticle, updateArticle } from '@/api/api';
-import { boardQueries } from '@/api/queries';
+import { articleMutations } from '@/api/mutations';
 import ImageUploader from '@/components/feature/imageUpload/ImageUploader';
 import Button from '@/components/ui/Button';
 import InputField from '@/components/ui/Input/InputField';
@@ -9,13 +8,10 @@ import {
   type CreateArticleRequest,
   createArticleRequestSchema,
 } from '@/types/ArticleRequestSchema';
-import type { ArticleDetailResponse } from '@/types/boardType';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { isAxiosError } from 'axios';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'sonner';
 
 interface ArticleFormType {
   title: string;
@@ -50,51 +46,16 @@ export default function ArticleForm({ initialValue }: ArticleFormProps) {
 
   const queryClient = useQueryClient();
 
-  const { mutate: createArticleMutation } = useMutation({
-    mutationFn: (formData: CreateArticleRequest) => createArticle(formData),
-    onSuccess: (data: ArticleDetailResponse) => {
-      const newArticleId = data.id;
+  const { mutate: createMutate } = useMutation(
+    articleMutations.createArticleMutationOptions(queryClient),
+  );
 
-      queryClient.invalidateQueries({
-        queryKey: boardQueries.articles(),
-      });
-      toast.success('게시글이 등록되었습니다.');
-      navigate(`/board/${newArticleId}`);
-    },
-    onError: error => {
-      if (isAxiosError(error) && error.response?.status === 403) {
-        toast.error('게시글 작성 권한이 없습니다. 로그인 해주세요.');
-      } else {
-        toast.error('게시글 작성 실패. 다시 시도해주세요.');
-      }
-      throw error;
-    },
-  });
-
-  const { mutate: updateArticleMutation } = useMutation({
-    mutationFn: (formData: CreateArticleRequest) =>
-      updateArticle({ articleId: Number(articleId), payload: formData }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: boardQueries.article(Number(articleId)),
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: boardQueries.articles(),
-      });
-
-      toast.success('게시글이 수정되었습니다.');
-      navigate(`/board/${articleId}`);
-    },
-    onError: error => {
-      if (isAxiosError(error) && error.response?.status === 403) {
-        toast.error('게시글 작성 권한이 없습니다. 로그인 해주세요.');
-      } else {
-        toast.error('게시글 작성 실패. 다시 시도해주세요.');
-      }
-      throw error;
-    },
-  });
+  const { mutate: updateMutate } = useMutation(
+    articleMutations.updateArticleMutationOptions(
+      Number(articleId),
+      queryClient,
+    ),
+  );
 
   const onSubmit = (formData: CreateArticleRequest) => {
     const payload = {
@@ -104,13 +65,23 @@ export default function ArticleForm({ initialValue }: ArticleFormProps) {
     };
 
     if (isEditMode) {
-      updateArticleMutation(payload);
+      updateMutate(payload, {
+        onSuccess: () => {
+          navigate(`/board/${articleId}`);
+        },
+      });
     } else {
-      createArticleMutation(payload);
+      createMutate(payload, {
+        onSuccess: data => {
+          const newArticleId = data.id;
+          navigate(`/board/${newArticleId}`);
+        },
+      });
     }
   };
 
-  const isSubmittingText = isEditMode ? '수정중...' : '등록중...';
+  const isSubmittingText =
+    isEditMode && isSubmitting ? '수정중...' : '등록중...';
   const submitText = isEditMode ? '수정하기' : '등록하기';
 
   const isEditInvalid = !isDirty || !isValid || isSubmitting;

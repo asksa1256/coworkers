@@ -1,11 +1,8 @@
-import { deleteArticle } from '@/api/api';
-import { boardQueries } from '@/api/queries';
+import { articleMutations } from '@/api/mutations';
 import Button from '@/components/ui/Button';
 import useModal from '@/hooks/useModal';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { isAxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
 
 export default function ArticleDeleteModal({
   articleId,
@@ -16,28 +13,21 @@ export default function ArticleDeleteModal({
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const { mutate: deleteCommentMutate, isPending } = useMutation({
-    mutationFn: () => deleteArticle(articleId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: boardQueries.articles(),
-      });
-      toast.success('게시글이 삭제되었습니다.');
-      navigate(`/board`, { replace: true });
-      closeModal();
-    },
-    onError: error => {
-      if (isAxiosError(error) && error.response?.status === 403) {
-        toast.error('게시글 삭제 권한이 없습니다. 로그인 해주세요.');
-      } else {
-        toast.error('게시글 삭제 실패. 다시 시도해주세요.');
-      }
-      throw error;
-    },
-  });
+  const { mutate: deleteArticleMutate, isPending } = useMutation(
+    articleMutations.deleteArticleMutationOptions({
+      articleId,
+      queryClient,
+      closeModal,
+    }),
+  );
 
   const handleClickDelete = () => {
-    deleteCommentMutate();
+    deleteArticleMutate(undefined, {
+      // 삭제 기능은 mutate의 첫번째 인자로 넘겨줄 payload가 없으므로 undefined로 전달
+      onSuccess: () => {
+        navigate('/board');
+      },
+    });
   };
 
   return (

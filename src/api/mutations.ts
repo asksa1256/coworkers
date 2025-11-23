@@ -1,4 +1,5 @@
 import type { TeamFormDataType } from '@/components/feature/form/TeamForm';
+import type { CreateArticleRequest } from '@/types/ArticleRequestSchema';
 import type { ArticleDetailResponse } from '@/types/boardType';
 import type {
   ArticleCommentResponse,
@@ -27,8 +28,10 @@ import type { UseFormReset, UseFormSetError } from 'react-hook-form';
 import { toast } from 'sonner';
 import {
   addTaskList,
+  createArticle,
   createArticleComment,
   createTask,
+  deleteArticle,
   deleteArticleComment,
   deleteGroup,
   deleteGroupMember,
@@ -581,6 +584,25 @@ export const groupMutations = {
 
 // 게시글 뮤테이션
 export const articleMutations = {
+  createArticleMutationOptions: (queryClient: QueryClient) =>
+    mutationOptions({
+      mutationFn: (formData: CreateArticleRequest) => createArticle(formData),
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: boardQueries.articles(),
+        });
+        toast.success('게시글이 등록되었습니다.');
+      },
+      onError: error => {
+        if (isAxiosError(error) && error.response?.status === 403) {
+          toast.error('게시글 작성 권한이 없습니다. 로그인 해주세요.');
+        } else {
+          toast.error('게시글 작성 실패. 다시 시도해주세요.');
+        }
+        throw error;
+      },
+    }),
+
   updateArticleMutationOptions: (articleId: number, queryClient: QueryClient) =>
     mutationOptions({
       mutationFn: (variables: {
@@ -614,6 +636,34 @@ export const articleMutations = {
           toast.error('게시글 수정 권한이 없습니다. 로그인 해주세요.');
         } else {
           toast.error('게시글 수정 실패. 다시 시도해주세요.');
+        }
+        throw error;
+      },
+    }),
+
+  deleteArticleMutationOptions: ({
+    articleId,
+    queryClient,
+    closeModal,
+  }: {
+    articleId: number;
+    queryClient: QueryClient;
+    closeModal: () => void;
+  }) =>
+    mutationOptions({
+      mutationFn: () => deleteArticle(articleId),
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: boardQueries.articles(),
+        });
+        toast.success('게시글이 삭제되었습니다.');
+        closeModal();
+      },
+      onError: error => {
+        if (isAxiosError(error) && error.response?.status === 403) {
+          toast.error('게시글 삭제 권한이 없습니다. 로그인 해주세요.');
+        } else {
+          toast.error('게시글 삭제 실패. 다시 시도해주세요.');
         }
         throw error;
       },
