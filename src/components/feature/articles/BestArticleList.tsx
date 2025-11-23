@@ -115,10 +115,10 @@ function SwiperView({ allData }: SwiperViewProps) {
         }}
         pagination={{ clickable: true }}
         spaceBetween={12}
-        // autoplay={{
-        //   delay: 5000,
-        //   disableOnInteraction: false,
-        // }}
+        autoplay={{
+          delay: 5000,
+          disableOnInteraction: false,
+        }}
         speed={500}
         breakpoints={{
           320: { slidesPerView: 1, slidesPerGroup: 1 },
@@ -131,7 +131,8 @@ function SwiperView({ allData }: SwiperViewProps) {
             <ArticleCard
               article={article}
               isBest={true}
-              className='md:min-h-[200px]'
+              // className='md:min-h-[200px]'
+              className='h-auto grow-1 items-stretch'
             />
           </SwiperSlide>
         ))}
