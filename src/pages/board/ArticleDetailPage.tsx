@@ -46,93 +46,102 @@ export default function ArticleDetailPage() {
     { label: '삭제하기', onClick: handleDelete },
   ];
 
-  if (isPending)
-    return (
-      <div className='flex flex-col items-center justify-center gap-2'>
-        <Spinner />
-        불러오는 중...
-      </div>
-    );
-
-  if (isError)
-    return (
-      <div className='flex flex-col items-center justify-center gap-2'>
-        <p className='text-text-default text-md font-medium lg:text-base'>
-          게시글 불러오기에 실패했습니다.
-        </p>
-      </div>
-    );
-
-  if (!data)
-    return (
-      <EmptyContent>
-        <p className='text-text-default text-md font-medium lg:text-base'>
-          게시글이 삭제되었거나 존재하지 않습니다.
-        </p>
-      </EmptyContent>
-    );
+  const isEmpty = !isPending && !isError && !data;
 
   return (
     <article className='lg:flex lg:justify-center lg:gap-[26px]'>
       <div className='bg-bg-primary relative my-4 w-full rounded-[20px] px-[22px] py-10 shadow-sm md:my-[68px] md:px-10 md:pt-[54px] md:pb-[120px] lg:max-w-280 lg:px-[60px] lg:py-[88px]'>
-        <Button
-          type='button'
-          variant='ghost'
-          round='sm'
-          className='group bg-bg-primary text-text-default hover:text-text-primary hover:bg-bg-secondary mb-8 flex w-auto items-center transition-colors'
-          onClick={() => navigate(-1)}
-        >
-          <LeftArrowIcon className='group-hover:text-text-primary' />
-          돌아가기
-        </Button>
-
-        <div className='border-border-primary flex flex-col gap-4 border-b pb-3'>
-          <div className='flex items-center justify-between'>
-            <h4 className='text-2lg font-bold md:text-xl'>{data.title}</h4>
-
-            {user?.id === data.writer.id && (
-              <Dropdown
-                type='icon'
-                menuItems={MODIFY_DELETE_DROPDOWN_MAP}
-                triggerChildren={<KebabIcon />}
-                align='end'
-                className='text-center'
-              />
-            )}
+        {isPending && (
+          <div className='flex flex-col items-center justify-center gap-2'>
+            <Spinner />
+            불러오는 중...
           </div>
+        )}
 
-          <div className='md:text-md flex items-center gap-2 text-xs'>
-            <Avatar size='sm' imgSrc={null} />
-            <span className='font-medium'>{data.writer.nickname}</span>|
-            <span className='text-text-default font-medium'>
-              {formatRelativeTime(data.createdAt)}
-            </span>
+        {isError && (
+          <div className='flex flex-col items-center justify-center gap-2'>
+            <p className='text-text-default text-md font-medium lg:text-base'>
+              게시글 불러오기에 실패했습니다.
+            </p>
           </div>
-        </div>
+        )}
 
-        <div className='mt-4 md:mt-[28px]'>
-          <p className='text-md mb-5 md:mb-6 md:text-base'>{data.content}</p>
-          {data.image && (
-            <div className='aspect-square w-[140px] overflow-hidden rounded-xl md:w-[200px]'>
-              <img src={data.image} alt='' />
+        {isEmpty && (
+          <EmptyContent>
+            <p className='text-text-default text-md font-medium lg:text-base'>
+              게시글이 삭제되었거나 존재하지 않습니다.
+            </p>
+          </EmptyContent>
+        )}
+
+        {data && (
+          <>
+            <Button
+              type='button'
+              variant='ghost'
+              round='sm'
+              className='group bg-bg-primary text-text-default hover:text-text-primary hover:bg-bg-secondary mb-8 flex w-auto items-center transition-colors'
+              onClick={() => navigate(-1)}
+            >
+              <LeftArrowIcon className='group-hover:text-text-primary' />
+              돌아가기
+            </Button>
+
+            <div className='border-border-primary flex flex-col gap-4 border-b pb-3'>
+              <div className='flex items-center justify-between'>
+                <h4 className='text-2lg font-bold md:text-xl'>{data.title}</h4>
+
+                {user?.id === data.writer.id && (
+                  <Dropdown
+                    type='icon'
+                    menuItems={MODIFY_DELETE_DROPDOWN_MAP}
+                    triggerChildren={<KebabIcon />}
+                    align='end'
+                    className='text-center'
+                  />
+                )}
+              </div>
+
+              <div className='md:text-md flex items-center gap-2 text-xs'>
+                <Avatar size='sm' imgSrc={null} />
+                <span className='font-medium'>{data.writer.nickname}</span>|
+                <span className='text-text-default font-medium'>
+                  {formatRelativeTime(data.createdAt)}
+                </span>
+              </div>
             </div>
-          )}
 
-          {/* 좋아요 버튼 (mobile ~ tablet: 컨텐츠 내부) */}
-          <div className='mt-4 md:mt-[28px]'>
-            <LikeButton likeCount={data.likeCount} isLiked={data.isLiked} />
-          </div>
-        </div>
+            <div className='mt-4 md:mt-[28px]'>
+              <p className='text-md mb-5 md:mb-6 md:text-base'>
+                {data.content}
+              </p>
+              {data.image && (
+                <div className='aspect-square w-[140px] overflow-hidden rounded-xl md:w-[200px]'>
+                  <img src={data.image} alt='' />
+                </div>
+              )}
 
-        {/* 댓글 */}
-        <ArticleCommentSection
-          articleId={data.id}
-          commentCount={data.commentCount}
-        />
+              {/* 좋아요 버튼 (mobile ~ tablet: 컨텐츠 내부) */}
+              <div className='mt-4 md:mt-[28px]'>
+                <LikeButton likeCount={data.likeCount} isLiked={data.isLiked} />
+              </div>
+            </div>
+
+            {/* 댓글 */}
+            <ArticleCommentSection
+              articleId={data.id}
+              commentCount={data.commentCount}
+            />
+          </>
+        )}
       </div>
 
       {/* 좋아요 버튼 (desktop: floating) */}
-      <LikeFloatingButton likeCount={data.likeCount} isLiked={data.isLiked} />
+      <LikeFloatingButton
+        likeCount={data?.likeCount ?? 0}
+        isLiked={data?.isLiked ?? false}
+        disabled={!data}
+      />
     </article>
   );
 }

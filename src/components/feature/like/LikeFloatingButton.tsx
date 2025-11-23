@@ -9,9 +9,14 @@ import { useParams } from 'react-router-dom';
 interface Props {
   likeCount: number;
   isLiked: boolean;
+  disabled?: boolean;
 }
 
-export default function LikeFloatingButton({ likeCount, isLiked }: Props) {
+export default function LikeFloatingButton({
+  likeCount,
+  isLiked,
+  disabled,
+}: Props) {
   const queryClient = useQueryClient();
   const { articleId } = useParams();
 
@@ -44,7 +49,8 @@ export default function LikeFloatingButton({ likeCount, isLiked }: Props) {
         size='icon-xl'
         variant='ghost'
         round='full'
-        className='group bg-bg-primary shadow-sm transition-transform hover:-translate-y-0.5'
+        disabled={disabled}
+        className='disabled:bg-bg-tertiary group bg-bg-primary shadow-sm transition-transform hover:-translate-y-0.5'
         onClick={handleLike}
       >
         {isLiked ? (
