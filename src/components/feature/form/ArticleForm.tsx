@@ -4,6 +4,7 @@ import Button from '@/components/ui/Button';
 import InputField from '@/components/ui/Input/InputField';
 import { Label } from '@/components/ui/Label';
 import TextareaField from '@/components/ui/Textarea/TextareaField';
+import usePreventUnsavedChanges from '@/hooks/usePreventUnsavedChanged';
 import {
   type CreateArticleRequest,
   createArticleRequestSchema,
@@ -57,6 +58,8 @@ export default function ArticleForm({ initialValue }: ArticleFormProps) {
     ),
   );
 
+  const { confirmSave } = usePreventUnsavedChanges({ isDirty });
+
   const onSubmit = (formData: CreateArticleRequest) => {
     const payload = {
       title: formData.title,
@@ -67,12 +70,14 @@ export default function ArticleForm({ initialValue }: ArticleFormProps) {
     if (isEditMode) {
       updateMutate(payload, {
         onSuccess: () => {
+          confirmSave();
           navigate(`/board/${articleId}`);
         },
       });
     } else {
       createMutate(payload, {
         onSuccess: data => {
+          confirmSave();
           const newArticleId = data.id;
           navigate(`/board/${newArticleId}`, { replace: true });
         },
