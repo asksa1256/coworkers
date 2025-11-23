@@ -25,7 +25,7 @@ export default function ArticleDeleteModal({
     deleteArticleMutate(undefined, {
       // 삭제 기능은 mutate의 첫번째 인자로 넘겨줄 payload가 없으므로 undefined로 전달
       onSuccess: () => {
-        navigate('/board');
+        navigate('/board', { replace: true });
       },
     });
   };

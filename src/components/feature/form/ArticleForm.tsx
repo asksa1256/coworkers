@@ -74,7 +74,7 @@ export default function ArticleForm({ initialValue }: ArticleFormProps) {
       createMutate(payload, {
         onSuccess: data => {
           const newArticleId = data.id;
-          navigate(`/board/${newArticleId}`);
+          navigate(`/board/${newArticleId}`, { replace: true });
         },
       });
     }
