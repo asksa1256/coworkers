@@ -43,21 +43,22 @@ export default function KanbanCard({ taskList, tab, onDragStart }: Props) {
       onDragStart={handleDragStart}
       onDragEnd={() => setIsDragging(false)}
       className={cn(
-        'card-common relative block cursor-grab px-4 py-5',
+        'card-common relative block px-4 py-5',
         isDragging && 'border-primary opacity-50',
       )}
     >
+      {/* 카드 전체가 클릭가능 범위가 되도록 지정 */}
+      <Link
+        to={`/${groupId}/details/${taskList.id}`}
+        className='absolute inset-0'
+      />
+
       <div
         className={clsx('flex items-center justify-between', {
           'mb-4': taskList.tasks.length,
         })}
       >
-        <Link
-          to={`/${groupId}/details/${taskList.id}`}
-          className='text-md grow-1 font-semibold'
-        >
-          {taskList.name}
-        </Link>
+        <h4 className='text-md grow-1 font-semibold'>{taskList.name}</h4>
         <div className='flex items-center'>
           <CircularProgressbar
             className='px-2'
@@ -71,6 +72,7 @@ export default function KanbanCard({ taskList, tab, onDragStart }: Props) {
           />
         </div>
       </div>
+
       <div className='flex flex-col gap-2'>
         {taskList.tasks.map(task => (
           <TaskCheckbox
