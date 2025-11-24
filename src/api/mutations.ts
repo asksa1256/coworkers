@@ -3,6 +3,7 @@ import type { ArticleDetailResponse } from '@/types/boardType';
 import type {
   ArticleCommentResponse,
   ArticleCommentsResponse,
+  TaskCommentResponse,
 } from '@/types/commentType';
 import type { GroupDetailResponse } from '@/types/groupType';
 import type { TaskFormSchema } from '@/types/taskFormSchema';
@@ -29,10 +30,12 @@ import {
   addTaskList,
   createArticleComment,
   createTask,
+  createTaskComment,
   deleteArticleComment,
   deleteGroup,
   deleteGroupMember,
   deleteTask,
+  deleteTaskComment,
   deleteTaskList,
   deleteTaskRecurring,
   likeArticle,
@@ -40,6 +43,7 @@ import {
   updateArticleComment,
   updateGroup,
   updateTask,
+  updateTaskComment,
   updateTaskList,
   updateTaskListOrder,
 } from './api';
@@ -875,6 +879,167 @@ export const likeMutations = {
         queryClient.invalidateQueries({
           queryKey: boardQueries.article(articleId),
         });
+      },
+    }),
+};
+
+// task 상세페이지 댓글 뮤테이션
+export const taskDetailCommentMutations = {
+  taskCmtCreate: (taskId: number) => ['taskCommentCreate', taskId],
+  // 생성
+  taskCmtCreateMutationOptions: ({
+    queryClient,
+    taskId,
+    user,
+  }: {
+    queryClient: QueryClient;
+    taskId: number;
+    user: UserType;
+  }) =>
+    mutationOptions({
+      mutationKey: taskDetailCommentMutations.taskCmtCreate(taskId),
+      mutationFn: ({ taskId, content }: { taskId: number; content: string }) =>
+        createTaskComment(taskId, content),
+      onMutate: async ({ taskId, content }) => {
+        await queryClient.cancelQueries({
+          queryKey: taskQueries.taskComments(),
+        });
+
+        const prevComments = queryClient.getQueryData<TaskCommentResponse[]>(
+          taskQueries.taskComments(),
+        );
+
+        const newComment: TaskCommentResponse = {
+          content: content,
+          createdAt: new Date().toISOString(),
+          id: taskId + prevComments!.length,
+          taskId: taskId,
+          updatedAt: new Date().toISOString(),
+          user: {
+            id: user!.id,
+            image: user!.image,
+            nickname: user!.nickname,
+          },
+        };
+
+        queryClient.setQueryData<TaskCommentResponse[]>(
+          taskQueries.taskComments(),
+          prev => {
+            if (!prev) return prev;
+            return [newComment, ...prev];
+          },
+        );
+
+        return { prevComments };
+      },
+      onError: (error, variant, context) => {
+        queryClient.setQueryData(
+          taskQueries.taskComments(),
+          context?.prevComments,
+        );
+        console.error(error);
+        toast.error('댓글 등록에 실패하였습니다. 다시 시도해주세요.');
+      },
+      onSettled: () => {
+        if (
+          queryClient.isMutating({
+            mutationKey: ['taskCommentCreate', taskId],
+          }) === 1
+        ) {
+          queryClient.invalidateQueries({
+            queryKey: taskQueries.taskComments(),
+          });
+          queryClient.invalidateQueries({
+            queryKey: ['tasks'],
+          });
+        }
+      },
+    }),
+  // 수정
+  taskCmtEditMutationOptions: ({
+    queryClient,
+    setEditingCommentId,
+  }: {
+    queryClient: QueryClient;
+    setEditingCommentId: (value: number | null) => void;
+  }) =>
+    mutationOptions({
+      mutationFn: ({
+        taskId,
+        commentId,
+        content,
+      }: {
+        taskId: number;
+        commentId: number;
+        content: string;
+      }) => updateTaskComment(taskId, commentId, content),
+      onMutate: async ({ content, commentId }) => {
+        await queryClient.cancelQueries({
+          queryKey: taskQueries.taskComments(),
+        });
+
+        const prevComments = queryClient.getQueryData<TaskCommentResponse[]>(
+          taskQueries.taskComments(),
+        );
+
+        queryClient.setQueryData<TaskCommentResponse[]>(
+          taskQueries.taskComments(),
+          prev => {
+            if (!prev) return prev;
+            return prev.map(cmt =>
+              cmt.id === commentId ? { ...cmt, content: content } : cmt,
+            );
+          },
+        );
+
+        setEditingCommentId(null);
+
+        return { prevComments };
+      },
+      onError: (error, variant, context) => {
+        queryClient.setQueryData(
+          taskQueries.taskComments(),
+          context?.prevComments,
+        );
+        console.error(error);
+        toast.error('댓글 수정에 실패하였습니다. 다시 시도해주세요.');
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: taskQueries.taskComments(),
+        });
+      },
+    }),
+  // 삭제
+  taskCmtDeleteMutationOptions: ({
+    queryClient,
+    closeModal,
+  }: {
+    queryClient: QueryClient;
+    closeModal: () => void;
+  }) =>
+    mutationOptions({
+      mutationFn: ({
+        taskId,
+        commentId,
+      }: {
+        taskId: number;
+        commentId: number;
+      }) => deleteTaskComment(taskId, commentId),
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: taskQueries.taskComments(),
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: ['tasks'],
+        });
+
+        toast.success('댓글을 삭제했습니다.');
+        closeModal();
+      },
+      onError: () => {
+        toast.error('댓글 삭제 실패. 다시 시도해주세요.');
       },
     }),
 };
