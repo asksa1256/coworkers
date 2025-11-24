@@ -4,6 +4,7 @@ import Button from '@/components/ui/Button';
 import InputField from '@/components/ui/Input/InputField';
 import PasswordChangeField from '@/components/ui/Input/PasswordChangeField';
 import useModal from '@/hooks/useModal';
+import usePreventUnsavedChanges from '@/hooks/usePreventUnsavedChanged';
 import useUploadImage from '@/hooks/useUploadImage';
 import {
   userConfigSchema,
@@ -13,10 +14,8 @@ import type { UserType } from '@/types/userType';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import type React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useBlocker } from 'react-router-dom';
-import { toast } from 'sonner';
 import ResetPasswordForm from '../auth/ResetPasswordForm';
 import EditableAvatar from '../profile/EditableAvatar';
 import DeleteAccountModal from './DeleteAccountModal';
@@ -43,11 +42,8 @@ export default function UserConfigForm({ userData, onSubmitSuccess }: Props) {
       image: userData.image,
     },
   });
-  // 미저장 변경내용 경고를 띄웠는지 확인하는 상태
-  const [hasWarned, setHasWarned] = useState(false);
-  // 변경 내용 저장하지 않았을 때 다른 페이지로 라우팅 방지, 경고를 한 번 보여줬다면 라우팅 허용
-  const shouldBlock = isDirty && !hasWarned;
-  const blocker = useBlocker(shouldBlock);
+
+  const { setHasWarned } = usePreventUnsavedChanges(isDirty);
 
   const {
     mutate: updateUserMutate,
@@ -83,35 +79,6 @@ export default function UserConfigForm({ userData, onSubmitSuccess }: Props) {
       setHasWarned(false);
     }
   }, [isSuccess]);
-
-  useEffect(() => {
-    // 브라우저의 새로고침, 종료, url 이동 방지
-    if (shouldBlock) {
-      window.onbeforeunload = e => {
-        e.preventDefault();
-        // 브라우저 경고 출력시 플래그 활성
-        setHasWarned(true);
-      };
-    }
-
-    // 클라이언트 라우팅 또는 뒤로가기 방지
-    if (blocker.state === 'blocked') {
-      toast.info('저장하지 않은 변경사항이 있어요!', {
-        action: {
-          label: '변경사항 저장하기',
-          onClick: handleSubmit(onSubmit),
-        },
-      });
-
-      // 토스트 출력시 플래그 활성
-      setHasWarned(true);
-      blocker.reset();
-    }
-
-    return () => {
-      window.onbeforeunload = null;
-    };
-  }, [shouldBlock, blocker.state]);
 
   return (
     <form
