@@ -1,22 +1,20 @@
-import { articleCommentMutations } from '@/api/mutations';
+import { articleMutations } from '@/api/mutations';
 import Button from '@/components/ui/Button';
 import useModal from '@/hooks/useModal';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 
-export default function ArticleCommentDeleteModal({
-  commentId,
-  content,
+export default function ArticleDeleteModal({
   articleId,
 }: {
-  commentId: number;
-  content?: string;
   articleId: number;
 }) {
   const { closeModal } = useModal();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
-  const { mutate: deleteArticleCommentMutate, isPending } = useMutation(
-    articleCommentMutations.deleteArticleCommentOptions({
+  const { mutate: deleteArticleMutate, isPending } = useMutation(
+    articleMutations.deleteArticleMutationOptions({
       articleId,
       queryClient,
       closeModal,
@@ -24,15 +22,17 @@ export default function ArticleCommentDeleteModal({
   );
 
   const handleClickDelete = () => {
-    deleteArticleCommentMutate(commentId);
+    deleteArticleMutate(undefined, {
+      // 삭제 기능은 mutate의 첫번째 인자로 넘겨줄 payload가 없으므로 undefined로 전달
+      onSuccess: () => {
+        navigate('/board', { replace: true });
+      },
+    });
   };
 
   return (
     <div className='text-center'>
-      <div className='mb-2 font-medium'>
-        <p className='text-text-default text-md mb-2 truncate'>{content}</p>
-        댓글을 삭제하시겠습니까?
-      </div>
+      <p className='mb-2 font-medium'>게시글을 삭제하시겠습니까?</p>
 
       <div className='mt-6 flex gap-2'>
         <Button

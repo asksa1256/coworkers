@@ -1,14 +1,18 @@
+import { articleMutations } from '@/api/mutations';
 import ImageUploader from '@/components/feature/imageUpload/ImageUploader';
 import Button from '@/components/ui/Button';
 import InputField from '@/components/ui/Input/InputField';
 import { Label } from '@/components/ui/Label';
 import TextareaField from '@/components/ui/Textarea/TextareaField';
+import usePreventUnsavedChanges from '@/hooks/usePreventUnsavedChanged';
 import {
   type CreateArticleRequest,
   createArticleRequestSchema,
 } from '@/types/ArticleRequestSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
+import { useNavigate, useParams } from 'react-router-dom';
 
 interface ArticleFormType {
   title: string;
@@ -21,6 +25,9 @@ interface ArticleFormProps {
 }
 
 export default function ArticleForm({ initialValue }: ArticleFormProps) {
+  const { articleId } = useParams();
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -38,16 +45,48 @@ export default function ArticleForm({ initialValue }: ArticleFormProps) {
 
   const isEditMode = !!initialValue;
 
+  const queryClient = useQueryClient();
+
+  const { mutate: createMutate } = useMutation(
+    articleMutations.createArticleMutationOptions(queryClient),
+  );
+
+  const { mutate: updateMutate } = useMutation(
+    articleMutations.updateArticleMutationOptions(
+      Number(articleId),
+      queryClient,
+    ),
+  );
+
+  const { confirmSave } = usePreventUnsavedChanges(isDirty);
+
   const onSubmit = (formData: CreateArticleRequest) => {
     const payload = {
       title: formData.title,
       content: formData.content,
       image: formData.image,
     };
-    console.log(payload);
+
+    if (isEditMode) {
+      updateMutate(payload, {
+        onSuccess: () => {
+          confirmSave();
+          navigate(`/board/${articleId}`);
+        },
+      });
+    } else {
+      createMutate(payload, {
+        onSuccess: data => {
+          confirmSave();
+          const newArticleId = data.id;
+          navigate(`/board/${newArticleId}`, { replace: true });
+        },
+      });
+    }
   };
 
-  const isSubmittingText = isEditMode ? '수정중...' : '등록중...';
+  const isSubmittingText =
+    isEditMode && isSubmitting ? '수정중...' : '등록중...';
   const submitText = isEditMode ? '수정하기' : '등록하기';
 
   const isEditInvalid = !isDirty || !isValid || isSubmitting;

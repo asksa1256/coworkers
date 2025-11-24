@@ -6,6 +6,7 @@ import {
   getGroup,
   getMyHistory,
   getSingleTaskList,
+  getTaskComments,
   getTasks,
 } from '@/api/api';
 import axiosInstance from '@/lib/axios';
@@ -34,7 +35,7 @@ export const groupQueries = {
 };
 
 export const boardQueries = {
-  articles: (sort: string, searchValue?: string, searchRange?: string) => [
+  articles: (sort?: string, searchValue?: string, searchRange?: string) => [
     'articles',
     sort,
     searchValue,
@@ -112,6 +113,12 @@ export const taskQueries = {
       queryKey: [...taskQueries.tasks(groupId, taskListId, date)],
       queryFn: () => getTasks(groupId!, taskListId!, date!),
       enabled: !!groupId && !!taskListId,
+    }),
+  taskComments: () => ['taskComments'],
+  taskCommentOptions: (taskId: number) =>
+    queryOptions({
+      queryKey: taskQueries.taskComments(),
+      queryFn: () => getTaskComments(taskId),
     }),
 };
 

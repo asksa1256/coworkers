@@ -1,8 +1,10 @@
 import type { TeamFormDataType } from '@/components/feature/form/TeamForm';
+import type { CreateArticleRequest } from '@/types/ArticleRequestSchema';
 import type { ArticleDetailResponse } from '@/types/boardType';
 import type {
   ArticleCommentResponse,
   ArticleCommentsResponse,
+  TaskCommentResponse,
 } from '@/types/commentType';
 import type { GroupDetailResponse } from '@/types/groupType';
 import type { TaskFormSchema } from '@/types/taskFormSchema';
@@ -28,20 +30,26 @@ import type { UseFormReset, UseFormSetError } from 'react-hook-form';
 import { toast } from 'sonner';
 import {
   addTaskList,
+  createArticle,
   createArticleComment,
   createTask,
+  createTaskComment,
+  deleteArticle,
   deleteArticleComment,
   deleteGroup,
   deleteGroupMember,
   deleteTask,
+  deleteTaskComment,
   deleteTaskList,
   deleteTaskRecurring,
   deleteUser,
   likeArticle,
   unlikeArticle,
+  updateArticle,
   updateArticleComment,
   updateGroup,
   updateTask,
+  updateTaskComment,
   updateTaskList,
   updateTaskListOrder,
   updateUser,
@@ -581,6 +589,94 @@ export const groupMutations = {
     }),
 };
 
+// 게시글 뮤테이션
+export const articleMutations = {
+  createArticleMutationOptions: (queryClient: QueryClient) =>
+    mutationOptions({
+      mutationFn: (formData: CreateArticleRequest) => createArticle(formData),
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: boardQueries.articles(),
+        });
+        toast.success('게시글이 등록되었습니다.');
+      },
+      onError: error => {
+        if (isAxiosError(error) && error.response?.status === 403) {
+          toast.error('게시글 작성 권한이 없습니다. 로그인 해주세요.');
+        } else {
+          toast.error('게시글 작성 실패. 다시 시도해주세요.');
+        }
+        throw error;
+      },
+    }),
+
+  updateArticleMutationOptions: (articleId: number, queryClient: QueryClient) =>
+    mutationOptions({
+      mutationFn: (variables: {
+        title: string;
+        content: string;
+        image?: string;
+      }) =>
+        updateArticle({
+          payload: {
+            title: variables.title,
+            content: variables.content,
+            image: variables.image || '',
+          },
+          articleId,
+        }),
+
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: boardQueries.article(articleId),
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: boardQueries.articles(),
+        });
+
+        toast.success('게시글이 수정되었습니다.');
+      },
+
+      onError: error => {
+        if (isAxiosError(error) && error.response?.status === 403) {
+          toast.error('게시글 수정 권한이 없습니다. 로그인 해주세요.');
+        } else {
+          toast.error('게시글 수정 실패. 다시 시도해주세요.');
+        }
+        throw error;
+      },
+    }),
+
+  deleteArticleMutationOptions: ({
+    articleId,
+    queryClient,
+    closeModal,
+  }: {
+    articleId: number;
+    queryClient: QueryClient;
+    closeModal: () => void;
+  }) =>
+    mutationOptions({
+      mutationFn: () => deleteArticle(articleId),
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: boardQueries.articles(),
+        });
+        toast.success('게시글이 삭제되었습니다.');
+        closeModal();
+      },
+      onError: error => {
+        if (isAxiosError(error) && error.response?.status === 403) {
+          toast.error('게시글 삭제 권한이 없습니다. 로그인 해주세요.');
+        } else {
+          toast.error('게시글 삭제 실패. 다시 시도해주세요.');
+        }
+        throw error;
+      },
+    }),
+};
+
 // 게시글 댓글 뮤테이션
 export const articleCommentMutations = {
   // 댓글 등록
@@ -906,6 +1002,167 @@ export const userMutations = {
       },
       onError: () => {
         toast.error('회원 탈퇴 실패. 다시 시도해주세요.');
+      },
+    }),
+};
+
+// task 상세페이지 댓글 뮤테이션
+export const taskDetailCommentMutations = {
+  taskCmtCreate: (taskId: number) => ['taskCommentCreate', taskId],
+  // 생성
+  taskCmtCreateMutationOptions: ({
+    queryClient,
+    taskId,
+    user,
+  }: {
+    queryClient: QueryClient;
+    taskId: number;
+    user: UserType;
+  }) =>
+    mutationOptions({
+      mutationKey: taskDetailCommentMutations.taskCmtCreate(taskId),
+      mutationFn: ({ taskId, content }: { taskId: number; content: string }) =>
+        createTaskComment(taskId, content),
+      onMutate: async ({ taskId, content }) => {
+        await queryClient.cancelQueries({
+          queryKey: taskQueries.taskComments(),
+        });
+
+        const prevComments = queryClient.getQueryData<TaskCommentResponse[]>(
+          taskQueries.taskComments(),
+        );
+
+        const newComment: TaskCommentResponse = {
+          content: content,
+          createdAt: new Date().toISOString(),
+          id: taskId + prevComments!.length,
+          taskId: taskId,
+          updatedAt: new Date().toISOString(),
+          user: {
+            id: user!.id,
+            image: user!.image,
+            nickname: user!.nickname,
+          },
+        };
+
+        queryClient.setQueryData<TaskCommentResponse[]>(
+          taskQueries.taskComments(),
+          prev => {
+            if (!prev) return prev;
+            return [newComment, ...prev];
+          },
+        );
+
+        return { prevComments };
+      },
+      onError: (error, variant, context) => {
+        queryClient.setQueryData(
+          taskQueries.taskComments(),
+          context?.prevComments,
+        );
+        console.error(error);
+        toast.error('댓글 등록에 실패하였습니다. 다시 시도해주세요.');
+      },
+      onSettled: () => {
+        if (
+          queryClient.isMutating({
+            mutationKey: ['taskCommentCreate', taskId],
+          }) === 1
+        ) {
+          queryClient.invalidateQueries({
+            queryKey: taskQueries.taskComments(),
+          });
+          queryClient.invalidateQueries({
+            queryKey: ['tasks'],
+          });
+        }
+      },
+    }),
+  // 수정
+  taskCmtEditMutationOptions: ({
+    queryClient,
+    setEditingCommentId,
+  }: {
+    queryClient: QueryClient;
+    setEditingCommentId: (value: number | null) => void;
+  }) =>
+    mutationOptions({
+      mutationFn: ({
+        taskId,
+        commentId,
+        content,
+      }: {
+        taskId: number;
+        commentId: number;
+        content: string;
+      }) => updateTaskComment(taskId, commentId, content),
+      onMutate: async ({ content, commentId }) => {
+        await queryClient.cancelQueries({
+          queryKey: taskQueries.taskComments(),
+        });
+
+        const prevComments = queryClient.getQueryData<TaskCommentResponse[]>(
+          taskQueries.taskComments(),
+        );
+
+        queryClient.setQueryData<TaskCommentResponse[]>(
+          taskQueries.taskComments(),
+          prev => {
+            if (!prev) return prev;
+            return prev.map(cmt =>
+              cmt.id === commentId ? { ...cmt, content: content } : cmt,
+            );
+          },
+        );
+
+        setEditingCommentId(null);
+
+        return { prevComments };
+      },
+      onError: (error, variant, context) => {
+        queryClient.setQueryData(
+          taskQueries.taskComments(),
+          context?.prevComments,
+        );
+        console.error(error);
+        toast.error('댓글 수정에 실패하였습니다. 다시 시도해주세요.');
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: taskQueries.taskComments(),
+        });
+      },
+    }),
+  // 삭제
+  taskCmtDeleteMutationOptions: ({
+    queryClient,
+    closeModal,
+  }: {
+    queryClient: QueryClient;
+    closeModal: () => void;
+  }) =>
+    mutationOptions({
+      mutationFn: ({
+        taskId,
+        commentId,
+      }: {
+        taskId: number;
+        commentId: number;
+      }) => deleteTaskComment(taskId, commentId),
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: taskQueries.taskComments(),
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: ['tasks'],
+        });
+
+        toast.success('댓글을 삭제했습니다.');
+        closeModal();
+      },
+      onError: () => {
+        toast.error('댓글 삭제 실패. 다시 시도해주세요.');
       },
     }),
 };

@@ -1,30 +1,29 @@
-import { articleCommentMutations } from '@/api/mutations';
+import { taskDetailCommentMutations } from '@/api/mutations';
 import Button from '@/components/ui/Button';
 import useModal from '@/hooks/useModal';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-export default function ArticleCommentDeleteModal({
+export default function TaskDetailCommentDeleteModal({
   commentId,
   content,
-  articleId,
+  taskId,
 }: {
   commentId: number;
   content?: string;
-  articleId: number;
+  taskId: number;
 }) {
   const { closeModal } = useModal();
   const queryClient = useQueryClient();
 
-  const { mutate: deleteArticleCommentMutate, isPending } = useMutation(
-    articleCommentMutations.deleteArticleCommentOptions({
-      articleId,
+  const { mutate: deleteTaskCommentMutate, isPending } = useMutation(
+    taskDetailCommentMutations.taskCmtDeleteMutationOptions({
       queryClient,
       closeModal,
     }),
   );
 
   const handleClickDelete = () => {
-    deleteArticleCommentMutate(commentId);
+    deleteTaskCommentMutate({ taskId, commentId });
   };
 
   return (
@@ -48,7 +47,7 @@ export default function ArticleCommentDeleteModal({
           onClick={handleClickDelete}
           disabled={isPending}
         >
-          {isPending ? '삭제중...' : '삭제하기'}
+          {isPending ? '삭제중....' : '삭제하기'}
         </Button>
       </div>
     </div>

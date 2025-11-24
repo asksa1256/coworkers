@@ -1,10 +1,12 @@
 import LeftArrowIcon from '@/assets/icons/LeftArrowIcon.svg?react';
 import ArticleForm from '@/components/feature/form/ArticleForm';
 import Button from '@/components/ui/Button';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function ArticleFormPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const article = location.state?.article;
 
   return (
     <section className='flex justify-center'>
@@ -20,7 +22,7 @@ export default function ArticleFormPage() {
           돌아가기
         </Button>
 
-        <ArticleForm />
+        <ArticleForm initialValue={article} />
       </div>
     </section>
   );
