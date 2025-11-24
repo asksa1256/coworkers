@@ -2,19 +2,14 @@ import { useEffect, useState } from 'react';
 import { useBlocker } from 'react-router-dom';
 import { toast } from 'sonner';
 
-interface Props {
-  isDirty: boolean;
-}
-
-export default function usePreventUnsavedChanges({ isDirty }: Props) {
-  const [isSaved, setIsSaved] = useState(false);
+const usePreventUnsavedChanges = (isDirty: boolean) => {
   const [hasWarned, setHasWarned] = useState(false);
 
-  const shouldBlock = isDirty && !isSaved && !hasWarned;
+  const shouldBlock = isDirty && !hasWarned;
   const blocker = useBlocker(shouldBlock);
 
   // 미저장 경고 해제 함수 (컴포넌트에서 onSuccess 내부에 사용)
-  const confirmSave = () => setIsSaved(true);
+  const confirmSave = () => setHasWarned(true);
 
   useEffect(() => {
     // 브라우저의 새로고침, 종료, url 이동 방지
@@ -40,5 +35,7 @@ export default function usePreventUnsavedChanges({ isDirty }: Props) {
     };
   }, [shouldBlock, blocker]);
 
-  return { confirmSave };
-}
+  return { confirmSave, setHasWarned };
+};
+
+export default usePreventUnsavedChanges;

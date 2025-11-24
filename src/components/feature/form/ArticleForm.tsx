@@ -58,7 +58,7 @@ export default function ArticleForm({ initialValue }: ArticleFormProps) {
     ),
   );
 
-  const { confirmSave } = usePreventUnsavedChanges({ isDirty });
+  const { confirmSave } = usePreventUnsavedChanges(isDirty);
 
   const onSubmit = (formData: CreateArticleRequest) => {
     const payload = {
