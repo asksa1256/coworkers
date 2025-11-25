@@ -34,7 +34,7 @@ export default function TaskListDropdown({
     },
   ];
   const taskListDropdownTrigger = (
-    <KebabIcon className='text-icon-secondary hover:text-icon-primary h-6 w-6' />
+    <KebabIcon className='text-icon-secondary hover:text-icon-primary relative h-6 w-6' />
   );
 
   const handleOpenUpdateTaskListModal = () => {

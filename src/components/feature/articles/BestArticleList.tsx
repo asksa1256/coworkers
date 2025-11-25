@@ -128,7 +128,11 @@ function SwiperView({ allData }: SwiperViewProps) {
       >
         {allData?.map(article => (
           <SwiperSlide key={article.id}>
-            <ArticleCard article={article} isBest={true} />
+            <ArticleCard
+              article={article}
+              isBest={true}
+              className='md:min-h-[200px]'
+            />
           </SwiperSlide>
         ))}
       </Swiper>

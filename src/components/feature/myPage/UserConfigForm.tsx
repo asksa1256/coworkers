@@ -1,8 +1,10 @@
-import SecessionIcon from '@/assets/icons/SecessionIcon.svg?react';
+import { userMutations } from '@/api/mutations';
+import DeleteAccountIcon from '@/assets/icons/DeleteAccountIcon.svg?react';
 import Button from '@/components/ui/Button';
 import InputField from '@/components/ui/Input/InputField';
 import PasswordChangeField from '@/components/ui/Input/PasswordChangeField';
 import useModal from '@/hooks/useModal';
+import usePreventUnsavedChanges from '@/hooks/usePreventUnsavedChanged';
 import useUploadImage from '@/hooks/useUploadImage';
 import {
   userConfigSchema,
@@ -10,37 +12,50 @@ import {
 } from '@/types/userConfigSchema';
 import type { UserType } from '@/types/userType';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
 import type React from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import ResetPasswordForm from '../auth/ResetPasswordForm';
 import EditableAvatar from '../profile/EditableAvatar';
-import SecessionModal from '../teamPage/SecessionModal';
+import DeleteAccountModal from './DeleteAccountModal';
 
 interface Props {
   userData: UserType;
-  onSubmitSuccess: (data: UserType) => void;
+  onSubmitSuccess: (data: UserConfigSchema) => void;
 }
 
-export default function UserConfigForm({ userData }: Props) {
+export default function UserConfigForm({ userData, onSubmitSuccess }: Props) {
   const { openModal } = useModal();
   const {
     register,
     handleSubmit,
     watch,
     setValue,
-    formState: { isDirty, isSubmitting, errors, isValid },
+    reset,
+    formState: { isDirty, errors, isValid },
   } = useForm<UserConfigSchema>({
     resolver: zodResolver(userConfigSchema),
+    mode: 'onBlur',
     defaultValues: {
       nickname: userData.nickname,
       image: userData.image,
     },
   });
-  const { handleUploadImage } = useUploadImage();
+
+  const { setHasWarned } = usePreventUnsavedChanges(isDirty);
+
+  const {
+    mutate: updateUserMutate,
+    isSuccess,
+    isPending,
+    variables: requestPayload,
+  } = useMutation(userMutations.updateUserMutationOptions());
 
   const LABEL_STYLE =
     'text-md mb-2 md:mb-3 inline-block font-medium md:text-base';
 
+  const { handleUploadImage } = useUploadImage();
   const imgSrc = watch('image');
 
   const handleChangeImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,12 +67,31 @@ export default function UserConfigForm({ userData }: Props) {
     }
   };
 
+  const onSubmit = async (data: UserConfigSchema) => {
+    updateUserMutate(data);
+  };
+
+  useEffect(() => {
+    // 헤더와 유저정보를 받아오는 userAtom 동기화, isDirty와 경고 플래그 초기화
+    if (isSuccess) {
+      onSubmitSuccess(requestPayload);
+      reset(requestPayload);
+      setHasWarned(false);
+    }
+  }, [isSuccess]);
+
   return (
-    <form className='mx-auto w-full max-w-235 rounded-[20px] bg-white px-5 py-12 md:px-14 md:pt-[66px] md:pb-20'>
+    <form
+      className='mx-auto w-full max-w-235 rounded-[20px] bg-white px-5 py-12 md:px-14 md:pt-[66px] md:pb-20'
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <h2 className='mb-8 text-xl font-bold md:mb-10'>계정 설정</h2>
 
       <div className='mb-3 flex justify-center md:mb-9'>
-        <EditableAvatar imgSrc={imgSrc} onImageChange={handleChangeImage} />
+        <EditableAvatar
+          imgSrc={imgSrc || null}
+          onImageChange={handleChangeImage}
+        />
       </div>
 
       <div className='mb-9 flex flex-col gap-6 md:mb-10 lg:mb-7'>
@@ -65,7 +99,11 @@ export default function UserConfigForm({ userData }: Props) {
           <label className={LABEL_STYLE} htmlFor='nickname'>
             이름
           </label>
-          <InputField id='nickname' {...register('nickname')} />
+          <InputField
+            id='nickname'
+            {...register('nickname')}
+            error={errors.nickname}
+          />
         </div>
 
         <div>
@@ -99,16 +137,19 @@ export default function UserConfigForm({ userData }: Props) {
         type='button'
         onClick={() => {
           openModal({
-            children: <SecessionModal />,
+            children: <DeleteAccountModal />,
             closeIconButton: false,
           });
         }}
       >
-        <SecessionIcon className='svg:size-6' /> 회원 탈퇴하기
+        <DeleteAccountIcon className='svg:size-6' /> 회원 탈퇴하기
       </Button>
 
-      <Button className='md:py-4 md:text-lg' disabled={!isDirty}>
-        변경사항 저장
+      <Button
+        className='md:py-4 md:text-lg'
+        disabled={!isDirty || !isValid || isPending}
+      >
+        {isPending ? '저장중...' : '변경사항 저장'}
       </Button>
     </form>
   );

@@ -1,6 +1,7 @@
 import type { TeamFormDataType } from '@/components/feature/form/TeamForm';
 import axiosInstance from '@/lib/axios';
 import type {
+  ArticleDetailRequest,
   ArticleDetailResponse,
   ArticleListResponse,
 } from '@/types/boardType';
@@ -26,6 +27,7 @@ import type {
   TaskListsResponse,
   TaskUpdateRequestBody,
 } from '@/types/taskType';
+import type { UserConfigSchema } from '@/types/userConfigSchema';
 import type { MembershipsType, MyHistoryResponse } from '@/types/userType';
 import type { AxiosResponse } from 'axios';
 
@@ -169,6 +171,23 @@ export const deleteGroup = async (groupId: number) => {
   }
 };
 
+export const updateUser = async (payload: UserConfigSchema) => {
+  try {
+    const { data } = await axiosInstance.patch('/user', payload);
+    return data;
+  } catch (e) {
+    console.log('유저 정보 수정 에러:', e);
+  }
+};
+
+export const deleteUser = async () => {
+  try {
+    await axiosInstance.delete('/user');
+  } catch (e) {
+    console.log('회원탈퇴 에러:', e);
+  }
+};
+
 export const createInviteToken = async (groupId: string): Promise<string> => {
   const { data: token } = await axiosInstance.get(
     `/groups/${groupId}/invitation`,
@@ -226,6 +245,63 @@ export const getArticle = async (
   }
 };
 
+// 게시글 작성
+export const createArticle = async (payload: {
+  title: string;
+  content: string;
+  image?: string;
+}): Promise<ArticleDetailResponse> => {
+  try {
+    const response = await axiosInstance.post(`/articles`, {
+      title: payload.title,
+      content: payload.content,
+      ...(payload.image ? { image: payload.image } : {}),
+    });
+    return response.data;
+  } catch (e) {
+    console.log('게시글 작성 에러: ', e);
+    throw e;
+  }
+};
+
+// 게시글 수정
+export const updateArticle = async ({
+  payload,
+  articleId,
+}: {
+  payload: {
+    title: string;
+    content: string;
+    image?: string;
+  };
+  articleId: number;
+}): Promise<ArticleDetailRequest> => {
+  try {
+    const response = await axiosInstance.patch(`/articles/${articleId}`, {
+      title: payload.title,
+      content: payload.content,
+      ...(payload.image ? { image: payload.image } : {}),
+    });
+    return response.data;
+  } catch (e) {
+    console.log('게시글 수정 에러: ', e);
+    throw e;
+  }
+};
+
+// 게시글 삭제
+export const deleteArticle = async (
+  articleId: number,
+): Promise<{ id?: number; message?: string }> => {
+  try {
+    const response = await axiosInstance.delete(`/articles/${articleId}`);
+    return response.data;
+  } catch (e) {
+    console.log('게시글 삭제 에러: ', e);
+    throw e;
+  }
+};
+
 // 게시글 댓글 목록 불러오기
 export const getArticleComments = async (
   articleId: number,
@@ -279,7 +355,12 @@ export const updateArticleComment = async (
 export const deleteArticleComment = async (
   commentId: number,
 ): Promise<{ id?: number; message?: string }> => {
-  return await axiosInstance.delete(`/comments/${commentId}`);
+  try {
+    return await axiosInstance.delete(`/comments/${commentId}`);
+  } catch (e) {
+    console.log('댓글 삭제 에러: ', e);
+    throw e;
+  }
 };
 
 // 게시글 좋아요 추가

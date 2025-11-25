@@ -29,7 +29,7 @@ export default function BoardPage() {
         size='icon-lg'
         round='full'
         title='글 작성하기'
-        className='fixed right-10 bottom-10 h-14 w-14 lg:right-[10%] lg:bottom-[76px] [&_svg]:!size-5'
+        className='fixed right-10 bottom-10 z-10 h-14 w-14 shadow-lg lg:right-[76px] lg:bottom-10 xl:right-[5%] 2xl:right-[10%] [&_svg]:!size-5'
         onClick={() => navigate('/board/post')}
       >
         <PencilIcon />
