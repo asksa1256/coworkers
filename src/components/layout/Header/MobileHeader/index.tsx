@@ -16,7 +16,7 @@ export default function MobileHeader({
   onUpdateCurrentGroup,
 }: Props) {
   return (
-    <header className='bg-bg-primary border-border-primary sticky top-0 z-40 z-[1] flex h-[52px] shrink-0 items-center justify-between border-b px-4'>
+    <header className='bg-bg-primary border-border-primary sticky top-0 z-40 flex h-[52px] shrink-0 items-center justify-between border-b px-4'>
       <div className='flex h-full items-center gap-3'>
         {isLoggedIn && (
           <MobileMenu
