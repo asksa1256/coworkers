@@ -60,7 +60,7 @@ export default function LandingPage() {
 
 function HeroSection({ onClick }: { onClick?: () => void }) {
   return (
-    <section className='bg-bg-secondary relative flex flex-col overflow-hidden lg:h-screen lg:flex-row'>
+    <section className='bg-bg-secondary relative flex flex-col justify-between overflow-hidden lg:h-screen lg:flex-row'>
       <div className='pt-[34px] md:pt-[89px] lg:pt-[208px]'>
         <FadeInFromTop>
           <div className='pr-[167px] pl-5 md:pl-9 lg:pl-[76px]'>
@@ -110,12 +110,12 @@ function HeroSection({ onClick }: { onClick?: () => void }) {
           <img
             src={LandingHeroMediumImg}
             alt='Coworkers Dashboard'
-            className='hidden h-full w-full md:block lg:hidden'
+            className='hidden h-full w-full object-contain md:block lg:hidden'
           />
           <img
             src={LandingHeroLargeImg}
             alt='Coworkers Dashboard'
-            className='hidden h-full w-full object-cover lg:block'
+            className='hidden h-full w-full object-contain lg:block'
           />
         </div>
 
