@@ -112,12 +112,16 @@ export default function ArticleDetailPage() {
             </div>
 
             <div className='mt-4 md:mt-[28px]'>
-              <p className='text-md mb-5 md:mb-6 md:text-base'>
+              <p className='text-md mb-5 whitespace-pre-line md:mb-6 md:text-base'>
                 {data.content}
               </p>
               {data.image && (
                 <div className='aspect-square w-[140px] overflow-hidden rounded-xl md:w-[200px]'>
-                  <img src={data.image} alt='' />
+                  <img
+                    src={data.image}
+                    alt=''
+                    className='h-full w-full overflow-clip object-cover [overflow-clip-margin:unset]'
+                  />
                 </div>
               )}
 
