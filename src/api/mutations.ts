@@ -472,6 +472,11 @@ export const taskMutations = {
       onSuccess: (data, { groupId, taskListId }) => {
         toast.success('할일 삭제 성공하였습니다.');
 
+        // 할일 그룹 정보 캐싱 무효화
+        queryClient.invalidateQueries({
+          queryKey: groupQueries.group(Number(groupId)),
+        });
+
         // 할일 목록 캐싱 무효화
         queryClient.invalidateQueries({
           queryKey: ['singleTaskList', groupId, taskListId],
