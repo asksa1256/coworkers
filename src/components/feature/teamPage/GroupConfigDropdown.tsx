@@ -25,7 +25,9 @@ export default function GroupConfigDropdown({
     {
       label: '수정하기',
       onClick: () => {
-        navigate(`/${groupId}/update-team`);
+        navigate(`/${groupId}/update-team`, {
+          state: window.location.pathname,
+        });
       },
     },
     {
