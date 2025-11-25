@@ -4,7 +4,7 @@ import Button from '@/components/ui/Button';
 import useModal from '@/hooks/useModal';
 import { userAtom } from '@/store/authAtom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -15,7 +15,7 @@ interface Props {
 
 export default function DeleteGroupModal({ groupId, groupName }: Props) {
   const { closeModal } = useModal();
-  const [user, setUser] = useAtom(userAtom);
+  const user = useAtomValue(userAtom);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { mutate, isPending, isSuccess } = useMutation(
@@ -23,17 +23,7 @@ export default function DeleteGroupModal({ groupId, groupName }: Props) {
   );
 
   useEffect(() => {
-    //userAtom 그룹 정보 동기화
     if (isSuccess) {
-      setUser(prev => {
-        if (!prev) return prev;
-        return {
-          ...prev,
-          memberships: prev.memberships.filter(
-            group => group.groupId !== groupId,
-          ),
-        };
-      });
       navigate('/', { replace: true });
       closeModal();
     }
