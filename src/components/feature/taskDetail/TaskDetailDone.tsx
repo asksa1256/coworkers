@@ -12,7 +12,7 @@ export default function TaskDetailDone({ isCheck, onChangeDone }: Props) {
       className={cn(
         'fixed right-5 bottom-[30px] md:static',
         'border-primary text-md inline-flex h-10 cursor-pointer items-center gap-1 rounded-full border pr-5 pl-4 font-semibold shadow-[0px_15px_50px_-12px_rgba(0,0,0,0.05)]',
-        isCheck ? 'text-primary' : 'text-text-inverse bg-primary',
+        isCheck ? 'text-primary bg-bg-primary' : 'text-text-inverse bg-primary',
       )}
     >
       <input
