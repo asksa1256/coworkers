@@ -20,6 +20,10 @@ const usePreventUnsavedChanges = (isDirty: boolean) => {
         setHasWarned(true);
       };
     }
+
+    return () => {
+      window.onbeforeunload = null;
+    };
   }, [shouldBlock]);
 
   useEffect(() => {
@@ -31,10 +35,6 @@ const usePreventUnsavedChanges = (isDirty: boolean) => {
       setHasWarned(true);
       blocker.reset();
     }
-
-    return () => {
-      window.onbeforeunload = null;
-    };
   }, [blocker]);
 
   return { confirmSave, setHasWarned };
