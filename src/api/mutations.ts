@@ -424,6 +424,11 @@ export const taskMutations = {
         // 서버에서 보내주는 일자와 쿼리키값에 등록한 일자의 매칭 불일치로
         // 프리픽스 매칭으로 적용함
 
+        // 할일 그룹 정보 캐싱 무효화
+        queryClient.invalidateQueries({
+          queryKey: groupQueries.group(Number(groupId)),
+        });
+
         // 할일 목록 캐싱 무효화
         queryClient.invalidateQueries({
           queryKey: ['singleTaskList', groupId, taskListId],
