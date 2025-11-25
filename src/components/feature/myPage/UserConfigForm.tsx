@@ -136,7 +136,7 @@ export default function UserConfigForm({ userData, onSubmitSuccess }: Props) {
       </div>
 
       <Button
-        className='text-danger mb-6 flex w-auto items-center gap-2 py-0 font-medium has-[>svg]:px-0 md:mb-8 md:text-base'
+        className='text-danger hover:bg-unset mb-6 flex w-auto items-center gap-2 py-0 font-medium has-[>svg]:px-0 md:mb-8 md:text-base'
         variant='ghost'
         type='button'
         onClick={() => {
@@ -146,7 +146,8 @@ export default function UserConfigForm({ userData, onSubmitSuccess }: Props) {
           });
         }}
       >
-        <DeleteAccountIcon className='svg:size-6' /> 회원 탈퇴하기
+        <DeleteAccountIcon className='svg:size-6' />
+        회원 탈퇴하기
       </Button>
 
       <Button
