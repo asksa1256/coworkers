@@ -20,7 +20,7 @@ export default function SelectGroupModal() {
         </p>
       </div>
 
-      <ol className='border-border-primary -mx-4 rounded-2xl border px-4'>
+      <ol className='border-border-primary -mx-4 max-h-[300px] overflow-y-auto rounded-2xl border px-4'>
         {userGroups?.map(group => (
           <li
             key={group.id}
