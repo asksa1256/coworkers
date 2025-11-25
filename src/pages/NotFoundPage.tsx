@@ -22,10 +22,10 @@ export default function NotFoundPage() {
             </h1>
 
             <div className='space-y-2'>
-              <p className='text-2xl font-semibold text-gray-800'>
+              <p className='text-2xl font-semibold break-keep text-gray-800'>
                 페이지를 찾을 수 없습니다.
               </p>
-              <p className='max-w-md text-gray-500'>
+              <p className='break-keep text-gray-500'>
                 요청하신 페이지가 존재하지 않거나 이동되었을 수 있습니다.
                 <br />
                 3초 후 이전 페이지로 이동합니다.
