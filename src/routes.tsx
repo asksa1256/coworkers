@@ -21,6 +21,7 @@ import SignUpPage from './pages/auth/SignUpPage';
 import ArticleDetailPage from './pages/board/ArticleDetailPage';
 import ArticleFormPage from './pages/board/ArticleFormPage';
 import MyPage from './pages/MyPage';
+import NotFoundPage from './pages/NotFoundPage';
 import UpdateTeamPage from './pages/UpdateTeamPage';
 
 const withPrivate = (element: ReactNode) => {
@@ -129,6 +130,10 @@ const routes = [
         element: withPrivate(<ArticleFormPage />),
       },
     ],
+  },
+  {
+    path: '*', // 와일드카드 경로: 어떤 경로와도 일치하지 않는 모든 URL 처리
+    element: <NotFoundPage />,
   },
 ];
 
