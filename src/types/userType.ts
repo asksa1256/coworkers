@@ -55,3 +55,8 @@ export interface HistoryByDateType {
   dateTitle: string;
   tasks: MyHistoryTaskDoneItem[];
 }
+
+export interface UpdateUserRequestBody {
+  nickname?: string;
+  image: string | null;
+}

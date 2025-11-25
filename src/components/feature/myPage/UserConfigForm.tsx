@@ -10,7 +10,7 @@ import {
   userConfigSchema,
   type UserConfigSchema,
 } from '@/types/userConfigSchema';
-import type { UserType } from '@/types/userType';
+import type { UpdateUserRequestBody, UserType } from '@/types/userType';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import type React from 'react';
@@ -22,7 +22,7 @@ import DeleteAccountModal from './DeleteAccountModal';
 
 interface Props {
   userData: UserType;
-  onSubmitSuccess: (data: UserConfigSchema) => void;
+  onSubmitSuccess: (data: UpdateUserRequestBody) => void;
 }
 
 export default function UserConfigForm({ userData, onSubmitSuccess }: Props) {
@@ -68,12 +68,16 @@ export default function UserConfigForm({ userData, onSubmitSuccess }: Props) {
   };
 
   const onSubmit = async (data: UserConfigSchema) => {
-    updateUserMutate(data);
+    // 백엔드에서 수정하기 전과 같은 닉네임을 요청으로 보낼시 중복검사를 실행하기 때문에 닉네임 변경이 없다면 payload에서 제거
+    const payload =
+      data.nickname === userData.nickname ? { image: data.image } : data;
+    updateUserMutate(payload);
   };
 
   useEffect(() => {
     // 헤더와 유저정보를 받아오는 userAtom 동기화, isDirty와 경고 플래그 초기화
     if (isSuccess) {
+      console.log(requestPayload);
       onSubmitSuccess(requestPayload);
       reset(requestPayload);
       setHasWarned(false);

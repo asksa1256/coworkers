@@ -27,8 +27,11 @@ import type {
   TaskListsResponse,
   TaskUpdateRequestBody,
 } from '@/types/taskType';
-import type { UserConfigSchema } from '@/types/userConfigSchema';
-import type { MembershipsType, MyHistoryResponse } from '@/types/userType';
+import type {
+  MembershipsType,
+  MyHistoryResponse,
+  UpdateUserRequestBody,
+} from '@/types/userType';
 import type { AxiosResponse } from 'axios';
 
 export const getGroup = async (
@@ -171,12 +174,13 @@ export const deleteGroup = async (groupId: number) => {
   }
 };
 
-export const updateUser = async (payload: UserConfigSchema) => {
+export const updateUser = async (payload: UpdateUserRequestBody) => {
   try {
     const { data } = await axiosInstance.patch('/user', payload);
     return data;
   } catch (e) {
     console.log('유저 정보 수정 에러:', e);
+    throw e;
   }
 };
 
@@ -185,6 +189,7 @@ export const deleteUser = async () => {
     await axiosInstance.delete('/user');
   } catch (e) {
     console.log('회원탈퇴 에러:', e);
+    throw e;
   }
 };
 
