@@ -20,7 +20,9 @@ const usePreventUnsavedChanges = (isDirty: boolean) => {
         setHasWarned(true);
       };
     }
+  }, [shouldBlock]);
 
+  useEffect(() => {
     // 클라이언트 라우팅 또는 뒤로가기 방지
     if (blocker.state === 'blocked') {
       toast.info('저장하지 않은 변경사항이 있어요!');
@@ -33,7 +35,7 @@ const usePreventUnsavedChanges = (isDirty: boolean) => {
     return () => {
       window.onbeforeunload = null;
     };
-  }, [shouldBlock, blocker]);
+  }, [blocker]);
 
   return { confirmSave, setHasWarned };
 };
