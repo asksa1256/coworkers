@@ -16,6 +16,7 @@ interface GnbItemProps {
   type: 'team' | 'board';
   href: string;
   title: string;
+  image?: string | null;
   current: boolean;
 }
 
@@ -24,7 +25,7 @@ const gnbIconType = {
   board: GnbBoardIcon,
 };
 
-function GnbItem({ type, href, title, current }: GnbItemProps) {
+function GnbItem({ type, href, title, current, image }: GnbItemProps) {
   const Icon = gnbIconType[type];
   return (
     <li className='md:mb-2'>
@@ -43,7 +44,14 @@ function GnbItem({ type, href, title, current }: GnbItemProps) {
             'transition-all group-[.is-fold]:md:mx-auto group-[.is-fold]:md:w-6',
           )}
         >
-          {<Icon />}
+          {image ? (
+            <img
+              src={image}
+              className='aspect-square w-full rounded-sm object-cover md:scale-150'
+            />
+          ) : (
+            <Icon />
+          )}
         </span>
         <span
           className={cn(
@@ -120,7 +128,14 @@ export default function HeaderGnb({
                     currentGroup && 'text-primary',
                   )}
                 >
-                  <GnbTeamIcon />
+                  {currentGroup?.image ? (
+                    <img
+                      src={currentGroup.image}
+                      className='aspect-square w-full rounded-sm object-cover md:scale-150'
+                    />
+                  ) : (
+                    <GnbTeamIcon />
+                  )}
                 </span>
                 <span
                   className={cn(
@@ -146,6 +161,7 @@ export default function HeaderGnb({
                   {userGroups.map(team => (
                     <GnbItem
                       type='team'
+                      image={team.image}
                       title={team.name}
                       href={`/${team.id}`}
                       key={team.id}
