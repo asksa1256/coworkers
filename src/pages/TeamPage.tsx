@@ -55,12 +55,10 @@ export default function TeamPage() {
           />
         </GroupTitleBar>
 
-        {isAdmin && (
-          <ReportCard
-            todosCount={calcTodayTodos(groupData.taskLists)}
-            doneCount={calcTodayDone(groupData.taskLists)}
-          />
-        )}
+        <ReportCard
+          todosCount={calcTodayTodos(groupData.taskLists)}
+          doneCount={calcTodayDone(groupData.taskLists)}
+        />
       </div>
 
       {isAdmin && (

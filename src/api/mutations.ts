@@ -15,8 +15,7 @@ import type {
   TaskListsResponse,
   TaskUpdateRequestBody,
 } from '@/types/taskType';
-import type { UserConfigSchema } from '@/types/userConfigSchema';
-import type { UserType } from '@/types/userType';
+import type { UpdateUserRequestBody, UserType } from '@/types/userType';
 import { toggleDoneAt } from '@/utils/taskUtils';
 import {
   mutationOptions,
@@ -992,7 +991,7 @@ export const userMutations = {
   // 유저 정보 수정
   updateUserMutationOptions: () =>
     mutationOptions({
-      mutationFn: (payload: UserConfigSchema) => updateUser(payload),
+      mutationFn: (payload: UpdateUserRequestBody) => updateUser(payload),
       onSuccess: () => {
         toast.success('사용자 정보를 변경했습니다.');
       },
