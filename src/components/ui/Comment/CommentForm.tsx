@@ -52,6 +52,8 @@ export default function CommentForm({
   };
 
   const handleEnter = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.nativeEvent.isComposing) return;
+
     if (e.code === 'Enter' && e.ctrlKey) {
       handleSubmit(handleFormSubmit)();
     }
