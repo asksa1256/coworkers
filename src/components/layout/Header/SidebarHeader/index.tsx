@@ -24,7 +24,7 @@ export default function SidebarHeader({
   return (
     <header
       className={cn(
-        'bg-bg-primary border-border-primary group sticky top-0 flex h-screen w-[270px] flex-col border-r transition-all',
+        'bg-bg-primary border-border-primary group sticky top-0 z-[1] flex h-screen w-[270px] flex-col border-r transition-all',
         isFold && 'is-fold w-[72px] lg:w-[72px]',
       )}
     >

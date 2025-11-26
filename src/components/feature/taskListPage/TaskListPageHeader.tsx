@@ -5,7 +5,7 @@ import GroupConfigDropdown from '@/components/feature/teamPage/GroupConfigDropdo
 import GroupTitleBar from '@/components/ui/GroupTitleBar';
 import { useGroupAuthContext } from '@/hooks/useGroupAuthContext';
 import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 interface Props {
   date: Date;
@@ -27,7 +27,14 @@ export default function TaskListPageHeader({ date }: Props) {
         variant='list'
         className='flex shrink-0 items-center gap-2 lg:mb-12'
       >
-        <h2>{groupData.name}</h2>
+        <h2>
+          <Link
+            to={`/${groupId}`}
+            aria-label={`${groupData.name} 팀페이지로 이동`}
+          >
+            {groupData.name}
+          </Link>
+        </h2>
 
         <GroupConfigDropdown
           groupId={Number(groupId)}

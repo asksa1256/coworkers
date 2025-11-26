@@ -85,7 +85,7 @@ export default function TaskDetailSheet({
             </div>
           </div>
         </SheetHeader>
-        <div className='flex-1 overflow-auto'>
+        <div className='flex-1 overflow-x-hidden overflow-y-auto pb-20 md:pb-10'>
           <div className='px-4 md:px-7 lg:px-10'>
             {/* 유저 정보 */}
             <div className='mb-4 flex items-center gap-3'>

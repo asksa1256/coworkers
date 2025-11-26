@@ -3,6 +3,7 @@ import InputField from '@/components/ui/Input/InputField';
 import { cn } from '@/lib/utils';
 import { formatDate } from '@/utils/dateUtils';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 interface Props {
   value: Date | undefined;
@@ -18,7 +19,15 @@ export default function TaskFormCalendar({
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   const handleUpdateDate = (date: Date | undefined) => {
-    const nextDate = date ?? new Date();
+    const todayDate = new Date();
+    const nextDate = date ?? todayDate;
+
+    const diffDate = todayDate.getTime() - nextDate.getTime();
+    if (diffDate >= 0) {
+      toast.error('오늘보다 이전 날짜로 설정할 수 없습니다.');
+      return;
+    }
+
     onChange(nextDate);
     setIsCalendarOpen(false);
   };

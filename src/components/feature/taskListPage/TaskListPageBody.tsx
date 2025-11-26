@@ -63,7 +63,7 @@ export default function TaskListPageBody({ date, setDate }: Props) {
       </div>
 
       {/* 투두 주간일자 */}
-      <div className='bg-bg-primary sticky top-[52px] mt-4.5 grid grid-cols-7 gap-1 py-1.5 md:gap-2 lg:top-0 lg:mt-6.5 lg:gap-3'>
+      <div className='bg-bg-primary sticky top-[52px] z-[1] mt-4.5 grid grid-cols-7 gap-1 py-1.5 md:gap-2 lg:top-0 lg:mt-6.5 lg:gap-3'>
         <TaskSectionWeek date={date} onChangeDate={handleUpdateDate} />
       </div>
 

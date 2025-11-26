@@ -16,7 +16,7 @@ export default function SidebarUser({ currentGroup }: Props) {
   const { nickname, image } = user;
 
   return (
-    <div className='border-border-primary relative mx-4 border-t pt-5 pb-6'>
+    <div className='border-border-primary relative mx-4 border-t pt-5 pb-6 [&_button]:max-w-full [&_button]:overflow-hidden'>
       <UserMenu>
         <div className='flex w-full items-center gap-3 text-left'>
           <Avatar

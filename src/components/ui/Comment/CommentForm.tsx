@@ -9,6 +9,7 @@ import type { CommentData } from '@/types/commentType';
 import { getCommentAuthor } from '@/utils/typeGuard';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAtomValue } from 'jotai';
+import type { KeyboardEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import Button from '../Button';
 import TextareaField from '../Textarea/TextareaField';
@@ -50,6 +51,12 @@ export default function CommentForm({
     }
   };
 
+  const handleEnter = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.code === 'Enter' && e.ctrlKey) {
+      handleSubmit(handleFormSubmit)();
+    }
+  };
+
   const isEditMode = !!comment;
 
   // 수정 폼
@@ -72,7 +79,9 @@ export default function CommentForm({
               <TextareaField
                 {...register('content')}
                 className='[&_textarea]:bg-bg-primary'
+                onKeyDown={handleEnter}
               />
+              <p className='text-text-default text-sm'>ctrl + enter - 전송</p>
             </div>
           </div>
 
@@ -102,12 +111,25 @@ export default function CommentForm({
 
   // 등록 폼
   return (
-    <form
-      onSubmit={handleSubmit(handleFormSubmit)}
-      className={cn('mb-[28px] flex gap-3 md:mb-9 md:gap-4', className)}
-    >
-      <Avatar size='md' imgSrc={user?.image ?? null} className='mt-3 md:mt-2' />
-      <InputReply {...register('content')} value={watch('content')} />
-    </form>
+    <div className='mb-[28px] md:mb-9'>
+      <form
+        onSubmit={handleSubmit(handleFormSubmit)}
+        className={cn('flex gap-3 md:gap-4', className)}
+      >
+        <Avatar
+          size='md'
+          imgSrc={user?.image ?? null}
+          className='mt-3 md:mt-2'
+        />
+        <div className='grow-1'>
+          <InputReply
+            {...register('content')}
+            value={watch('content')}
+            onKeyDown={handleEnter}
+          />
+          <p className='text-text-default mt-1 text-sm'>ctrl + enter - 전송</p>
+        </div>
+      </form>
+    </div>
   );
 }

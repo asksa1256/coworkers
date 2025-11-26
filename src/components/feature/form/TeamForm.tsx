@@ -101,9 +101,14 @@ export default function TeamForm({ initialData, onSubmit }: Props) {
           <InputField
             id='name'
             type='text'
+            maxLength={30}
             placeholder='팀 이름을 입력해주세요.'
             {...register('name', {
               required: '팀 이름을 입력해주세요.',
+              maxLength: {
+                value: 30,
+                message: '팀명은 30자 이하로 작성해주세요.',
+              },
             })}
             error={errors.name}
           />
