@@ -56,7 +56,7 @@ export default function ResetPasswordForm() {
       }
 
       if (forLoggedInUser) closeModal();
-      toast.success('비밀번호 변경이 완료되었습니다.');
+      toast.success('비밀번호 변경이 완료되었습니다. 다시 로그인 해주세요.');
       navigate('/auth/signIn');
     } catch (error) {
       if (axios.isAxiosError(error)) {

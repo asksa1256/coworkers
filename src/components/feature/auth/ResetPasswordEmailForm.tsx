@@ -87,6 +87,8 @@ export default function ResetPasswordEmailForm() {
           </h4>
           <p className='text-md text-gray-400'>
             비밀번호 재설정 링크를 보내드립니다.
+            <br />
+            메일 도착까지 5분 이상 소요될 수도 있어요.
           </p>
         </div>
 

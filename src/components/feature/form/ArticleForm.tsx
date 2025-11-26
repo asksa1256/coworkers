@@ -61,6 +61,8 @@ export default function ArticleForm({ initialValue }: ArticleFormProps) {
   const { confirmSave } = usePreventUnsavedChanges(isDirty);
 
   const onSubmit = (formData: CreateArticleRequest) => {
+    confirmSave(); // 폼 제출 시 미저장 경고 해제
+
     const payload = {
       title: formData.title,
       content: formData.content,
