@@ -38,18 +38,26 @@ https://coworkers-three.vercel.app
 ---
 
 ## 📚 기술 스택 
+| 기술 | 카테고리 | 용도 |
+|------------|----------|---------------------|
+| <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> | UI 개발 | 컴포넌트 기반 선언적 UI 개발 |
+| <img src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white"> | 언어 | 정적 타이핑을 통한 코드 안정성 확보 및 런타임 에러 방지 |
+| <img src="https://img.shields.io/badge/react router dom-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white"> | 라우팅 | SPA 구현을 위한 클라이언트 사이드 라우팅 |
+| <img src="https://img.shields.io/badge/jotai-171717?style=for-the-badge&logoColor=white"> | 상태 관리 | Atomic 패턴을 이용한 전역 상태 관리 |
+| <img src="https://img.shields.io/badge/react hook form-EC5990?style=for-the-badge&logo=reacthookform&logoColor=black"> | 폼 관리 | 비제어 컴포넌트 기반 폼 상태 관리 및 렌더링 최적화 |
+| <img src="https://img.shields.io/badge/zod-408AFF?style=for-the-badge&logo=zod&logoColor=white"> | 유효성 검사 | 스키마 기반 검사 로직 분리로 관심사 분리 및 TS 타입 추론 |
+| <img src="https://img.shields.io/badge/TanStack Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white"> | 데이터 페칭 | 서버 데이터 캐싱, 동기화 및 선언적 데이터 상태 관리(로딩/에러) |
+| <img src="https://img.shields.io/badge/axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white"> | 네트워크 | 인터셉터를 활용한 공통 요청 및 토큰 관리 |
+| <img src="https://img.shields.io/badge/tailwindcss-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white"> | 스타일 | Utility-first 기반 스타일 생산성 향상 |
+| <img src="https://img.shields.io/badge/storybook-FF4785?style=for-the-badge&logo=storybook&logoColor=white"> | 디자인 시스템 | 공용 컴포넌트 중복 개발 방지 및 자동 문서화 |
+| <img src="https://img.shields.io/badge/shadcn/ui-000000?style=for-the-badge&logo=shadcnui&logoColor=white"> | UI 컴포넌트 | 공용 컴포넌트 개발 속도, 생산성, 접근성 확보 |
+| <img src="https://img.shields.io/badge/swiper-6332F6?style=for-the-badge&logo=swiper&logoColor=white"> | UI 컴포넌트 | 캐러셀 구현 편의성 도구 |
+| <img src="https://img.shields.io/badge/framer motion-0055FF?style=for-the-badge&logo=framer&logoColor=white"> | 애니메이션 | 스크롤 인터랙션 구현 편의성 도구 |
+| <img src="https://img.shields.io/badge/immer-00E7C3?style=for-the-badge&logo=immer&logoColor=black"> | 유틸리티 | 불변성 유지 로직 간소화로 가독성 향상 |
+| <img src="https://img.shields.io/badge/date fns-770C56?style=for-the-badge&logo=datefns&logoColor=white"> | 유틸리티 | `new Date()`보다 경량화된 날짜 데이터 처리 |
+| <img src="https://img.shields.io/badge/vite-646CFF?style=for-the-badge&logo=vite&logoColor=white"> | 빌드 도구 | HMR(Hot Module Replacement) 지원으로 개발 서버 실행 속도, 빌드 속도 향상 |
+| <img src="https://img.shields.io/badge/vercel-000?style=for-the-badge&logo=vercel&logoColor=white"> | 배포 | GitHub 연동 CI/CD 자동화 |
 
-- **Frontend:**
-  
-<img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> <img src="https://img.shields.io/badge/react rouder dom-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white">  <img src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white"> <img src="https://img.shields.io/badge/zod-408AFF?style=for-the-badge&logo=zod&logoColor=white"> <img src="https://img.shields.io/badge/react hook form-EC5990?style=for-the-badge&logo=reacthookform&logoColor=black"> <img src="https://img.shields.io/badge/jotai-171717?style=for-the-badge&logoColor=white"> <img src="https://img.shields.io/badge/axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white"> <img src="https://img.shields.io/badge/react query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white"> <img src="https://img.shields.io/badge/storybook-FF4785?style=for-the-badge&logo=storybook&logoColor=white"> <img src="https://img.shields.io/badge/swiper-6332F6?style=for-the-badge&logo=swiper&logoColor=white">
-- **Build:**
-  <img src="https://img.shields.io/badge/vite-646CFF?style=for-the-badge&logo=vite&logoColor=white">
-- **Deploy:**
-   <img src="https://img.shields.io/badge/vercel-000?style=for-the-badge&logo=vercel&logoColor=white">
-- **Style:**
-   <img src="https://img.shields.io/badge/tailwindcss-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white"> <img src="https://img.shields.io/badge/shadcn/ui-000000?style=for-the-badge&logo=shadcnui&logoColor=white"> <img src="https://img.shields.io/badge/framer motion-0055FF?style=for-the-badge&logo=framer&logoColor=white">
-- **Etc:**
-   <img src="https://img.shields.io/badge/immer-00E7C3?style=for-the-badge&logo=immer&logoColor=black"> <img src="https://img.shields.io/badge/date fns-770C56?style=for-the-badge&logo=datefns&logoColor=white">
 
 ---
 
