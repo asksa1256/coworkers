@@ -2,14 +2,18 @@
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react-swc';
+import fs from 'fs';
 import { fileURLToPath } from 'node:url';
 import path from 'path';
 import { defineConfig } from 'vite';
 import svgr from 'vite-plugin-svgr';
+
 const dirname =
   typeof __dirname !== 'undefined'
     ? __dirname
     : path.dirname(fileURLToPath(import.meta.url));
+
+const useHttps = process.env.VITE_HTTPS === 'true';
 
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
@@ -47,4 +51,12 @@ export default defineConfig({
       },
     ],
   },
+  server: useHttps
+    ? {
+        https: {
+          key: fs.readFileSync('./certs/localhost+2-key.pem'),
+          cert: fs.readFileSync('./certs/localhost+2.pem'),
+        },
+      }
+    : {},
 });
