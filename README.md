@@ -58,7 +58,6 @@ https://coworkers-three.vercel.app
 | <img src="https://img.shields.io/badge/vite-646CFF?style=for-the-badge&logo=vite&logoColor=white"> | 빌드 도구 | HMR(Hot Module Replacement) 지원으로 개발 서버 실행 속도, 빌드 속도 향상 |
 | <img src="https://img.shields.io/badge/vercel-000?style=for-the-badge&logo=vercel&logoColor=white"> | 배포 | GitHub 연동 CI/CD 자동화 |
 
-
 ---
 
 ## 📁 프로젝트 구조 
@@ -66,23 +65,23 @@ https://coworkers-three.vercel.app
 ```
 src
  ┣ api/
- ┃  ┣ mutations.ts    // 뮤테이션 팩토리
- ┃  ┗ queries.ts      // 쿼리 팩토리
- ┣ assets/
+ ┃  ┣ mutations.ts    // 뮤테이션 팩토리 (React Query)
+ ┃  ┗ queries.ts      // 쿼리 팩토리 (React Query)
+ ┣ assets/            // 정적 리소스
  ┃  ┣ fonts/
  ┃  ┣ icons/
  ┃  ┗ images/
  ┣ components/
- ┃  ┣ feature/
- ┃  ┣ layout/
+ ┃  ┣ feature/        // 기능별 컴포넌트
+ ┃  ┣ layout/         // 페이지별 레이아웃
  ┃  ┗ ui/             // 공용 컴포넌트
  ┣ constants/         // 상수 선언
- ┣ hooks/
+ ┣ hooks/             // 공용 커스텀 훅
  ┣ lib/               // 라이브러리 관련 유틸 함수 (axios, shadcn/ui)
- ┣ pages/
+ ┣ pages/             
  ┣ store/             // jotai atoms
  ┣ stories/           // 스토리북 stories
- ┣ styles/
+ ┣ styles/            
  ┣ types/             // 타입, rhf 스키마 선언
  ┣ utils/             // 공용 유틸 함수
  ┣ App.tsx            // QueryProvider, RouterProvider 적용
@@ -92,33 +91,32 @@ src
 
 ---
 
-## 📐 아키텍처 설계
+## 개발 포인트
 
-### 1. React Query 쿼리 팩토리 적용 (캐싱 전략 최적화)
-
-**문제 상황**
+### 1. 아키텍처 설계 - React Query 쿼리 팩토리 적용 (캐싱 전략 최적화)
+**적용 전**
 - 동일한 API 호출이 여러 컴포넌트에서 중복 발생
 - 쿼리 키 관리가 일관성 없이 산재되어 유지보수 어려움
 
-**해결 방법**
+**적용 방법**
 - Query Factory 패턴 도입으로 쿼리 키 중앙 관리
-- `queries.ts` 내에서 도메인별로 query key 분리 및 구조화
+- `queries.ts`, `mutations.ts`에서 도메인별 query/mutation key 분리 및 구조화
 
-**결과**
+**적용 후**
 - 캐시 무효화 로직이 명확해져 버그 감소
 - 쿼리 키들이 하나의 파일에 모여있어 유지보수성 증가
 - UI로부터 리액트 쿼리 로직 분리 → 컴포넌트 가독성 개선
 
-### 2. Jotai: 가벼운 전역 상태 관리 라이브러리 
+### 2. Jotai를 이용한 가벼운 전역 상태 관리 
 | 기준 | Redux Toolkit | Zustand | Jotai |
 |------|--------------|---------|-------|
 | 번들 사이즈 | ❌ 큼 | ✅ 작음 | ✅ 매우 작음 |
 | 학습 곡선 | ❌ 가파름 | ✅ 완만 | ⚠️ 중간 |
 | React Query 호환 | ⚠️ 보통 | ✅ 좋음 | ✅ 매우 좋음 |
 
-→ 서버 상태는 React Query, 클라이언트 전역 상태는 atom으로 관리
+→ 서버 상태는 React Query, 클라이언트 전역 상태는 `Jotai atom`으로 관리
 
-### 3. Storybook: UI 컴포넌트 생산성 향상
+### 3. Storybook 도입을 통한 UI 컴포넌트 생산성 향상
 - Storybook을 통한 공용 컴포넌트 문서화
   - 동일한 컴포넌트를 새로 만드는 상황 방지
   - 버그 발견 시점 조기화 (UI 테스트를 Storybook에서 선행)
