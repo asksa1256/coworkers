@@ -17,18 +17,18 @@ https://coworkers-three.vercel.app
 ## ✨ 주요 기능 (Features)
 
 - 업무 생성 및 공유
-![업무 등록 및 공유](https://github.com/user-attachments/assets/0b1ab244-ee82-4708-9e9d-06810c94bd44)
-- 팀 생성, 팀 초대, 팀 관리
+![업무 등록 및 공유](https://github.com/user-attachments/assets/0b1ab244-ee82-4708-9e9d-06810c94bd44)<br/><hr/>
+- 팀 생성, 팀 초대/가입, 팀 관리
   - 팀 생성
-  ![팀 생성](https://github.com/user-attachments/assets/8534d37f-81a5-43a1-b674-58729832cd40)
+  ![팀 생성](https://github.com/user-attachments/assets/8534d37f-81a5-43a1-b674-58729832cd40)<br/><br/>
   - 팀 초대/가입
-  ![팀 초대 + 가입](https://github.com/user-attachments/assets/8cd97ff3-4998-4977-a713-7cba0d7fe977)
+  ![팀 초대 + 가입](https://github.com/user-attachments/assets/8cd97ff3-4998-4977-a713-7cba0d7fe977)<br/>
   - 팀 관리
-  ![팀 관리](https://github.com/user-attachments/assets/28abba8c-1967-4763-acaa-e1eb32d87c1c)
+  ![팀 관리](https://github.com/user-attachments/assets/28abba8c-1967-4763-acaa-e1eb32d87c1c)<br/><hr/>
 - 인증 시스템
-  ![카카오 간편 로그인](https://github.com/user-attachments/assets/19aa704d-1e48-4f7e-8bbf-9a53971945ee)
+  ![카카오 간편 로그인](https://github.com/user-attachments/assets/19aa704d-1e48-4f7e-8bbf-9a53971945ee)<br/><hr/>
 - 데이터 시각화
-  ![데이터 시각화](https://github.com/user-attachments/assets/93a214d6-17b2-4fdf-98ec-8ecd9dbd8d2b)
+  ![데이터 시각화](https://github.com/user-attachments/assets/93a214d6-17b2-4fdf-98ec-8ecd9dbd8d2b)<br/><hr/>
 - 자유게시판
   ![글 등록](https://github.com/user-attachments/assets/de471477-8291-4540-a55b-9c2bd17b7866)
 
@@ -94,7 +94,7 @@ src
 
 ## 📐 아키텍처 설계
 
-### 6-1. React Query 쿼리 팩토리 적용 (캐싱 전략 최적화)
+### 1. React Query 쿼리 팩토리 적용 (캐싱 전략 최적화)
 
 **문제 상황**
 - 동일한 API 호출이 여러 컴포넌트에서 중복 발생
@@ -109,7 +109,7 @@ src
 - 쿼리 키들이 하나의 파일에 모여있어 유지보수성 증가
 - UI로부터 리액트 쿼리 로직 분리 → 컴포넌트 가독성 개선
 
-### 6-2. 가벼운 전역 상태 관리 라이브러리 채택: Jotai
+### 2. Jotai: 가벼운 전역 상태 관리 라이브러리 
 | 기준 | Redux Toolkit | Zustand | Jotai |
 |------|--------------|---------|-------|
 | 번들 사이즈 | ❌ 큼 | ✅ 작음 | ✅ 매우 작음 |
@@ -118,7 +118,7 @@ src
 
 → 서버 상태는 React Query, 클라이언트 전역 상태는 atom으로 관리
 
-### 6-3. UI 컴포넌트 생산성 향상: Storybook
+### 3. Storybook: UI 컴포넌트 생산성 향상
 - Storybook을 통한 공용 컴포넌트 문서화
   - 동일한 컴포넌트를 새로 만드는 상황 방지
   - 버그 발견 시점 조기화 (UI 테스트를 Storybook에서 선행)
@@ -136,7 +136,7 @@ git clone https://github.com/asksa1256/coworkers.git .
 pnpm i
 pnpm run dev
 ```
-
+<!--
 ---
 
 ## 🎯 트러블슈팅 
@@ -145,11 +145,11 @@ pnpm run dev
 ---
 
 ## 📈 개선 계획
-
 - 다크모드 추가
 - 성능 최적화 (Lighthouse 지표 개선 등): [성능 최적화 과정](./docs/PERFORMANCE.md)
 
 ---
+-->
 
 ## 👥 팀원 소개 
 | Member | Role | 
