@@ -2,6 +2,7 @@ import Button from '@/components/ui/Button';
 import InputField from '@/components/ui/Input/InputField';
 import PasswordField from '@/components/ui/Input/PasswordField';
 import { Label } from '@/components/ui/Label';
+import { GUEST_ACCOUNT } from '@/constants';
 import axiosInstance from '@/lib/axios';
 import { userAtom } from '@/store/authAtom';
 import { type ErrorResponse } from '@/types';
@@ -28,14 +29,22 @@ export default function SignInForm() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting, isValid },
+    watch,
   } = useForm<SignInRequest>({
     resolver: zodResolver(SignInRequestSchema),
     mode: 'onBlur',
   });
 
+  const watchedEmail = watch('email');
+  const watchedPassword = watch('password');
+
+  const isInputEmpty = !watchedEmail?.trim() && !watchedPassword?.trim();
+  const isGuestDisabled = !isInputEmpty || isSubmitting;
+
   const onSubmit = async (data: SignInRequest) => {
     try {
       const res = await axiosInstance.post('/auth/signin', data);
+      console.log(res.data);
 
       const { user, accessToken, refreshToken } = res.data;
 
@@ -78,6 +87,10 @@ export default function SignInForm() {
     }
   };
 
+  const handleGuestSignIn = async () => {
+    await onSubmit(GUEST_ACCOUNT);
+  };
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -116,14 +129,22 @@ export default function SignInForm() {
         </div>
       </div>
 
-      <div className='flex flex-col gap-2'>
+      <div className='flex flex-col'>
         {globalError && <p className='text-danger text-md'>{globalError}</p>}
         <Button
           type='submit'
-          className='mb-6 text-base'
+          className='mb-2 text-base'
           disabled={isSubmitting || !isValid}
         >
           {isSubmitting ? '로그인 중...' : '로그인'}
+        </Button>
+        <Button
+          type='button'
+          className='mb-6 text-base'
+          disabled={isGuestDisabled}
+          onClick={handleGuestSignIn}
+        >
+          {isSubmitting ? '게스트 로그인 중...' : '게스트 로그인'}
         </Button>
       </div>
 
