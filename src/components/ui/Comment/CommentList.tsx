@@ -4,18 +4,12 @@ import type { ReactNode } from 'react';
 
 interface CommentListProps {
   comments: CommentData[];
-  // itemActions?: React.ReactNode;
-  // itemActions: (commentId: number) => {
-  //   dropdown: ReactNode;
-  //   editActions: CommentItemProps['actions']; // CommentItemProps의 actions 타입 재사용
-  // };
   children: ReactNode;
   className?: string;
 }
 
 export default function CommentList({
   comments,
-  // itemActions,
   children,
   className,
 }: CommentListProps) {
