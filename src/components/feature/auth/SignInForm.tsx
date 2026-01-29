@@ -23,6 +23,7 @@ import ResetPasswordModal from './ResetPasswordModal';
 
 export default function SignInForm() {
   const [globalError, setGlobalError] = useState('');
+  const [isGuestSubmitting, setIsGuestSubmitting] = useState(false);
   const setUser = useSetAtom(userAtom);
 
   const {
@@ -88,7 +89,9 @@ export default function SignInForm() {
   };
 
   const handleGuestSignIn = async () => {
+    setIsGuestSubmitting(true);
     await onSubmit(GUEST_ACCOUNT);
+    setIsGuestSubmitting(false);
   };
 
   return (
@@ -144,7 +147,7 @@ export default function SignInForm() {
           disabled={isGuestDisabled}
           onClick={handleGuestSignIn}
         >
-          {isSubmitting ? '게스트 로그인 중...' : '게스트 로그인'}
+          {isGuestSubmitting ? '게스트 로그인 중...' : '게스트 로그인'}
         </Button>
       </div>
 
