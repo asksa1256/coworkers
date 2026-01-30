@@ -43,7 +43,7 @@ function Calendar({
       classNames={{
         root: cn('w-fit', defaultClassNames.root),
         months: cn(
-          'flex gap-4 flex-col md:flex-row relative items-start',
+          'flex gap-4 flex-col md:flex-row relative',
           defaultClassNames.months,
         ),
         month: cn('flex flex-col w-full gap-4', defaultClassNames.month),
@@ -85,14 +85,14 @@ function Calendar({
           defaultClassNames.caption_label,
         ),
         table: 'w-full border-collapse',
-        weekdays: cn('flex', defaultClassNames.weekdays),
+        weekdays: cn('grid grid-cols-7', defaultClassNames.weekdays),
         weekday: cn(
           'text-muted-foreground rounded-md flex-1 font-normal text-md select-none',
           defaultClassNames.weekday,
         ),
-        week: cn('flex w-full mt-2', defaultClassNames.week),
+        week: cn('grid grid-cols-7 w-full mt-2', defaultClassNames.week),
         week_number_header: cn(
-          'select-none w-(--cell-size)',
+          'select-none',
           defaultClassNames.week_number_header,
         ),
         week_number: cn(
@@ -101,7 +101,7 @@ function Calendar({
         ),
         day: cn(
           'relative w-full h-full p-0 text-center group/day select-none',
-          'size-12.5', // aspect-square 대신 고정 너비/높이 사용
+          'aspect-square min-w-9 sm:min-w-10.5',
           defaultClassNames.day,
         ),
         range_start: cn(' bg-accent', defaultClassNames.range_start),
@@ -200,7 +200,7 @@ function CalendarDayButton({
       data-range-middle={modifiers.range_middle}
       className={cn(
         'data-[selected-single=true]:bg-primary data-[selected-single=true]:text-text-inverse data-[range-middle=true]:bg-accent data-[range-middle=true]:text-accent-foreground data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground dark:hover:text-accent-foreground group-data-[outside=true]/day:text-primary-inactive group-data-[today=true]/day:text-primary hover:bg-bg-secondary flex size-auto w-full min-w-(--cell-size) flex-col gap-1 text-[15px] leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 data-[range-end=true]:rounded-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md [&>span]:text-xs [&>span]:opacity-70',
-        'size-12.5', // aspect-square 대신 고정 너비/높이 사용
+        'aspect-square min-w-9 sm:min-w-10.5',
         defaultClassNames.day,
         className,
       )}
