@@ -45,7 +45,6 @@ export default function SignInForm() {
   const onSubmit = async (data: SignInRequest) => {
     try {
       const res = await axiosInstance.post('/auth/signin', data);
-      console.log(res.data);
 
       const { user, accessToken, refreshToken } = res.data;
 
