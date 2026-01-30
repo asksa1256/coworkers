@@ -44,13 +44,13 @@ export default function TaskFormCalendar({
         className={cn({ isCalendarOpen: '[&_input]:border-primary-hover' })}
       />
       {isCalendarOpen && (
-        <div className='border-primary-hover mt-2 w-full rounded-xl border'>
+        <div className='mt-2 w-full'>
           <Calendar
             mode='single'
             selected={value}
             defaultMonth={value}
             onSelect={handleUpdateDate}
-            className='w-full min-w-auto'
+            className='border-primary-hover h-fit w-full min-w-auto rounded-xl border shadow-md'
           />
         </div>
       )}
