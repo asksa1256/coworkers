@@ -24,3 +24,8 @@ export const FREQUENCY_TO_TEXT = {
   WEEKLY: '매주 반복',
   MONTHLY: '매월 반복',
 };
+
+export const GUEST_ACCOUNT = {
+  email: 'guest1234@email.com',
+  password: 'guest1234!',
+};
