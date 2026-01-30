@@ -50,7 +50,7 @@ export default function TaskFormCalendar({
             selected={value}
             defaultMonth={value}
             onSelect={handleUpdateDate}
-            className='border-primary-hover h-fit w-full min-w-auto rounded-xl border shadow-md'
+            className='border-primary-hover w-full min-w-auto rounded-xl border shadow-md'
           />
         </div>
       )}
